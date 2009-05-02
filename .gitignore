@@ -1,0 +1,12 @@
+.DS_Store
+pkg/*.gem
+pkg/*.tgz
+pkg/**/*
+*.o
+mkmf.log
+Makefile
+coverage/*
+doc/*
+ext/*.bundle
+ext/*.so
+ext/Makefile
