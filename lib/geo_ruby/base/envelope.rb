@@ -7,7 +7,7 @@ module GeoRuby
       attr_accessor :srid, :with_z, :zoom
 
       #Creates a enw Envelope with +lower_corner+ as the first element of the corners array and +upper_corner+ as the second element
-      def initialize(srid = @@srid, with_z = false)
+      def initialize(srid = @@default_srid, with_z = false)
         @srid = srid
         @with_z = with_z
       end
@@ -148,7 +148,7 @@ module GeoRuby
       end
 
       #Creates a new envelope. Accept an array of 2 points as argument
-      def self.from_points(points,srid=@@srid,with_z=false)
+      def self.from_points(points,srid=@@default_srid,with_z=false)
         raise "Not an array" unless points.class == Array
         e = Envelope.new(srid,with_z)
         e.lower_corner, e.upper_corner = points
@@ -156,7 +156,7 @@ module GeoRuby
       end
 
       #Creates a new envelope. Accept a sequence of point coordinates as argument : ((x,y),(x,y))
-      def self.from_coordinates(points,srid=@@srid,with_z=false)
+      def self.from_coordinates(points,srid=@@default_srid,with_z=false)
         e = Envelope.new(srid,with_z)
         e.lower_corner, e.upper_corner =  points.collect{|point_coords| Point.from_coordinates(point_coords,srid,with_z)}
         e

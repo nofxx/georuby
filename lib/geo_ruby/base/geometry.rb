@@ -1,13 +1,13 @@
 module GeoRuby#:nodoc:
   module Base
     #arbitrary default SRID
-    @@srid = 4326
+    @@default_srid = 4326
 
     def self.default_srid
-      @@srid
+      @@default_srid
     end
     def self.srid=(srid)
-      @@srid = srid
+      @@default_srid = srid
     end
 
     #Root of all geometric data classes.
@@ -22,7 +22,7 @@ module GeoRuby#:nodoc:
       attr_accessor :with_m
       alias :with_m? :with_m
 
-      def initialize(srid=@@srid,with_z=false,with_m=false)
+      def initialize(srid=@@default_srid,with_z=false,with_m=false)
         @srid=srid
         @with_z=with_z
         @with_m=with_m

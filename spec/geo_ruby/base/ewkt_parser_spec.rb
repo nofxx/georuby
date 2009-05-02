@@ -157,7 +157,7 @@ describe EWKTParser do
     @ewkt_parser.parse(ewkt)
     multi_polygon = @factory.geometry
     multi_polygon.should be_instance_of MultiPolygon
-    multi_polygon.should == MultiPolygon.from_polygons([Polygon.from_coordinates([[[12.4,-45.3,2],[45.4,41.6,3],[4.456,1.0698,4],[12.4,-45.3,2]],[[2.4,5.3,1],[5.4,1.4263,3.44],[14.46,1.06,4.5],[2.4,5.3,1]]],@@srid,true),Polygon.from_coordinates([[[0,0,5.6],[4,0,5.4],[4,4,1],[0,4,23],[0,0,5.6]],[[1,1,2.3],[3,1,4],[3,3,5],[1,3,6],[1,1,2.3]]],@@srid,true)],@@srid,true)
+    multi_polygon.should == MultiPolygon.from_polygons([Polygon.from_coordinates([[[12.4,-45.3,2],[45.4,41.6,3],[4.456,1.0698,4],[12.4,-45.3,2]],[[2.4,5.3,1],[5.4,1.4263,3.44],[14.46,1.06,4.5],[2.4,5.3,1]]],@@default_srid,true),Polygon.from_coordinates([[[0,0,5.6],[4,0,5.4],[4,4,1],[0,4,23],[0,0,5.6]],[[1,1,2.3],[3,1,4],[3,3,5],[1,3,6],[1,1,2.3]]],@@default_srid,true)],@@default_srid,true)
     multi_polygon.srid.should eql(4326)
     multi_polygon[0].srid.should eql(4326)
   end

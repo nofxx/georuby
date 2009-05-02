@@ -67,7 +67,7 @@ module GeoRuby
           @geometry_type = @geometry_type & ~SRID_MASK
         else
           #to manage multi geometries : the srid is not present in sub_geometries, therefore we take the srid of the parent ; if it is the root, we take the default srid
-          @srid= @srid || @@srid
+          @srid= @srid || @@default_srid
         end
 
         if @parse_options.has_key? @geometry_type

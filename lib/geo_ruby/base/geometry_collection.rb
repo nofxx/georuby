@@ -6,7 +6,7 @@ module GeoRuby
     class GeometryCollection < Geometry
       attr_reader :geometries
 
-      def initialize(srid = @@srid,with_z=false,with_m=false)
+      def initialize(srid = @@default_srid,with_z=false,with_m=false)
         super(srid,with_z,with_m)
         @geometries = []
       end
@@ -126,7 +126,7 @@ module GeoRuby
       end
 
       #creates a new GeometryCollection from an array of geometries
-      def self.from_geometries(geometries,srid=@@srid,with_z=false,with_m=false)
+      def self.from_geometries(geometries,srid=@@default_srid,with_z=false,with_m=false)
         geometry_collection = new(srid,with_z,with_m)
         geometry_collection.concat(geometries)
         geometry_collection
