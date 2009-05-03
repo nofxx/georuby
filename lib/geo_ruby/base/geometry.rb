@@ -83,6 +83,7 @@ module GeoRuby#:nodoc:
       def as_hex_ewkb(allow_srid=true,allow_z=true,allow_m=true)
         as_ewkb(allow_srid, allow_z, allow_m).unpack('H*').join('').upcase
       end
+
       #Outputs the geometry as a strict HexWKB string
       def as_hex_wkb
         as_hex_ewkb(false,false,false)

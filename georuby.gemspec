@@ -1,12 +1,13 @@
 # -*- encoding: utf-8 -*-
 
 Gem::Specification.new do |s|
-  s.name = %q{geo_ruby}
+  s.name = %q{georuby}
   s.version = "1.3.7"
 
   s.required_rubygems_version = Gem::Requirement.new(">= 0") if s.respond_to? :required_rubygems_version=
-  s.authors = ["Marcos Augusto"]
+  s.authors = ["Guilhem Vellut", "Marcos Augusto"]
   s.date = %q{2009-05-02}
+  s.description = %q{GeoRuby provides geometric data types from the OGC 'Simple Features' specification.}
   s.email = %q{x@nofxx.com}
   s.extra_rdoc_files = [
     "LICENSE",
@@ -68,11 +69,11 @@ Gem::Specification.new do |s|
     "spec/spec_helper.rb"
   ]
   s.has_rdoc = true
-  s.homepage = %q{http://github.com/nofxx/geo_ruby}
+  s.homepage = %q{http://github.com/nofxx/georuby}
   s.rdoc_options = ["--charset=UTF-8"]
   s.require_paths = ["lib"]
   s.rubygems_version = %q{1.3.2}
-  s.summary = %q{GeoRuby fork}
+  s.summary = %q{Ruby data holder for OGC Simple Features}
   s.test_files = [
     "spec/geo_ruby/shp4r/shp_spec.rb",
     "spec/geo_ruby/base/polygon_spec.rb",
