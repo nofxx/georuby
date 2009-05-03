@@ -1,7 +1,7 @@
-require 'geo_ruby/base/geometry'
+require 'geo_ruby/simple_features/geometry'
 
 module GeoRuby
-  module Base
+  module SimpleFeatures
     #Represents a collection of arbitrary geometries
     class GeometryCollection < Geometry
       attr_reader :geometries

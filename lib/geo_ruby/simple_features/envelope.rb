@@ -1,5 +1,5 @@
 module GeoRuby
-  module Base
+  module SimpleFeatures
 
     #Contains the bounding box of a geometry
     class Envelope

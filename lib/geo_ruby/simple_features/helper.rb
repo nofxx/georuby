@@ -1,5 +1,5 @@
 module GeoRuby
-  module Base
+  module SimpleFeatures
     #indicates the presence of Z coordinates in EWKB strings
     Z_MASK=0x80000000
     #indicates the presence of M coordinates in EWKB strings.

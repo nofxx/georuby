@@ -1,8 +1,8 @@
 # -*- coding: utf-8 -*-
-require "geo_ruby/base/geometry"
+require "geo_ruby/simple_features/geometry"
 
 module GeoRuby
-  module Base
+  module SimpleFeatures
     #Represents a point. It is in 3D if the Z coordinate is not +nil+.
     class Point < Geometry
       DEG2RAD = 0.0174532925199433

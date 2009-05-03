@@ -1,7 +1,7 @@
-require 'geo_ruby/base/geometry_collection'
+require 'geo_ruby/simple_features/geometry_collection'
 
 module GeoRuby
-  module Base
+  module SimpleFeatures
     #Represents a group of points (see Point).
     class MultiPoint < GeometryCollection
 

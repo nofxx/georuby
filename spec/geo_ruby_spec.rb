@@ -5,7 +5,7 @@ require File.expand_path(File.dirname(__FILE__) + '/spec_helper')
 describe "GeoRuby Stuff" do
 
   it "should instantiate Geometry" do
-    @geo = GeoRuby::Base::Geometry.new
+    @geo = GeoRuby::SimpleFeatures::Geometry.new
     @geo.class.should eql(Geometry)
   end
 

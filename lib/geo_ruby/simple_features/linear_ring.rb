@@ -1,7 +1,7 @@
-require 'geo_ruby/base/line_string'
+require 'geo_ruby/simple_features/line_string'
 
 module GeoRuby
-  module Base
+  module SimpleFeatures
     #Represents a linear ring, which is a closed line string (see LineString). Currently, no check is performed to verify if the linear ring is really closed.
     class LinearRing < LineString
       def initialize(srid= @@default_srid,with_z=false,with_m=false)

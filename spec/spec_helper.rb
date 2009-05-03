@@ -9,4 +9,4 @@ end
 $:.unshift(File.dirname(__FILE__) + '/../lib')
 require 'geo_ruby'
 include GeoRuby
-include Base
+include SimpleFeatures

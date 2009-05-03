@@ -1,7 +1,7 @@
-require "geo_ruby/base/geometry"
+require "geo_ruby/simple_features/geometry"
 
 module GeoRuby
-  module Base
+  module SimpleFeatures
     #Represents a line string as an array of points (see Point).
     class LineString < Geometry
       #the list of points forming the line string

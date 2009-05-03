@@ -1,7 +1,7 @@
-require 'geo_ruby/base/geometry'
+require 'geo_ruby/simple_features/geometry'
 
 module GeoRuby
-  module Base
+  module SimpleFeatures
     #Represents a polygon as an array of linear rings (see LinearRing). No check is performed regarding the validity of the geometries forming the polygon.
     class Polygon < Geometry
       #the list of rings forming the polygon

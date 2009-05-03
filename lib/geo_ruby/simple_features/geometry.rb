@@ -1,5 +1,5 @@
 module GeoRuby#:nodoc:
-  module Base
+  module SimpleFeatures
     #arbitrary default SRID
     @@default_srid = 4326
 
@@ -184,7 +184,7 @@ module GeoRuby#:nodoc:
       #Limitations : Only supports points, linestrings and polygons (no collection for now).
       #Addapted from Pramukta's code
       def self.from_kml(kml)
-        return GeoRuby::Base::Geometry.from_ewkt(kml_to_wkt(kml))
+        return GeoRuby::SimpleFeatures::Geometry.from_ewkt(kml_to_wkt(kml))
       end
 
       require 'rexml/document'

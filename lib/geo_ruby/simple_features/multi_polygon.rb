@@ -1,7 +1,7 @@
-require 'geo_ruby/base/geometry_collection'
+require 'geo_ruby/simple_features/geometry_collection'
 
 module GeoRuby
-  module Base
+  module SimpleFeatures
     #Represents a group of polygons (see Polygon).
    class MultiPolygon < GeometryCollection
       def initialize(srid = @@default_srid,with_z=false,with_m=false)
