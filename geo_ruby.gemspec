@@ -32,7 +32,6 @@ Gem::Specification.new do |s|
     "lib/geo_ruby/base/multi_line_string.rb",
     "lib/geo_ruby/base/multi_point.rb",
     "lib/geo_ruby/base/multi_polygon.rb",
-    "lib/geo_ruby/base/multi_polygon_flymake.rb",
     "lib/geo_ruby/base/point.rb",
     "lib/geo_ruby/base/polygon.rb",
     "lib/geo_ruby/shp4r/dbf.rb",

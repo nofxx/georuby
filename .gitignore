@@ -4,4 +4,3 @@ pkg/*.tgz
 pkg/**/*
 coverage/*
 doc/*
-*flymake.rb
