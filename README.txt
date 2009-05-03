@@ -1,29 +1,9 @@
-= geo_ruby
+=GeoRuby
 
-Experiment with GeoRuby (http://georuby.rubyforge.org) with the fast Geo (http://geo.rubyforge.org).
+This is a fork of GeoRuby. It is intended as a holder for data returned from PostGIS and the Spatial Extensions of MySql. The data model roughly follows the OGC "Simple Features for SQL" specification (see http://www.opengis.org/docs/99-049.pdf), although without any kind of advanced functionalities (such as geometric operators or reprojections). It also supports various output and input formats (GeoRSS, KML, Shapefile).
 
-
-== DESCRIPTION:
-
-the objective is provide all the georuby functionalities, with time consuming calculus in C.
-_this is not usable yet_
-
-See:
-GeoRuby (http://georuby.rubyforge.org)
-Copyright (c) 2006 Guilhem Vellut <guilhem.vellut+georuby@gmail.com>
-
-Geo (http://geo.rubyforge.org)
-Copyright (C) 2007 Martin Kihlgren
-
-
-== REQUIREMENTS:
-
-glib:: http://www.gtk.org/
-
-== FEATURES:
-
-=Available data types
-
+===Available data types
+The following geometric data types are provided :
 - Point
 - Line string
 - Linear ring
@@ -35,25 +15,69 @@ glib:: http://www.gtk.org/
 
 They can be in 2D, 3DZ, 3DM, and 4D.
 
+On top of this an Envelope class is available, to contain the bounding box of a geometry.
 
-Geo::Point:: A 2D point providing some common geometry operations.
-Geo::Line:: A 2D line consisting of 2 Geo::Points providing some common geometry operations.
-Geo::Triangle:: A 2D triangle consisting of 3 Geo::Points providing some common geometry operations.
-Geo::PointSet:: A Set-like container of Points.
-Geo::LineSet:: A Set-like container of Lines that provides optimized versions of some common geometry operations on lines.
-Geo::TriangleSet:: A Set-like container of Triangles that provides optimized versions of some common geometry operations on lines.
+===Input and output
+These geometries can be input and output in WKB/EWKB/WKT/EWKT format (as well as the related HexWKB and HexEWKB formats). HexEWKB and WKB are the default form under which geometric data is returned respectively from PostGIS and MySql.
 
-== Usage:
+GeoRSS Simple, GeoRSS W3CGeo, GeoRSS GML can also be input and output. Note that they will not output valid RSS, but just the part strictly concerning the geometry as outlined in http://www.georss.org/1/ . Since the model does not allow multiple geometries, for geometry collections, only the first geometry will be output. Similarly, for polygons, the GeoRSS output will only contain the outer ring. As for W3CGeo output, only points can be output, so the first point of the geometry is chosen. By default the Simple format is output. Envelope can also be output in these formats: The box geometric type is chosen (except for W3CGeo, where the center of the envelope is chose). These formats can also be input and a GeoRuby geometry will be created. Note that it will not read a valid RSS file, only a geometry string.
 
-Just install the gem.
+On top of that, there is now support for KML output and input. As for GeoRSS, a valid KML file will not be output, but only the geometric data. Options <tt>:id</tt>, <tt>:extrude</tt>, <tt>:tesselate</tt> and <tt>:altitude_mode</tt> can be given. Note that if the <tt>:altitude_mode</tt> option is not passed or set to <tt>clampToGround</tt>, the altitude data will not be output even if present. Envelopes output a LatLonAltBox instead of a geometry. For the output, the following geometric types are supported : Point, LineString, Polygon.
 
-== Examples:
+===SHP reading et writing
+Georuby has support for reading ESRI shapefiles (http://www.esri.com/library/whitepapers/pdfs/shapefile.pdf). A tool called <tt>shp2sql.rb</tt> is also provided : it shows how to use the SHP reading functionality together with the spatial adapter plugin for Rails to import spatial features into MySQL and PostGIS.
 
-To find if a given line intersects a set of 100 000 other lines:
+Here is an example of Shapefile reading, that goes through all the geometries in a file and disaply the values of the attributes :
+        ShpFile.open(shpfile) do |shp|
+                shp.each do |shape|
+                        geom = shape.geometry #a GeoRuby SimpleFeature
+                        att_data = shape.data #a Hash
+                        shp.fields.each do |field|
+                                puts att_data[field.name]
+                        end
+                end
+        end
 
- :include:examples/intersects.rb
+Support for ESRI shapefile creation and modification has been added as well. New shapefiles can be created given a geometry type and specifications for the DBF fields. Data can be added and removed from an existing shapefile. An update operation is also provided for convenience : it just performs a 'delete' and an 'add', which means the index of the modified record will change. Note that once a shapefile has been created, GeoRuby does not allow the modification of the schema (it will probably be done in a subsequent version).
 
-== License:
+Here is an example of how to create a new Shapefile with 2 fields :
+        shpfile = ShpFile.create('hello.shp',ShpType::POINT,[Dbf::Field.new("Hoyoyo","C",10),Dbf::Field.new("Boyoul","N",10,0)])
+The file is then open for reading and writing.
 
+Here is an example of how to write to a shapefile (created or not with GeoRuby) :
+        shpfile = ShpFile.open('places.shp')
+        shpfile.transaction do |tr|
+                tr.add(ShpRecord.new(Point.from_x_y(123.4,123.4),'Hoyoyo' => "AEZ",'Bouyoul' => 45))
+                tr.update(4,ShpRecord.new(Point.from_x_y(-16.67,16.41),'Hoyoyo' => "EatMe",'Bouyoul' => 42))
+                tr.delete(1)
+        end
+        shpfile.close
+
+Note the transaction is just there so the operations on the files can be buffered. Nothing happens on the original files until the block has finished executing. Calling <tt>tr.rollback</tt> at anytime during the execution will prevent the modifications.
+
+Also currently, error reporting is minimal and it has not been tested that thoroughly so caveat emptor and backup before performing any destructive operation.
+
+===Installation
+To install the latest version, just type :
+      gem install GeoRuby
+
+===Changes since the last version
+- Writing of ESRI shapefiles
+- Reading of ESRI shapefiles
+- Addition of a small tool to import spatial features in MySQL and PostGIS from a SHP file
+
+===Coming in the next versions
+- Schema modification of existing shapefiles
+- More error reporting when writing shapefiles
+- More tests on writing shapefiles ; tests on real-world shapefiles
+- Better shp2sql import tool
+- Documentation
+
+===Acknowledgement
+The SHP reading part uses a modified version of the DBF library (http://rubyforge.org/projects/dbf/) by Keith Morrison (http://infused.org). Thanks also to Pramukta Kumar and Pete Schwamb for their contributions.
+
+===License
 GeoRuby is released under the MIT license.
-geo is provided under the GPL-2.
+
+===Support
+Any questions, enhancement proposals, bug notifications or corrections can be sent to mailto:guilhem.vellut@gmail.com.
