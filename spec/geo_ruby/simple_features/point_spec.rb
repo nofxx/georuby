@@ -185,7 +185,7 @@ describe Point do
 
   end
 
-  describe " > Distance" do
+  describe " > Distance & Bearing" do
 
     before(:each) do
       @p1 = Point.from_x_y(1,1)
@@ -205,6 +205,43 @@ describe Point do
     it "should calculate ellipsoidal distance" do
       @p1.ellipsoidal_distance(@p2).
         should be_close(156876.149400742, 0.00000001)
+    end
+
+    it "should calculate the bearing from apoint to another in degrees" do
+      @p1.bearing_to(@p2).should be_close(45.0, 0.01)
+    end
+
+    it "should calculate the bearing from apoint to another in degrees" do
+      p3 = Point.from_x_y(1,-1)
+      @p1.bearing_to(p3).should be_close(180.0, 0.01)
+    end
+
+    it "should calculate the bearing from apoint to another in degrees" do
+      p3 = Point.from_x_y(-1,-1)
+      @p1.bearing_to(p3).should be_close(225.0, 0.01)
+    end
+
+    it "should calculate the bearing from apoint to another in degrees" do
+      p3 = Point.from_x_y(-1,1)
+      @p1.bearing_to(p3).should be_close(270.0, 0.01)
+    end
+
+    it "should calculate the bearing from apoint to another in degrees" do
+      p3 = Point.from_x_y(2,-1)
+      @p1.bearing_to(p3).should be_close(153.4349488, 0.0001)
+    end
+
+    it "should calculate a clone point bearing to 0" do
+      @p1.bearing_to(@p1).should eql(0)
+    end
+
+    it "should calculate the bearing from apoint to another in degrees" do
+      @p1.bearing_text(@p2).should eql(:ne)
+    end
+
+    it "should calculate the bearing from apoint to another in degrees" do
+      p3 = Point.from_x_y(-1,1)
+      @p1.bearing_text(p3).should eql(:w)
     end
 
   end

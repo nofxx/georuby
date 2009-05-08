@@ -108,6 +108,30 @@ module GeoRuby
         b*a_bis*(sigma-deltaSigma)
       end
 
+      #Bearing from a point to another, in degrees.
+      def bearing_to(other)
+        return 0 if self == other
+        a,b =  other.x - self.x, other.y - self.y
+        res =  Math.acos(b / Math.sqrt(a*a+b*b)) / Math::PI * 180;
+        a < 0 ? 360 - res : res
+      end
+
+      #Bearing from a point to another as symbols. (:n, :s, :sw, :ne...)
+      def bearing_text(other)
+        case bearing_to(other)
+        when 1..22    then :n
+        when 23..66   then :ne
+        when 67..112  then :e
+        when 113..146 then :se
+        when 147..202 then :s
+        when 203..246 then :sw
+        when 247..292 then :w
+        when 293..336 then :nw
+        when 337..360 then :n
+        else nil
+        end
+      end
+
       #Bounding box in 2D/3D. Returns an array of 2 points
       def bounding_box
         unless with_z
