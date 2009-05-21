@@ -19,22 +19,16 @@ module GeoRuby
       end
 
       class Reader < Table
+        alias_method :fields, :columns
         def header_length
           @columns_count
-        end
-
-        def fields
-          @columns
         end
 
         def self.open(f)
           new(f)
         end
 
-        def close()
-          nil
-        end
-
+        def close(); nil;  end
       end
     end
   end

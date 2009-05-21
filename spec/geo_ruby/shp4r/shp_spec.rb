@@ -54,7 +54,9 @@ describe Shp4r do
     it "should parse fields" do
       field = @shpfile.fields.first
       field.name.should eql("Chipoto")
-      field.type.should eql("F")
+      # Dbf now uses the decimal to choose between int and float
+      # So here is N instead of F
+      field.type.should eql("N")
     end
 
     it "should parse record 1" do
@@ -62,7 +64,6 @@ describe Shp4r do
       rec.geometry.should be_kind_of MultiLineString
       rec.geometry.length.should eql(1)
       rec.geometry[0].length.should eql(6)
-      puts rec.data.class
       rec.data["Chipoto"].should eql(5.678)
     end
 
