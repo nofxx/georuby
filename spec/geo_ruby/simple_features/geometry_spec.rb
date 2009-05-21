@@ -10,7 +10,7 @@ describe Geometry do
   end
 
   it "should have a default srid" do
-    @geo.srid.should eql(@@default_srid) #Geometry.default_srid)
+    @geo.srid.should eql(4326) #Geometry.default_srid)
   end
 
   it "should change srid" do

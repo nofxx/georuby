@@ -287,7 +287,7 @@ describe Point do
     end
 
     it "should print as georss" do
-      @point.georss_simple_representation('hey').should eql("<georss:point>32.3141 -11.2431</georss:point>\n")
+      @point.georss_simple_representation(:georss_ns => 'hey').should eql("<hey:point>32.3141 -11.2431</hey:point>\n")
     end
 
     it "should print r (polar coords)" do

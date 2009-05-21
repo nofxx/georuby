@@ -157,7 +157,7 @@ describe GeorssParser do
     </LineString>")
     g.should be_a LineString
     g.length.should eql(2)
-    g.should == LineString.from_points([Point.from_x_y_z(-122.364383,37.824664,0),Point.from_x_y_z(-122.364152,37.824322,0)],@@default_srid,true)
+    g.should == LineString.from_points([Point.from_x_y_z(-122.364383,37.824664,0),Point.from_x_y_z(-122.364152,37.824322,0)],4326,true)
 
     g = Geometry.from_kml("<Polygon>
       <extrude>1</extrude>

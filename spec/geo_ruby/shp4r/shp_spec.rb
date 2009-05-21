@@ -62,6 +62,7 @@ describe Shp4r do
       rec.geometry.should be_kind_of MultiLineString
       rec.geometry.length.should eql(1)
       rec.geometry[0].length.should eql(6)
+      puts rec.data.class
       rec.data["Chipoto"].should eql(5.678)
     end
 

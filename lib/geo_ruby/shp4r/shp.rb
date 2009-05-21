@@ -436,11 +436,7 @@ module GeoRuby
             str = if field.type == 'D'
                     sprintf("%04i%02i%02i",data.year,data.month,data.mday)
                   elsif field.type == 'L'
-                    if data
-                      "T"
-                    else
-                      "F"
-                    end
+                    data ? "T" :  "F"
                   else
                     data.to_s
                   end
