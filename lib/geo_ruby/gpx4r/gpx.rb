@@ -74,7 +74,7 @@ module GeoRuby
       # If the GPX isn't closed, a line from the first
       # to the last point will be created to close it.
       def as_polygon
-        Polygon.from_points([@points << @points[-1]])
+        Polygon.from_points([@points[0] == @points[-1] ?  @points : @points << @points[0] ])
       end
 
       # Return GPX Envelope
@@ -88,9 +88,15 @@ module GeoRuby
         @points[i]
       end
 
-      def parse_file
-        Nokogiri.HTML(@gpx.read).search("//trkpt").each do |tp|
-          @points << Point.from_x_y_z_m(tp["lon"].to_f, tp["lat"].to_f, tp.at("ele").inner_text.to_i, tp.at("time").inner_text)
+      # wpt => waypoint => TODO?
+      # rte(pt) => route
+      # trk(pt) => track /
+      def parse_file(parse_time=true)
+        data = @gpx.read
+        @file_mode = data =~ /trkpt/ ? "//trkpt" : "//rtept"
+        Nokogiri.HTML(data).search(@file_mode).each do |tp|
+          time = time.inner_text if parse_time && time = tp.at("time")
+          @points << Point.from_x_y_z_m(tp["lon"].to_f, tp["lat"].to_f, tp.at("ele").inner_text.to_i, time)
         end
         close
         @record_count = @points.length

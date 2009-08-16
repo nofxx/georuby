@@ -5,7 +5,7 @@
 
 Gem::Specification.new do |s|
   s.name = %q{georuby}
-  s.version = "1.6.0"
+  s.version = "1.6.1"
 
   s.required_rubygems_version = Gem::Requirement.new(">= 0") if s.respond_to? :required_rubygems_version=
   s.authors = ["Guilhem Vellut", "Marcos Augusto"]
@@ -49,11 +49,13 @@ Gem::Specification.new do |s|
      "script/destroy",
      "script/generate",
      "script/txt2html",
+     "spec/data/gpx/fells_loop.gpx",
      "spec/data/gpx/long.gpx",
      "spec/data/gpx/long.kml",
      "spec/data/gpx/long.nmea",
      "spec/data/gpx/short.gpx",
      "spec/data/gpx/short.kml",
+     "spec/data/gpx/tracktreks.gpx",
      "spec/data/multipoint.dbf",
      "spec/data/multipoint.shp",
      "spec/data/multipoint.shx",
