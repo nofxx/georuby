@@ -1,5 +1,7 @@
 # Uses the dbf lib, Copyright 2006 Keith Morrison (http://infused.org)
 # Modified to work as external gem now
+require 'rubygems'
+require 'dbf'
 
 module GeoRuby
   module Shp4r
