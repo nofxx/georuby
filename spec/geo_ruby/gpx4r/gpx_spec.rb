@@ -15,9 +15,9 @@ describe Gpx4r do
   describe "Waypoints" do
 
     before(:all) do
-      @gpxfile = GpxFile.open(File.dirname(__FILE__) + '/../../data/gpx/short.gpx')
-      @gpxfile2 = GpxFile.open(File.dirname(__FILE__) + '/../../data/gpx/fells_loop')
-      @gpxfile3 = GpxFile.open(File.dirname(__FILE__) + '/../../data/gpx/tracktreks.gpx')
+      @gpxfile = GpxFile.open(File.dirname(__FILE__) + '/../../data/gpx/short.gpx', :with_z => true, :with_m => true)
+      @gpxfile2 = GpxFile.open(File.dirname(__FILE__) + '/../../data/gpx/fells_loop', :with_z => true, :with_m => true)
+      @gpxfile3 = GpxFile.open(File.dirname(__FILE__) + '/../../data/gpx/tracktreks.gpx', :with_z => true)
     end
 
     it "should open and parse" do
@@ -59,7 +59,7 @@ describe Gpx4r do
 
     it "should read Z and M 3" do
       @gpxfile3[0].z.should eql(88)
-      @gpxfile3[0].m.should be_nil
+      @gpxfile3[0].m.should eql(0.0)
     end
 
     it "should return it as a linestring" do

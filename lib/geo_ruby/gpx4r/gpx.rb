@@ -11,13 +11,14 @@ module GeoRuby
       include Enumerable
 
       # Opens a GPX file. Both "abc.shp" and "abc" are accepted.
-      def initialize(file, with_z = true, with_m = true)
+      def initialize(file, *opts) #with_z = true, with_m = true)
         @file_root = file.gsub(/\.gpx$/i,"")
         raise MalformedGpxException.new("Missing GPX File") unless
           File.exists? @file_root + ".gpx"
         @points, @envelope = [], nil
         @gpx = File.open(@file_root + ".gpx", "rb")
-        parse_file
+        opt = opts.inject({}) { |o, h| h.merge(o) }
+        parse_file(opt[:with_z], opt[:with_m])
       end
 
       #force the reopening of the files compsing the shp. Close before calling this.
@@ -26,8 +27,8 @@ module GeoRuby
       end
 
       #opens a GPX "file". If a block is given, the GpxFile object is yielded to it and is closed upon return. Else a call to <tt>open</tt> is equivalent to <tt>GpxFile.new(...)</tt>.
-      def self.open(file)
-        gpxfile = GpxFile.new(file)
+      def self.open(file, *opts)
+        gpxfile = GpxFile.new(file, *opts)
         if block_given?
           yield gpxfile
           gpxfile.close
@@ -91,12 +92,13 @@ module GeoRuby
       # wpt => waypoint => TODO?
       # rte(pt) => route
       # trk(pt) => track /
-      def parse_file(parse_time=true)
+      def parse_file(with_z, with_m)
         data = @gpx.read
         @file_mode = data =~ /trkpt/ ? "//trkpt" : "//rtept"
         Nokogiri.HTML(data).search(@file_mode).each do |tp|
-          time = time.inner_text if parse_time && time = tp.at("time")
-          @points << Point.from_x_y_z_m(tp["lon"].to_f, tp["lat"].to_f, tp.at("ele").inner_text.to_i, time)
+          z = z.inner_text.to_i if with_z && z = tp.at("ele")
+          m = m.inner_text if with_m && m = tp.at("time")
+          @points << Point.from_coordinates([tp["lon"].to_f, tp["lat"].to_f, z, m],nil,with_z, with_m)
         end
         close
         @record_count = @points.length
