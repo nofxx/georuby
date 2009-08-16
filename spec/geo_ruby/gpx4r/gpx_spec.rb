@@ -72,14 +72,6 @@ describe Gpx4r do
       @gpxfile3.as_polyline.should be_instance_of LineString
     end
 
-    it "should return it as a polygon" do
-      @gpxfile.as_polygon.should be_instance_of Polygon
-    end
-
-    it "should return it as a polygon 3" do
-      @gpxfile3.as_polygon.should be_instance_of Polygon
-    end
-
     it "should return a envelope" do
       @gpxfile.envelope.should be_instance_of Envelope
       @gpxfile.envelope.lower_corner.x.should be_close(9.08128, 0.001)
@@ -90,6 +82,15 @@ describe Gpx4r do
       @gpxfile3.envelope.should be_instance_of Envelope
       @gpxfile3.envelope.lower_corner.x.should be_close(-149.8422613, 0.001)
       @gpxfile3.envelope.lower_corner.y.should be_close(-17.547636, 0.001)
+    end
+
+    it "should return it as a polygon" do
+      [@gpxfile, @gpxfile2, @gpxfile3].each do |g|
+        g.as_polygon.should be_instance_of Polygon
+        g.as_polygon[0].should be_instance_of LinearRing
+        g.as_polygon[0].should be_closed
+        g.as_polygon[1].should be_nil
+      end
     end
 
     it "should close the polygon" do

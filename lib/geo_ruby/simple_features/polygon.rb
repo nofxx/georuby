@@ -133,14 +133,14 @@ module GeoRuby
       #creates a new polygon. Accepts a sequence of points as argument : ((x,y)....(x,y)),((x,y).....(x,y))
       def self.from_coordinates(point_sequences,srid=@@default_srid,with_z=false,with_m=false)
         polygon = new(srid,with_z,with_m)
-        polygon.concat( point_sequences.collect {|points| LinearRing.from_coordinates(points,srid,with_z,with_m) } )
+        polygon.concat( point_sequences.map {|points| LinearRing.from_coordinates(points,srid,with_z,with_m) } )
         polygon
       end
 
       #creates a new polygon from a list of Points (pt1....ptn),(pti....ptj)
       def self.from_points(point_sequences, srid=@@default_srid,with_z=false,with_m=false)
         polygon = new(srid,with_z,with_m)
-        polygon.concat( point_sequences.collect {|points| LinearRing.from_points(points,srid,with_z,with_m) } )
+        polygon.concat( point_sequences.map {|points| LinearRing.from_points(points,srid,with_z,with_m) } )
         polygon
 
       end
