@@ -23,7 +23,7 @@ describe Shp4r do
     end
 
     it "should parse record 1" do
-      rec = @shpfile.first
+      rec = @shpfile[0]
       rec.geometry.should be_kind_of Point
       rec.geometry.x.should be_close(-90.08375, 0.00001)
       rec.geometry.y.should be_close(34.39996, 0.00001)
@@ -60,7 +60,7 @@ describe Shp4r do
     end
 
     it "should parse record 1" do
-      rec = @shpfile.first
+      rec = @shpfile[0]
       rec.geometry.should be_kind_of MultiLineString
       rec.geometry.length.should eql(1)
       rec.geometry[0].length.should eql(6)
@@ -87,7 +87,7 @@ describe Shp4r do
     end
 
     it "should parse record 1" do
-      rec = @shpfile.first
+      rec = @shpfile[0]
       rec.geometry.should be_kind_of MultiPolygon
       rec.geometry.length.should eql(1)
       rec.geometry[0].length.should eql(1)
