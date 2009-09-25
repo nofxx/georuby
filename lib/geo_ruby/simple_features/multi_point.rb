@@ -5,7 +5,7 @@ module GeoRuby
     #Represents a group of points (see Point).
     class MultiPoint < GeometryCollection
 
-      def initialize(srid= @@default_srid,with_z=false,with_m=false)
+      def initialize(srid= DEFAULT_SRID,with_z=false,with_m=false)
         super(srid,with_z,with_m)
       end
 
@@ -23,14 +23,14 @@ module GeoRuby
       end
 
       #Creates a new multi point from an array of points
-      def self.from_points(points,srid= @@default_srid,with_z=false,with_m=false)
+      def self.from_points(points,srid= DEFAULT_SRID,with_z=false,with_m=false)
         multi_point= new(srid,with_z,with_m)
         multi_point.concat(points)
         multi_point
       end
 
       #Creates a new multi point from a list of point coordinates : ((x,y)...(x,y))
-      def self.from_coordinates(points,srid= @@default_srid,with_z=false,with_m=false)
+      def self.from_coordinates(points,srid= DEFAULT_SRID,with_z=false,with_m=false)
         multi_point= new(srid,with_z,with_m)
         multi_point.concat(points.collect {|point| Point.from_coordinates(point,srid,with_z,with_m)})
         multi_point

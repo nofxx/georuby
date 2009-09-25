@@ -17,7 +17,7 @@ module GeoRuby
       alias :tet :t
       alias :tetha :t
 
-      def initialize(srid=@@default_srid,with_z=false,with_m=false)
+      def initialize(srid=DEFAULT_SRID,with_z=false,with_m=false)
         super(srid,with_z,with_m)
         @x = @y = 0.0
         @z=0.0 #default value : meaningful if with_z
@@ -261,7 +261,7 @@ module GeoRuby
       end
 
       #creates a point from an array of coordinates
-      def self.from_coordinates(coords,srid=@@default_srid,with_z=false,with_m=false)
+      def self.from_coordinates(coords,srid=DEFAULT_SRID,with_z=false,with_m=false)
         if ! (with_z or with_m)
           from_x_y(coords[0],coords[1],srid)
         elsif with_z and with_m
@@ -274,26 +274,26 @@ module GeoRuby
       end
 
       #creates a point from the X and Y coordinates
-      def self.from_x_y(x,y,srid=@@default_srid)
+      def self.from_x_y(x,y,srid=DEFAULT_SRID)
         point= new(srid)
         point.set_x_y(x,y)
       end
 
       #creates a point from the X, Y and Z coordinates
-      def self.from_x_y_z(x,y,z,srid=@@default_srid)
+      def self.from_x_y_z(x,y,z,srid=DEFAULT_SRID)
         point= new(srid,true)
         point.set_x_y_z(x,y,z)
       end
 
       #creates a point from the X, Y and M coordinates
-      def self.from_x_y_m(x,y,m,srid=@@default_srid)
+      def self.from_x_y_m(x,y,m,srid=DEFAULT_SRID)
         point= new(srid,false,true)
         point.m=m
         point.set_x_y(x,y)
       end
 
       #creates a point from the X, Y, Z and M coordinates
-      def self.from_x_y_z_m(x,y,z,m,srid=@@default_srid)
+      def self.from_x_y_z_m(x,y,z,m,srid=DEFAULT_SRID)
         point= new(srid,true,true)
         point.m=m
         point.set_x_y_z(x,y,z)
@@ -301,7 +301,7 @@ module GeoRuby
 
       #creates a point using polar coordinates
       #r and theta(degrees)
-      def self.from_r_t(r,t,srid=@@default_srid)
+      def self.from_r_t(r,t,srid=DEFAULT_SRID)
         t *= DEG2RAD
         x = r * Math.cos(t)
         y = r * Math.sin(t)
@@ -310,7 +310,7 @@ module GeoRuby
       end
 
       #creates a point using coordinates like 22`34 23.45N
-      def self.from_latlong(lat,lon,srid=@@default_srid)
+      def self.from_latlong(lat,lon,srid=DEFAULT_SRID)
         p = [lat,lon].map do |l|
           sig, deg, min, sec, cen = l.scan(/(-)?(\d{1,2})\D*(\d{2})\D*(\d{2})(\D*(\d{1,3}))?/).flatten
           sig = true if l =~ /W|S/

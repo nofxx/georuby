@@ -1,14 +1,8 @@
 module GeoRuby#:nodoc:
   module SimpleFeatures
     #arbitrary default SRID
-    @@default_srid = 4326
+    DEFAULT_SRID = 4326 unless defined? DEFAULT_SRID
 
-    def self.default_srid
-      @@default_srid
-    end
-    def self.srid=(srid)
-      @@default_srid = srid
-    end
 
     #Root of all geometric data classes.
     #Objects of class Geometry should not be instantiated.
@@ -22,7 +16,7 @@ module GeoRuby#:nodoc:
       attr_accessor :with_m
       alias :with_m? :with_m
 
-      def initialize(srid=@@default_srid,with_z=false,with_m=false)
+      def initialize(srid=DEFAULT_SRID,with_z=false,with_m=false)
         @srid=srid
         @with_z=with_z
         @with_m=with_m

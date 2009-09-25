@@ -7,7 +7,7 @@ module GeoRuby
       #the list of points forming the line string
       attr_reader :points
 
-      def initialize(srid= @@default_srid,with_z=false,with_m=false)
+      def initialize(srid= DEFAULT_SRID,with_z=false,with_m=false)
         super(srid,with_z,with_m)
         @points=[]
       end
@@ -167,14 +167,14 @@ module GeoRuby
       end
 
       #Creates a new line string. Accept an array of points as argument
-      def self.from_points(points,srid=@@default_srid,with_z=false,with_m=false)
+      def self.from_points(points,srid=DEFAULT_SRID,with_z=false,with_m=false)
         line_string = new(srid,with_z,with_m)
         line_string.concat(points)
         line_string
       end
 
       #Creates a new line string. Accept a sequence of points as argument : ((x,y)...(x,y))
-      def self.from_coordinates(points,srid=@@default_srid,with_z=false,with_m=false)
+      def self.from_coordinates(points,srid=DEFAULT_SRID,with_z=false,with_m=false)
         line_string = new(srid,with_z,with_m)
         line_string.concat( points.map {|p| Point.from_coordinates(p,srid,with_z,with_m) } )
         line_string

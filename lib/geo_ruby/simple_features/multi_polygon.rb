@@ -4,7 +4,7 @@ module GeoRuby
   module SimpleFeatures
     #Represents a group of polygons (see Polygon).
    class MultiPolygon < GeometryCollection
-      def initialize(srid = @@default_srid,with_z=false,with_m=false)
+      def initialize(srid = DEFAULT_SRID,with_z=false,with_m=false)
         super(srid)
       end
 
@@ -21,13 +21,13 @@ module GeoRuby
       end
 
       #Creates a multi polygon from an array of polygons
-      def self.from_polygons(polygons,srid=@@default_srid,with_z=false,with_m=false)
+      def self.from_polygons(polygons,srid=DEFAULT_SRID,with_z=false,with_m=false)
         multi_polygon = new(srid,with_z,with_m)
         multi_polygon.concat(polygons)
         multi_polygon
       end
       #Creates a multi polygon from sequences of points : ((((x,y)...(x,y)),((x,y)...(x,y)),((x,y)...(x,y)))
-      def self.from_coordinates(point_sequence_sequences,srid= @@default_srid,with_z=false,with_m=false)
+      def self.from_coordinates(point_sequence_sequences,srid= DEFAULT_SRID,with_z=false,with_m=false)
         multi_polygon = new(srid,with_z,with_m)
         multi_polygon.concat( point_sequence_sequences.collect {|point_sequences| Polygon.from_coordinates(point_sequences,srid,with_z,with_m) } )
         multi_polygon

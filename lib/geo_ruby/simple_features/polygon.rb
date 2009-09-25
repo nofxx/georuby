@@ -7,7 +7,7 @@ module GeoRuby
       #the list of rings forming the polygon
       attr_reader :rings
 
-      def initialize(srid = @@default_srid,with_z=false,with_m=false)
+      def initialize(srid = DEFAULT_SRID,with_z=false,with_m=false)
         super(srid,with_z,with_m)
         @rings = []
       end
@@ -124,21 +124,21 @@ module GeoRuby
       end
 
       #creates a new polygon. Accepts an array of linear strings as argument
-      def self.from_linear_rings(linear_rings,srid = @@default_srid,with_z=false,with_m=false)
+      def self.from_linear_rings(linear_rings,srid = DEFAULT_SRID,with_z=false,with_m=false)
         polygon = new(srid,with_z,with_m)
         polygon.concat(linear_rings)
         polygon
       end
 
       #creates a new polygon. Accepts a sequence of points as argument : ((x,y)....(x,y)),((x,y).....(x,y))
-      def self.from_coordinates(point_sequences,srid=@@default_srid,with_z=false,with_m=false)
+      def self.from_coordinates(point_sequences,srid=DEFAULT_SRID,with_z=false,with_m=false)
         polygon = new(srid,with_z,with_m)
         polygon.concat( point_sequences.map {|points| LinearRing.from_coordinates(points,srid,with_z,with_m) } )
         polygon
       end
 
       #creates a new polygon from a list of Points (pt1....ptn),(pti....ptj)
-      def self.from_points(point_sequences, srid=@@default_srid,with_z=false,with_m=false)
+      def self.from_points(point_sequences, srid=DEFAULT_SRID,with_z=false,with_m=false)
         polygon = new(srid,with_z,with_m)
         polygon.concat( point_sequences.map {|points| LinearRing.from_points(points,srid,with_z,with_m) } )
         polygon

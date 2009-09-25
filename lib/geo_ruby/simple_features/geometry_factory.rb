@@ -59,7 +59,7 @@ module GeoRuby
         xyzm.each_slice(4) {|slice| add_point_x_y_z_m(*slice)}
       end
       #begin a geometry of type +geometry_type+
-      def begin_geometry(geometry_type,srid=@@default_srid)
+      def begin_geometry(geometry_type,srid=DEFAULT_SRID)
         geometry= geometry_type::new(srid)
         @geometry= geometry if @geometry.nil?
         @geometry_stack << geometry

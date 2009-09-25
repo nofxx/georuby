@@ -5,11 +5,11 @@
 
 Gem::Specification.new do |s|
   s.name = %q{georuby}
-  s.version = "1.6.2"
+  s.version = "1.6.3"
 
   s.required_rubygems_version = Gem::Requirement.new(">= 0") if s.respond_to? :required_rubygems_version=
   s.authors = ["Guilhem Vellut", "Marcos Augusto"]
-  s.date = %q{2009-08-16}
+  s.date = %q{2009-09-25}
   s.description = %q{GeoRuby provides geometric data types from the OGC 'Simple Features' specification.}
   s.email = %q{x@nofxx.com}
   s.extra_rdoc_files = [
