@@ -4,7 +4,7 @@ describe MultiPoint do
 
   it "test_multi_point_creation" do
     multi_point = MultiPoint.from_coordinates([[12.4,-123.3],[-65.1,123.4],[123.55555555,123]],444)
-    multi_point.should be_instance_of MultiPoint
+    multi_point.should be_instance_of(MultiPoint)
     multi_point.length.should eql(3)
     multi_point[0].should == Point.from_x_y(12.4,-123.3,444)
     multi_point[2].should == Point.from_x_y(123.55555555,123,444)
@@ -24,6 +24,12 @@ describe MultiPoint do
 
     multi_point = MultiPoint.from_coordinates([[12.4,-123.3,4.5],[-65.1,123.4,6.7],[123.55555555,123,7.8]],444,true)
     multi_point.as_ewkt.should eql("SRID=444;MULTIPOINT((12.4 -123.3 4.5),(-65.1 123.4 6.7),(123.55555555 123 7.8))")
+  end
+
+  it "should respond to points" do
+    mp = MultiPoint.from_coordinates([[12.4,-123.3],[-65.1,123.4],[123.55555555,123]],444)
+    mp.should have(3).geometries
+    mp.should have(3).points
   end
 
 end

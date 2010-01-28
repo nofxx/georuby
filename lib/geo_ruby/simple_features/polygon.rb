@@ -1,7 +1,9 @@
 require 'geo_ruby/simple_features/geometry'
 
 module GeoRuby
+
   module SimpleFeatures
+
     #Represents a polygon as an array of linear rings (see LinearRing). No check is performed regarding the validity of the geometries forming the polygon.
     class Polygon < Geometry
       #the list of rings forming the polygon
@@ -64,12 +66,14 @@ module GeoRuby
           true
         end
       end
+
       #binary representation of a polygon, without the headers neccessary for a valid WKB string
       def binary_representation(allow_z=true,allow_m=true)
         rep = [length].pack("V")
         each {|linear_ring| rep << linear_ring.binary_representation(allow_z,allow_m)}
         rep
       end
+
       #WKB geometry type
       def binary_geometry_type
         3
@@ -79,6 +83,7 @@ module GeoRuby
       def text_representation(allow_z=true,allow_m=true)
         @rings.collect{|line_string| "(" + line_string.text_representation(allow_z,allow_m) + ")" }.join(",")
       end
+
       #WKT geometry type
       def text_geometry_type
         "POLYGON"
@@ -90,6 +95,7 @@ module GeoRuby
         geom_attr = options[:geom_attr]
         "<#{georss_ns}:polygon#{geom_attr}>" + self[0].georss_poslist + "</#{georss_ns}:polygon>\n"
       end
+
       #georss w3c representation : outputs the first point of the outer ring
       def georss_w3cgeo_representation(options)
         w3cgeo_ns = options[:w3cgeo_ns] || "geo"
@@ -142,9 +148,10 @@ module GeoRuby
         polygon = new(srid,with_z,with_m)
         polygon.concat( point_sequences.map {|points| LinearRing.from_points(points,srid,with_z,with_m) } )
         polygon
-
       end
 
     end
+
   end
+
 end

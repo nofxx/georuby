@@ -4,12 +4,12 @@ describe MultiPolygon do
 
    it "test_multi_polygon_creation" do
     multi_polygon1 = MultiPolygon.from_polygons([Polygon.from_coordinates([[[12.4,-45.3],[45.4,41.6],[4.456,1.0698],[12.4,-45.3]],[[2.4,5.3],[5.4,1.4263],[14.46,1.06],[2.4,5.3]]],256),Polygon.from_coordinates([[[0,0],[4,0],[4,4],[0,4],[0,0]],[[1,1],[3,1],[3,3],[1,3],[1,1]]],256)],256)
-    multi_polygon1.should be_instance_of MultiPolygon
+    multi_polygon1.should be_instance_of(MultiPolygon)
     multi_polygon1.length.should eql(2)
     multi_polygon1[0].should == Polygon.from_coordinates([[[12.4,-45.3],[45.4,41.6],[4.456,1.0698],[12.4,-45.3]],[[2.4,5.3],[5.4,1.4263],[14.46,1.06],[2.4,5.3]]],256)
 
     multi_polygon2 = MultiPolygon.from_coordinates([[[[12.4,-45.3],[45.4,41.6],[4.456,1.0698],[12.4,-45.3]],[[2.4,5.3],[5.4,1.4263],[14.46,1.06],[2.4,5.3]]],[[[0,0],[4,0],[4,4],[0,4],[0,0]],[[1,1],[3,1],[3,3],[1,3],[1,1]]]],256)
-    multi_polygon1.should be_instance_of MultiPolygon
+    multi_polygon1.should be_instance_of(MultiPolygon)
     multi_polygon1.length.should eql(2)
 
     multi_polygon2[0].should == Polygon.from_coordinates([[[12.4,-45.3],[45.4,41.6],[4.456,1.0698],[12.4,-45.3]],[[2.4,5.3],[5.4,1.4263],[14.46,1.06],[2.4,5.3]]],256)
@@ -32,4 +32,19 @@ describe MultiPolygon do
     multi_polygon.as_ewkt.should eql("SRID=4326;MULTIPOLYGON(((12.4 -45.3 2,45.4 41.6 3,4.456 1.0698 4,12.4 -45.3 2),(2.4 5.3 1,5.4 1.4263 3.44,14.46 1.06 4.5,2.4 5.3 1)),((0 0 5.6,4 0 5.4,4 4 1,0 4 23,0 0 5.6),(1 1 2.3,3 1 4,3 3 5,1 3 6,1 1 2.3)))")
   end
 
+  describe "Counting" do
+
+    before do
+      @mp = MultiPolygon.from_polygons([Polygon.from_coordinates([[[12.4,-45.3],[45.4,41.6],[4.456,1.0698],[12.4,-45.3]],[[2.4,5.3],[5.4,1.4263],[14.46,1.06],[2.4,5.3]]],256),Polygon.from_coordinates([[[0,0],[4,0],[4,4],[0,4],[0,0]],[[1,1],[3,1],[3,3],[1,3],[1,1]]],256)],256)
+    end
+
+    it "should have a points method" do
+      @mp.points[0].should be_instance_of(Point)
+    end
+
+    it "should flatten it right" do
+      @mp.should have(18).points
+    end
+
+  end
 end

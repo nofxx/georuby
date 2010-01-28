@@ -4,7 +4,7 @@ require 'rake'
 begin
   require 'jeweler'
   Jeweler::Tasks.new do |gem|
-    gem.name = "georuby"
+    gem.name = "nofxx-georuby"
     gem.summary = "Ruby data holder for OGC Simple Features"
     gem.description = "GeoRuby provides geometric data types from the OGC 'Simple Features' specification."
     gem.email = "x@nofxx.com"

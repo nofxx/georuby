@@ -1,7 +1,11 @@
 # Uses the dbf lib, Copyright 2006 Keith Morrison (http://infused.org)
 # Modified to work as external gem now
 require 'rubygems'
-require 'dbf'
+begin
+  require 'dbf'
+rescue LoadError
+  puts "Unable to find gem 'dbf'. Please install."
+end
 
 module GeoRuby
   module Shp4r
