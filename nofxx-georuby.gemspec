@@ -5,7 +5,7 @@
 
 Gem::Specification.new do |s|
   s.name = %q{nofxx-georuby}
-  s.version = "1.7.0"
+  s.version = "1.7.1"
 
   s.required_rubygems_version = Gem::Requirement.new(">= 0") if s.respond_to? :required_rubygems_version=
   s.authors = ["Guilhem Vellut", "Marcos Augusto"]
@@ -23,7 +23,6 @@ Gem::Specification.new do |s|
      "README.txt",
      "Rakefile",
      "VERSION",
-     "georuby.gemspec",
      "lib/geo_ruby.rb",
      "lib/geo_ruby/gpx.rb",
      "lib/geo_ruby/gpx4r/gpx.rb",
@@ -45,6 +44,7 @@ Gem::Specification.new do |s|
      "lib/geo_ruby/simple_features/multi_polygon.rb",
      "lib/geo_ruby/simple_features/point.rb",
      "lib/geo_ruby/simple_features/polygon.rb",
+     "nofxx-georuby.gemspec",
      "script/console",
      "script/destroy",
      "script/generate",
