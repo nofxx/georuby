@@ -167,6 +167,7 @@ module GeoRuby
       end
 
       # Simplify linestring (Douglas Peucker Algorithm)
+      # http://en.wikipedia.org/wiki/Ramer-Douglas-Peucker_algorithm
       def simplify(epsilon=1)
         LineString.from_points(do_simplify(@points, epsilon))
       end
