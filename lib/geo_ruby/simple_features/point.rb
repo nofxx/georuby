@@ -6,6 +6,7 @@ module GeoRuby
     #Represents a point. It is in 3D if the Z coordinate is not +nil+.
     class Point < Geometry
       DEG2RAD = 0.0174532925199433
+      HALFPI  = 1.5707963267948966
       attr_accessor :x,:y,:z,:m
       attr_reader :r, :t # radium and theta
 
@@ -46,16 +47,15 @@ module GeoRuby
         Math.sqrt((point.x - x)**2 + (point.y - y)**2)
       end
 
-      #Returns the sperical distance in meters, with a radius of 6471000m, with the haversine law.
-      #Assumes x is the lon and y the lat, in degrees (Changed in version 1.1).
-      #The user has to make sure using this distance makes sense (ie she should be in latlon coordinates)
+      # Spherical distance in meters, using 'Haversine' formula.
+      # with a radius of 6471000m
+      # Assumes x is the lon and y the lat, in degrees (Changed in version 1.1).
+      # The user has to make sure using this distance makes sense (ie she should be in latlon coordinates)
       def spherical_distance(point,r=6370997.0)
-        radlat_from = lat * DEG2RAD
-        radlat_to = point.lat * DEG2RAD
         dlat = (point.lat - lat) * DEG2RAD / 2
         dlon = (point.lon - lon) * DEG2RAD / 2
 
-        a = Math.sin(dlat)**2 + Math.cos(radlat_from) * Math.cos(radlat_to) * Math.sin(dlon)**2
+        a = Math.sin(dlat)**2 + Math.cos(lat * DEG2RAD) * Math.cos(point.lat * DEG2RAD) * Math.sin(dlon)**2
         c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1-a))
         r * c
       end
@@ -146,12 +146,9 @@ module GeoRuby
       end
 
       #tests the equality of the position of points + m
-      def ==(other_point)
-        if other_point.class != self.class
-          false
-        else
-          @x == other_point.x and @y == other_point.y and @z == other_point.z and @m == other_point.m
-        end
+      def ==(other)
+        return false unless other.kind_of?(Point)
+        @x == other.x and @y == other.y and @z == other.z and @m == other.m
       end
 
       #binary representation of a point. It lacks some headers to be a valid EWKB representation.
@@ -161,6 +158,7 @@ module GeoRuby
         bin_rep += [@m].pack("E") if @with_m and allow_m #idem
         bin_rep
       end
+
       #WKB geometry type of a point
       def binary_geometry_type#:nodoc:
         1
@@ -173,6 +171,7 @@ module GeoRuby
         tex_rep += " #{@m}" if @with_m and allow_m
         tex_rep
       end
+
       #WKT geometry type of a point
       def text_geometry_type #:nodoc:
         "POINT"
@@ -184,11 +183,13 @@ module GeoRuby
         geom_attr = options[:geom_attr]
         "<#{georss_ns}:point#{geom_attr}>#{y} #{x}</#{georss_ns}:point>\n"
       end
+
       #georss w3c representation
       def georss_w3cgeo_representation(options) #:nodoc:
         w3cgeo_ns = options[:w3cgeo_ns] || "geo"
         "<#{w3cgeo_ns}:lat>#{y}</#{w3cgeo_ns}:lat>\n<#{w3cgeo_ns}:long>#{x}</#{w3cgeo_ns}:long>\n"
       end
+
       #georss gml representation
       def georss_gml_representation(options) #:nodoc:
         georss_ns = options[:georss_ns] || "georss"
@@ -235,29 +236,32 @@ module GeoRuby
         val.join(", ")
       end
 
-      #Polar stuff
-      #http://www.engineeringtoolbox.com/converting-cartesian-polar-coordinates-d_1347.html
-      #http://rcoordinate.rubyforge.org/svn/point.rb
+      # Polar stuff
+      #
+      # http://www.engineeringtoolbox.com/converting-cartesian-polar-coordinates-d_1347.html
+      # http://rcoordinate.rubyforge.org/svn/point.rb
       # outputs radium
-      def r;        Math.sqrt(x**2 + y**2);      end
+      def r;      Math.sqrt(@x**2 + @y**2);      end
 
-      #outputs theta
+      # outputs theta
       def theta_rad
         if @x.zero?
-          @y < 0 ? 3 * Math::PI / 2 : Math::PI / 2
+          @y < 0 ? 3 * HALFPI : HALFPI
         else
           th = Math.atan(@y/@x)
           th += 2 * Math::PI if r > 0
         end
       end
 
-      def theta_deg
-        theta_rad / DEG2RAD
-      end
+      # outputs theta in degrees
+      def theta_deg;        theta_rad / DEG2RAD;      end
 
-      #outputs an array containing polar distance and theta
-      def as_polar
-        [r,t]
+      # outputs an array containing polar distance and theta
+      def as_polar;        [r,t];      end
+
+      # invert signal of all coordinates
+      def -@
+        set_x_y_z(-@x, -@y, -@z)
       end
 
       #creates a point from an array of coordinates
@@ -323,11 +327,14 @@ module GeoRuby
 
       #aliasing the constructors in case you want to use lat/lon instead of y/x
       class << self
-        alias :from_lon_lat :from_x_y
-        alias :from_lon_lat_z :from_x_y_z
-        alias :from_lon_lat_m :from_x_y_m
+        alias :xy               :from_x_y
+        alias :xyz              :from_x_y_z
+        alias :from_lon_lat_z   :from_x_y_z
+        alias :from_lon_lat     :from_x_y
+        alias :from_lon_lat_z   :from_x_y_z
+        alias :from_lon_lat_m   :from_x_y_m
         alias :from_lon_lat_z_m :from_x_y_z_m
-        alias :from_rad_tet :from_r_t
+        alias :from_rad_tet     :from_r_t
       end
     end
   end
