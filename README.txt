@@ -35,36 +35,36 @@ Georuby has support for reading ESRI shapefiles (http://www.esri.com/library/whi
 
 Here is an example of Shapefile reading, that goes through all the geometries in a file and disaply the values of the attributes :
 
-        require 'geo_ruby/shp'
-
-        ShpFile.open(shpfile) do |shp|
-                shp.each do |shape|
-                        geom = shape.geometry #a GeoRuby SimpleFeature
-                        att_data = shape.data #a Hash
-                        shp.fields.each do |field|
-                                puts att_data[field.name]
-                        end
-                end
+      require 'geo_ruby/shp'
+																	 
+      ShpFile.open(shpfile) do |shp|
+        shp.each do |shape|
+          geom = shape.geometry #a GeoRuby SimpleFeature
+          att_data = shape.data #a Hash
+          shp.fields.each do |field|
+            puts att_data[field.name]
+          end
         end
+      end
 
 Support for ESRI shapefile creation and modification has been added as well. New shapefiles can be created given a geometry type and specifications for the DBF fields. Data can be added and removed from an existing shapefile. An update operation is also provided for convenience : it just performs a 'delete' and an 'add', which means the index of the modified record will change. Note that once a shapefile has been created, GeoRuby does not allow the modification of the schema (it will probably be done in a subsequent version).
 
 Here is an example of how to create a new Shapefile with 2 fields :
-
-        shpfile = ShpFile.create('hello.shp',ShpType::POINT,[Dbf::Field.new("Hoyoyo","C",10),Dbf::Field.new("Boyoul","N",10,0)])
+																	 
+      shpfile = ShpFile.create('hello.shp',ShpType::POINT,[Dbf::Field.new("Hoyoyo","C",10),Dbf::Field.new("Boyoul","N",10,0)])
 
 The file is then open for reading and writing.
 
 Here is an example of how to write to a shapefile (created or not with GeoRuby) :
 
-        shpfile = ShpFile.open('places.shp')
-        shpfile.transaction do |tr|
-                tr.add(ShpRecord.new(Point.from_x_y(123.4,123.4),'Hoyoyo' => "AEZ",'Bouyoul' => 45))
-                tr.update(4,ShpRecord.new(Point.from_x_y(-16.67,16.41),'Hoyoyo' => "EatMe",'Bouyoul' => 42))
-                tr.delete(1)
-        end
-        shpfile.close
-
+      shpfile = ShpFile.open('places.shp')
+      shpfile.transaction do |tr|
+        tr.add(ShpRecord.new(Point.from_x_y(123.4,123.4),'Hoyoyo' => "AEZ",'Bouyoul' => 45))
+        tr.update(4,ShpRecord.new(Point.from_x_y(-16.67,16.41),'Hoyoyo' => "EatMe",'Bouyoul' => 42))
+        tr.delete(1)
+      end
+      shpfile.close
+																	 
 Note the transaction is just there so the operations on the files can be buffered. Nothing happens on the original files until the block has finished executing. Calling <tt>tr.rollback</tt> at anytime during the execution will prevent the modifications.
 
 Also currently, error reporting is minimal and it has not been tested that thoroughly so caveat emptor and backup before performing any destructive operation.

@@ -4,12 +4,12 @@ describe MultiLineString do
 
  it "test_multi_line_string_creation" do
     multi_line_string1 = MultiLineString.from_line_strings([LineString.from_coordinates([[1.5,45.2],[-54.12312,-0.012]],256),LineString.from_coordinates([[1.5,45.2],[-54.12312,-0.012],[45.123,123.3]],256)],256)
-    multi_line_string1.should be_instance_of MultiLineString
+    multi_line_string1.should be_instance_of(MultiLineString)
     multi_line_string1.length.should eql(2)
     multi_line_string1[0].should == LineString.from_coordinates([[1.5,45.2],[-54.12312,-0.012]],256)
 
     multi_line_string2= MultiLineString.from_coordinates([[[1.5,45.2],[-54.12312,-0.012]],[[1.5,45.2],[-54.12312,-0.012],[45.123,123.3]]],256);
-    multi_line_string1.should be_instance_of MultiLineString
+    multi_line_string1.should be_instance_of(MultiLineString)
     multi_line_string1.length.should eql(2)
     multi_line_string2[0].should == LineString.from_coordinates([[1.5,45.2],[-54.12312,-0.012]],256)
 
@@ -32,4 +32,23 @@ describe MultiLineString do
     multi_line_string.as_ewkt.should eql("SRID=256;MULTILINESTRING((1.5 45.2 1.3 1.2,-54.12312 -0.012 1.2 4.5),(1.5 45.2 5.1 -4.5,-54.12312 -0.012 -6.8 3.4,45.123 123.3 4.5 -5.3))")
   end
 
+  describe "Some More" do
+    before do
+      @mls = MultiLineString.from_line_strings([LineString.from_coordinates([[1.5,45.2],[-54.12312,-0.012]],256),LineString.from_coordinates([[1.5,45.2],[-54.12312,-0.012],[45.123,123.3]],256)],256)
+    end
+
+    it "should have a accessor to all points" do
+      @mls.points.should be_instance_of(Array)
+    end
+
+    it "should flatten the array" do
+      @mls.should have(5).points
+    end
+
+    it "should simplify to linestring" do
+      ls = @mls.to_line_string
+      ls.should be_instance_of(LineString)
+      ls.should have(5).points
+    end
+  end
 end
