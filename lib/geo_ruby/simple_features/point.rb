@@ -108,6 +108,29 @@ module GeoRuby
         b*a_bis*(sigma-deltaSigma)
       end
 
+      # Orthogonal Distance
+      # Based http://www.allegro.cc/forums/thread/589720
+      def orthogonal_distance(line)
+        head, tail  = line[0], line[-1]
+        a, b = @x - head.x, @y - head.y
+        c, d = tail.x - head.x, tail.y - head.y
+
+        dot = a * c + b * d
+        len = c * c + d * d
+        res = dot / len
+
+        xx, yy = if res < 0
+                   [head.x, head.y]
+                 elsif res > 1
+                   [tail.x, tail.y]
+                 else
+                   [head.x + res * c, head.y + res * d]
+                 end
+        # todo benchmark if worth creating an instance
+        # euclidian_distance(Point.from_x_y(xx, yy))
+        Math.sqrt((@x - xx) ** 2 + (@y - yy) ** 2)
+      end
+
       #Bearing from a point to another, in degrees.
       def bearing_to(other)
         return 0 if self == other

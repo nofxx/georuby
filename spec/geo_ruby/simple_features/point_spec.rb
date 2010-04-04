@@ -207,6 +207,34 @@ describe Point do
         should be_close(156876.149400742, 0.00000001)
     end
 
+    describe "Orthogonal Distance" do
+      before do
+        @line = LineString.from_coordinates([[0,0],[1,3]], 4326)
+        @line2 = LineString.from_coordinates([[1,1],[1,2]], 4326)
+      end
+
+      it "should calcula orthogonal distance from a line (90 deg)" do
+        @p1.orthogonal_distance(@line).should be_close(1.414, 0.001)
+      end
+
+      it "should calcula orthogonal distance very close..." do
+        @p1.orthogonal_distance(@line2).should be_zero
+      end
+
+      it "should calcula orthogonal distance from a line (90 deg)" do
+        @p2.orthogonal_distance(@line).should be_close(2.828, 0.001)
+      end
+
+      it "should calcula orthogonal distance from a line (0 deg)" do
+        @p2.orthogonal_distance(@line2).should be_close(1.0, 0.1)
+      end
+
+      it "should calcula orthogonal distance from a line (0 deg)" do
+        @p2.orthogonal_distance(@line2).should be_close(1.0, 0.1)
+      end
+
+    end
+
     it "should calculate the bearing from apoint to another in degrees" do
       @p1.bearing_to(@p2).should be_close(45.0, 0.01)
     end
