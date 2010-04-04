@@ -9,9 +9,9 @@ begin
     gem.description = "GeoRuby provides geometric data types from the OGC 'Simple Features' specification."
     gem.email = "x@nofxx.com"
     gem.homepage = "http://github.com/nofxx/georuby"
-    gem.authors = ["Guilhem Vellut", "Marcos Augusto"]
-
-    # gem is a Gem::Specification... see http://www.rubygems.org/read/chapter/20 for additional settings
+    gem.authors = ["Guilhem Vellut", "Marcos Piccinini"]
+    gem.add_development_dependency "rspec", ">= 1.2.9"
+    gem.add_development_dependency "dbf", ">= 1.1.2"
   end
 rescue LoadError
   puts "Jeweler not available. Install it with: sudo gem install technicalpickles-jeweler -s http://gems.github.com"
@@ -28,7 +28,6 @@ Spec::Rake::SpecTask.new(:rcov) do |spec|
   spec.pattern = 'spec/**/*_spec.rb'
   spec.rcov = true
 end
-
 
 task :default => :spec
 
