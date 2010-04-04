@@ -110,8 +110,8 @@ module GeoRuby
 
       # Orthogonal Distance
       # Based http://www.allegro.cc/forums/thread/589720
-      def orthogonal_distance(line)
-        head, tail  = line[0], line[-1]
+      def orthogonal_distance(line, tail = nil)
+        head, tail  = tail ?  [line, tail] : [line[0], line[-1]]
         a, b = @x - head.x, @y - head.y
         c, d = tail.x - head.x, tail.y - head.y
 

@@ -166,6 +166,27 @@ module GeoRuby
         pos_list.join(" ")
       end
 
+      # Simplify linestring (Douglas Peucker Algorithm)
+      def simplify(epsilon=1)
+        LineString.from_points(do_simplify(@points, epsilon))
+      end
+
+      def do_simplify(list, epsilon)
+        index = dmax = 0
+        2.upto(list.length - 1) do |i|
+          d = list[i].orthogonal_distance(list[0], list[-1])
+          index, dmax = i, d if d > dmax
+        end
+
+        if dmax >= epsilon
+          res1 = do_simplify(list[0..index], epsilon)
+          res2 = do_simplify(list[index..-1], epsilon)
+          res1[0..-2] + res2[0..-1]
+        else
+          [list[0], list[-1]]
+        end
+      end
+
       #Creates a new line string. Accept an array of points as argument
       def self.from_points(points,srid=DEFAULT_SRID,with_z=false,with_m=false)
         line_string = new(srid,with_z,with_m)

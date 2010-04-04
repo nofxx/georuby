@@ -11,6 +11,22 @@ describe Point do
     @point.should be_instance_of(Point)
   end
 
+  it "should have a nice matcher" do
+    @point.should be_a_point
+  end
+
+  it "should have a very nice matcher" do
+    @point.should be_a_point(0.0, 0.0)
+  end
+
+  it "should have a very nice matcher" do
+    Point.from_x_y_z_m(1,2,3.33,"t").should be_a_point(1, 2, 3.33, "t")
+  end
+
+  it "should have a dumb matcher" do
+    Point.should be_geometric
+  end
+
   it "should be subclassable" do
     place = Class.new(Point)
     p = place.from_x_y(1,2)

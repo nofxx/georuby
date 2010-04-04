@@ -13,3 +13,54 @@ require 'geo_ruby/gpx'
 
 include GeoRuby
 include SimpleFeatures
+
+module GeorubyMatchers
+
+  class BeGeometric
+
+    def matches?(actual)
+      actual.ancestors.include?(actual) || actual.kind_of?("Geometry")
+    end
+
+    def failure_message;          "expected #{@actual.inspect} to be some geom";    end
+  end
+
+  class BeAPoint
+    include Spec::Matchers
+
+    def initialize(expect=nil)
+      @expect = expect
+    end
+
+    def matches?(actual)
+      if @expect
+        [:x, :y, :z, :m].each_with_index do |c, i|
+          next unless val = @expect[i]
+          if val.kind_of? Numeric
+            actual.send(c).should be_close(val, 0.1)
+          else
+            actual.send(c).should eql(val)
+          end
+        end
+      else
+        actual.instance_of?(Point)
+      end
+    end
+
+    def failure_message;          "expected #{@expect} but received #{@actual.inspect}";    end
+    def negative_failure_message; "expected something else then '#{@expect}' but got '#{@actual}'";    end
+  end
+
+  def be_a_point(*args)
+    args.empty? ? BeAPoint.new : BeAPoint.new(args)
+  end
+
+  def be_geometric
+    BeGeometric.new
+  end
+end
+
+Spec::Runner.configure do |config|
+  config.include GeorubyMatchers
+end
+

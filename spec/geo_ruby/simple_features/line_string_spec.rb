@@ -205,4 +205,41 @@ describe LineString do
       @line.euclidian_distance.should eql(20)
     end
   end
+
+  describe "Simplify" do
+
+    before do
+      @line = LineString.from_coordinates([[6,0],[4,1],[3,4],[4,6],[5,8],[5,9],[4,10],[6,15]], 4326)
+    end
+
+    it "should simplify a simple linestring" do
+      line =  LineString.from_coordinates([[12,15],[14,17],[17, 20]], 4326)
+      line.simplify.should have(2).points
+    end
+
+    it "should simplify a harder linestring" do
+      @line.simplify(6).should have(6).points
+      @line.simplify(9).should have(4).points
+      @line.simplify(10).should have(3).points
+    end
+
+    it "should barely touch it" do
+      @line.simplify(1).should have(7).points
+    end
+
+    it "should simplify to five points" do
+      @line.simplify(7).should have(5).points
+    end
+
+    it "should flatten it" do
+      @line.simplify(11).should have(2).points
+    end
+
+    it "should be the first and last in a flatten" do
+      line = @line.simplify(11)
+      line[0].should be_a_point(6, 0)
+      line[1].should be_a_point(6, 15)
+    end
+
+  end
 end
