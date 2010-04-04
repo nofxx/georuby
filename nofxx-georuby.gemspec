@@ -5,11 +5,11 @@
 
 Gem::Specification.new do |s|
   s.name = %q{nofxx-georuby}
-  s.version = "1.7.1"
+  s.version = "1.7.2"
 
   s.required_rubygems_version = Gem::Requirement.new(">= 0") if s.respond_to? :required_rubygems_version=
-  s.authors = ["Guilhem Vellut", "Marcos Augusto"]
-  s.date = %q{2010-01-28}
+  s.authors = ["Guilhem Vellut", "Marcos Piccinini"]
+  s.date = %q{2010-04-04}
   s.description = %q{GeoRuby provides geometric data types from the OGC 'Simple Features' specification.}
   s.email = %q{x@nofxx.com}
   s.extra_rdoc_files = [
@@ -91,27 +91,27 @@ Gem::Specification.new do |s|
   s.homepage = %q{http://github.com/nofxx/georuby}
   s.rdoc_options = ["--charset=UTF-8"]
   s.require_paths = ["lib"]
-  s.rubygems_version = %q{1.3.5}
+  s.rubygems_version = %q{1.3.6}
   s.summary = %q{Ruby data holder for OGC Simple Features}
   s.test_files = [
-    "spec/geo_ruby/gpx4r/gpx_spec.rb",
+    "spec/geo_ruby_spec.rb",
+     "spec/spec_helper.rb",
+     "spec/geo_ruby/gpx4r/gpx_spec.rb",
      "spec/geo_ruby/shp4r/shp_spec.rb",
-     "spec/geo_ruby/simple_features/envelope_spec.rb",
-     "spec/geo_ruby/simple_features/ewkb_parser_spec.rb",
-     "spec/geo_ruby/simple_features/ewkt_parser_spec.rb",
-     "spec/geo_ruby/simple_features/geometry_collection_spec.rb",
-     "spec/geo_ruby/simple_features/geometry_factory_spec.rb",
-     "spec/geo_ruby/simple_features/geometry_spec.rb",
-     "spec/geo_ruby/simple_features/georss_parser_spec.rb",
-     "spec/geo_ruby/simple_features/line_string_spec.rb",
-     "spec/geo_ruby/simple_features/linear_ring_spec.rb",
-     "spec/geo_ruby/simple_features/multi_line_string_spec.rb",
-     "spec/geo_ruby/simple_features/multi_point_spec.rb",
-     "spec/geo_ruby/simple_features/multi_polygon_spec.rb",
      "spec/geo_ruby/simple_features/point_spec.rb",
+     "spec/geo_ruby/simple_features/geometry_factory_spec.rb",
+     "spec/geo_ruby/simple_features/envelope_spec.rb",
      "spec/geo_ruby/simple_features/polygon_spec.rb",
-     "spec/geo_ruby_spec.rb",
-     "spec/spec_helper.rb"
+     "spec/geo_ruby/simple_features/line_string_spec.rb",
+     "spec/geo_ruby/simple_features/multi_line_string_spec.rb",
+     "spec/geo_ruby/simple_features/ewkt_parser_spec.rb",
+     "spec/geo_ruby/simple_features/ewkb_parser_spec.rb",
+     "spec/geo_ruby/simple_features/linear_ring_spec.rb",
+     "spec/geo_ruby/simple_features/geometry_collection_spec.rb",
+     "spec/geo_ruby/simple_features/multi_polygon_spec.rb",
+     "spec/geo_ruby/simple_features/multi_point_spec.rb",
+     "spec/geo_ruby/simple_features/georss_parser_spec.rb",
+     "spec/geo_ruby/simple_features/geometry_spec.rb"
   ]
 
   if s.respond_to? :specification_version then
@@ -119,9 +119,15 @@ Gem::Specification.new do |s|
     s.specification_version = 3
 
     if Gem::Version.new(Gem::RubyGemsVersion) >= Gem::Version.new('1.2.0') then
+      s.add_development_dependency(%q<rspec>, [">= 1.2.9"])
+      s.add_development_dependency(%q<dbf>, [">= 1.1.2"])
     else
+      s.add_dependency(%q<rspec>, [">= 1.2.9"])
+      s.add_dependency(%q<dbf>, [">= 1.1.2"])
     end
   else
+    s.add_dependency(%q<rspec>, [">= 1.2.9"])
+    s.add_dependency(%q<dbf>, [">= 1.1.2"])
   end
 end
 

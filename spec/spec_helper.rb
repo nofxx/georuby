@@ -42,9 +42,8 @@ module GeorubyMatchers
             actual.send(c).should eql(val)
           end
         end
-      else
-        actual.instance_of?(Point)
       end
+      actual.should be_instance_of(Point)
     end
 
     def failure_message;          "expected #{@expect} but received #{@actual.inspect}";    end
