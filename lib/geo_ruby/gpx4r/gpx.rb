@@ -31,7 +31,7 @@ module GeoRuby
         gpxfile = GpxFile.new(file, *opts)
         if block_given?
           yield gpxfile
-          gpxfile.close
+          # gpxfile.close
         else
           gpxfile
         end
@@ -67,7 +67,7 @@ module GeoRuby
 
       # Return the GPX file as LineString
       def as_line_string
-        LineString.from_points(@points)
+        GeoRuby::SimpleFeatures::LineString.from_points(@points)
       end
       alias :as_polyline :as_line_string
 
@@ -75,7 +75,7 @@ module GeoRuby
       # If the GPX isn't closed, a line from the first
       # to the last point will be created to close it.
       def as_polygon
-        Polygon.from_points([@points[0] == @points[-1] ?  @points : @points.push(@points[0].clone)])
+        GeoRuby::SimpleFeatures::Polygon.from_points([@points[0] == @points[-1] ?  @points : @points.push(@points[0].clone)])
       end
 
       # Return GPX Envelope
@@ -94,14 +94,15 @@ module GeoRuby
       # trk(pt) => track /
       def parse_file(with_z, with_m)
         data = @gpx.read
-        @file_mode = data =~ /trkpt/ ? "//trkpt" : "//rtept"
+        @file_mode = data =~ /trkpt/ ? "//trkpt" : (data =~ /wpt/ ? "//wpt" : "//rtept")
         Nokogiri.HTML(data).search(@file_mode).each do |tp|
           z = z.inner_text.to_i if with_z && z = tp.at("ele")
           m = m.inner_text if with_m && m = tp.at("time")
-          @points << Point.from_coordinates([tp["lon"].to_f, tp["lat"].to_f, z, m],nil,with_z, with_m)
+          @points << GeoRuby::SimpleFeatures::Point.from_coordinates([tp["lon"].to_f, tp["lat"].to_f, z, m],4326,with_z, with_m)
         end
         close
         @record_count = @points.length
+        self.envelope
       rescue => e
         raise MalformedGpxException.new("Bad GPX. Error: #{e}")
         # trackpoint.at("gpxdata:hr").nil? # heartrate
