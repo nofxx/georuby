@@ -176,9 +176,9 @@ module GeoRuby
 
       #binary representation of a point. It lacks some headers to be a valid EWKB representation.
       def binary_representation(allow_z=true,allow_m=true) #:nodoc:
-        bin_rep = [@x,@y].pack("EE")
-        bin_rep += [@z].pack("E") if @with_z and allow_z #Default value so no crash
-        bin_rep += [@m].pack("E") if @with_m and allow_m #idem
+        bin_rep = [@x.to_f,@y.to_f].pack("EE")
+        bin_rep += [@z.to_f].pack("E") if @with_z and allow_z #Default value so no crash
+        bin_rep += [@m.to_f].pack("E") if @with_m and allow_m #idem
         bin_rep
       end
 
