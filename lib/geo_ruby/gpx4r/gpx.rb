@@ -96,7 +96,7 @@ module GeoRuby
         data = @gpx.read
         @file_mode = data =~ /trkpt/ ? "//trkpt" : (data =~ /wpt/ ? "//wpt" : "//rtept")
         Nokogiri.HTML(data).search(@file_mode).each do |tp|
-          z = z.inner_text.to_i if with_z && z = tp.at("ele")
+          z = z.inner_text.to_f if with_z && z = tp.at("ele")
           m = m.inner_text if with_m && m = tp.at("time")
           @points << GeoRuby::SimpleFeatures::Point.from_coordinates([tp["lon"].to_f, tp["lat"].to_f, z, m],4326,with_z, with_m)
         end

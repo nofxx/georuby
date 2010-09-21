@@ -25,7 +25,7 @@ describe Gpx4r do
     end
 
     it "should open and parse no trkpt one" do
-      @gpxfile2.record_count.should eql(46)
+      @gpxfile2.record_count.should eql(86)
     end
 
     it "should open and parse 3" do
@@ -38,18 +38,18 @@ describe Gpx4r do
     end
 
     it "should read Z and M" do
-      @gpxfile[0].z.should eql(468)
+      @gpxfile[0].z.should eql(468.0)
       @gpxfile[0].m.should eql("2008-09-07T17:36:57Z")
     end
 
     it "should read X and Y 2" do
-      @gpxfile2[0].x.should be_close(-71.107628, 0.0001)
-      @gpxfile2[0].y.should be_close(42.43095, 0.0001)
+      @gpxfile2[0].x.should be_close(-71.119277, 0.0001)
+      @gpxfile2[0].y.should be_close(42.438878, 0.0001)
     end
 
     it "should read Z and M 2" do
-      @gpxfile2[0].z.should eql(23)
-      @gpxfile2[0].m.should eql("2001-06-02T00:18:15Z")
+      @gpxfile2[0].z.should eql(44.586548)
+      @gpxfile2[0].m.should eql("2001-11-28T21:05:28Z")
     end
 
     it "should read X and Y 3" do
@@ -58,7 +58,7 @@ describe Gpx4r do
     end
 
     it "should read Z and M 3" do
-      @gpxfile3[0].z.should eql(88)
+      @gpxfile3[0].z.should eql(88.5787354)
       @gpxfile3[0].m.should eql(0.0)
     end
 
