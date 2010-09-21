@@ -10,26 +10,26 @@ begin
     gem.email = "x@nofxx.com"
     gem.homepage = "http://github.com/nofxx/georuby"
     gem.authors = ["Guilhem Vellut", "Marcos Piccinini"]
-    gem.add_development_dependency "rspec", ">= 1.2.9"
-    gem.add_development_dependency "dbf", ">= 1.1.2"
+    gem.add_development_dependency "rspec", ">= 2.0.0"
+    gem.add_development_dependency "dbf", ">= 1.2.9"
   end
 rescue LoadError
   puts "Jeweler not available. Install it with: sudo gem install technicalpickles-jeweler -s http://gems.github.com"
 end
 
-require 'spec/rake/spectask'
-Spec::Rake::SpecTask.new(:spec) do |spec|
-  spec.libs << 'lib' << 'spec'
-  spec.spec_files = FileList['spec/**/*_spec.rb']
-end
+# require 'spec/rake/spectask'
+# Spec::Rake::SpecTask.new(:spec) do |spec|
+#   spec.libs << 'lib' << 'spec'
+#   spec.spec_files = FileList['spec/**/*_spec.rb']
+# end
 
-Spec::Rake::SpecTask.new(:rcov) do |spec|
-  spec.libs << 'lib' << 'spec'
-  spec.pattern = 'spec/**/*_spec.rb'
-  spec.rcov = true
-end
+# Spec::Rake::SpecTask.new(:rcov) do |spec|
+#   spec.libs << 'lib' << 'spec'
+#   spec.pattern = 'spec/**/*_spec.rb'
+#   spec.rcov = true
+# end
 
-task :default => :spec
+# task :default => :spec
 
 require 'rake/rdoctask'
 Rake::RDocTask.new do |rdoc|

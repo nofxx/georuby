@@ -5,11 +5,11 @@
 
 Gem::Specification.new do |s|
   s.name = %q{nofxx-georuby}
-  s.version = "1.7.2"
+  s.version = "1.7.3"
 
   s.required_rubygems_version = Gem::Requirement.new(">= 0") if s.respond_to? :required_rubygems_version=
   s.authors = ["Guilhem Vellut", "Marcos Piccinini"]
-  s.date = %q{2010-04-04}
+  s.date = %q{2010-09-20}
   s.description = %q{GeoRuby provides geometric data types from the OGC 'Simple Features' specification.}
   s.email = %q{x@nofxx.com}
   s.extra_rdoc_files = [
@@ -85,13 +85,12 @@ Gem::Specification.new do |s|
      "spec/geo_ruby/simple_features/point_spec.rb",
      "spec/geo_ruby/simple_features/polygon_spec.rb",
      "spec/geo_ruby_spec.rb",
-     "spec/spec.opts",
      "spec/spec_helper.rb"
   ]
   s.homepage = %q{http://github.com/nofxx/georuby}
   s.rdoc_options = ["--charset=UTF-8"]
   s.require_paths = ["lib"]
-  s.rubygems_version = %q{1.3.6}
+  s.rubygems_version = %q{1.3.7}
   s.summary = %q{Ruby data holder for OGC Simple Features}
   s.test_files = [
     "spec/geo_ruby_spec.rb",
@@ -118,16 +117,16 @@ Gem::Specification.new do |s|
     current_version = Gem::Specification::CURRENT_SPECIFICATION_VERSION
     s.specification_version = 3
 
-    if Gem::Version.new(Gem::RubyGemsVersion) >= Gem::Version.new('1.2.0') then
-      s.add_development_dependency(%q<rspec>, [">= 1.2.9"])
-      s.add_development_dependency(%q<dbf>, [">= 1.1.2"])
+    if Gem::Version.new(Gem::VERSION) >= Gem::Version.new('1.2.0') then
+      s.add_development_dependency(%q<rspec>, [">= 2.0.0"])
+      s.add_development_dependency(%q<dbf>, [">= 1.2.9"])
     else
-      s.add_dependency(%q<rspec>, [">= 1.2.9"])
-      s.add_dependency(%q<dbf>, [">= 1.1.2"])
+      s.add_dependency(%q<rspec>, [">= 2.0.0"])
+      s.add_dependency(%q<dbf>, [">= 1.2.9"])
     end
   else
-    s.add_dependency(%q<rspec>, [">= 1.2.9"])
-    s.add_dependency(%q<dbf>, [">= 1.1.2"])
+    s.add_dependency(%q<rspec>, [">= 2.0.0"])
+    s.add_dependency(%q<dbf>, [">= 1.2.9"])
   end
 end
 
