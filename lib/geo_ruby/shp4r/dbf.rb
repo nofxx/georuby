@@ -4,7 +4,8 @@ require 'rubygems'
 begin
   require 'dbf'
 rescue LoadError
-  puts "Unable to find gem 'dbf'. Please install."
+  puts "You've loaded GeoRuby SHP Support."
+  puts "Please install the gem 'dbf' to use it. `gem install dbf`"
 end
 
 module GeoRuby

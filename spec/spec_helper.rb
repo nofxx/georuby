@@ -1,9 +1,8 @@
 begin
+  require 'rubygems'
   require 'spec'
 rescue LoadError
-  require 'rubygems'
-  gem 'rspec'
-  require 'spec'
+  require 'rspec'
 end
 
 $:.unshift(File.dirname(__FILE__) + '/../lib')
@@ -26,7 +25,7 @@ module GeorubyMatchers
   end
 
   class BeAPoint
-    include Spec::Matchers
+    include RSpec::Matchers
 
     def initialize(expect=nil)
       @expect = expect
@@ -59,7 +58,7 @@ module GeorubyMatchers
   end
 end
 
-Spec::Runner.configure do |config|
+RSpec.configure do |config|
   config.include GeorubyMatchers
 end
 

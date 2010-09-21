@@ -45,18 +45,18 @@ describe GeorssParser do
   end
 
   it "test_envelope" do
-    linear_ring1 = LinearRing.from_coordinates([[12.4,-45.3,5],[45.4,41.6,6],[4.456,1.0698,8],[12.4,-45.3,3.5]],256,true)
-    linear_ring2 = LinearRing.from_coordinates([[2.4,5.3,9.0],[5.4,1.4263,-5.4],[14.46,1.06,34],[2.4,5.3,3.14]],256,true)
+    linear_ring1 = LinearRing.from_coordinates([[12,-45,5],[45,41,6],[4,1,8],[12.4,-45,3]],256,true)
+    linear_ring2 = LinearRing.from_coordinates([[2,5,9],[5.4,1,-5.4],[14,1,34],[2,5,3]],256,true)
     polygon = Polygon.from_linear_rings([linear_ring1,linear_ring2],256,true)
 
     e = polygon.envelope
 
-    e.as_georss(:dialect => :simple).gsub("\n","").should eql("<georss:box>-45.3 4.456 41.6 45.4</georss:box>")
+    e.as_georss(:dialect => :simple).gsub("\n","").should eql("<georss:box>-45 4 41 45</georss:box>")
     #center
-    e.as_georss(:dialect => :w3cgeo).gsub("\n","").should eql("<geo:lat>-1.85</geo:lat><geo:long>24.928</geo:long>")
-    e.as_georss(:dialect => :gml).gsub("\n","").should eql("<georss:where><gml:Envelope><gml:LowerCorner>-45.3 4.456</gml:LowerCorner><gml:UpperCorner>41.6 45.4</gml:UpperCorner></gml:Envelope></georss:where>")
+    e.as_georss(:dialect => :w3cgeo).gsub("\n","").should eql("<geo:lat>-2</geo:lat><geo:long>24</geo:long>")
+    e.as_georss(:dialect => :gml).gsub("\n","").should eql("<georss:where><gml:Envelope><gml:LowerCorner>-45 4</gml:LowerCorner><gml:UpperCorner>41 45</gml:UpperCorner></gml:Envelope></georss:where>")
 
-    e.as_kml.gsub("\n","").should eql("<LatLonAltBox><north>41.6</north><south>-45.3</south><east>45.4</east><west>4.456</west><minAltitude>-5.4</minAltitude><maxAltitude>34</maxAltitude></LatLonAltBox>")
+    e.as_kml.gsub("\n","").should eql("<LatLonAltBox><north>41</north><south>-45</south><east>45</east><west>4</west><minAltitude>-5.4</minAltitude><maxAltitude>34</maxAltitude></LatLonAltBox>")
   end
 
   it "test_point_georss_read" do
