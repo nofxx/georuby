@@ -128,6 +128,18 @@ module GeoRuby
         end
         result += "</Polygon>\n"
       end
+      
+      def to_coordinates
+        rings.map{|lr| lr.to_coordinates}
+      end
+
+      # simple geojson representation
+      # TODO add CRS / SRID support?
+      def to_json(options = {})
+        {:type => 'Polygon',
+         :coordinates => self.to_coordinates}.to_json(options)
+      end
+      alias :as_geojson :to_json
 
       #creates a new polygon. Accepts an array of linear strings as argument
       def self.from_linear_rings(linear_rings,srid = DEFAULT_SRID,with_z=false,with_m=false)

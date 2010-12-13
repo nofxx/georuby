@@ -1,5 +1,12 @@
+require 'rubygems'
+
+# Must require active_spport/core_ext/object and then json/pure
+# or the json module gets clobbered and geojson output
+# becomes invalid... ie. it never calls class specific to_json
+require 'active_support/core_ext/object'
+require 'json/pure'
+
 begin
-  require 'rubygems'
   require 'spec'
 rescue LoadError
   require 'rspec'

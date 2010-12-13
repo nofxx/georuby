@@ -215,6 +215,14 @@ module GeoRuby#:nodoc:
         end
         return wkt
       end
+      
+      # Some GeoJSON files do not include srid info, so
+      # we provide an optional parameter
+      def self.from_geojson(geojson, srid=DEFAULT_SRID)
+        geojson_parser= GeojsonParser::new
+        geojson_parser.parse(geojson, srid)
+        geojson_parser.geometry
+      end
 
       private
 

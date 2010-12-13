@@ -135,12 +135,27 @@ You can read and convert GPX Files to LineString/Polygon:
      gpxfile.as_line_string
      => GeoRuby::SimpleFeatures::LineString..
 
+=== GeoJSON Support
+Basic GeoJSON support has been implemented per v1.0 of the {spec}[http://geojson.org/geojson-spec.html].
+
+USAGE:
+
+ input - GeoRuby::SimpleFeatures::Geometry.from_geojson(geojson_string)
+ output - call #as_geojson or #to_json on any SimpleFeature Geometry instance
+
+TODO:
+ * Refactor to support extremely large GeoJSON input streams / files. Currently
+   the entire GeoJSON representation must be loaded into memory as a String
+ * Improve srid/crs support on input and add support on output
+ * Implement bounding-box spport per spec on input/output?
+ * Improved / more tests
+
+GeoJSON support implemented by {Marcus Mateus}[http://github.com/marcusmateus] and released courtesy {SimpliTex}[http://simplitex.com].
 
 === Acknowledgement
 
 The SHP reading part uses the DBF library (http://rubyforge.org/projects/dbf/) by Keith Morrison (http://infused.org).
 Thanks also to Pramukta Kumar and Pete Schwamb for their contributions.
-
 
 === License
 

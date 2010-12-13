@@ -16,6 +16,7 @@ require 'geo_ruby/simple_features/geometry_collection'
 require 'geo_ruby/simple_features/envelope'
 require 'geo_ruby/simple_features/geometry_factory'
 require 'geo_ruby/simple_features/georss_parser'
+require 'geo_ruby/simple_features/geojson_parser'
 
 # Include if you need
 # require 'geo_ruby/shp4r/shp'

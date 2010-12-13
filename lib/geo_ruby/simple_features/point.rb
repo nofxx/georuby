@@ -287,6 +287,23 @@ module GeoRuby
         set_x_y_z(-@x, -@y, -@z)
       end
 
+      # TODO Perhaps should support with_m analogous to from_coordinates?
+      def to_coordinates
+        if with_z
+          [x,y,z]
+        else
+          [x,y]
+        end
+      end
+
+      # simple geojson representation
+      # TODO add CRS / SRID support?
+      def to_json(options = {})
+        {:type => 'Point',
+         :coordinates => self.to_coordinates}.to_json(options)
+      end
+      alias :as_geojson :to_json
+    
       #creates a point from an array of coordinates
       def self.from_coordinates(coords,srid=DEFAULT_SRID,with_z=false,with_m=false)
         if ! (with_z or with_m)

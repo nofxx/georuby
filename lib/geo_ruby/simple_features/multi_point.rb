@@ -27,6 +27,18 @@ module GeoRuby
         "MULTIPOINT"
       end
 
+      def to_coordinates
+        points.map{|p| p.to_coordinates }
+      end
+
+      # simple geojson representation
+      # TODO add CRS / SRID support?
+      def to_json(options = {})
+        {:type => 'MultiPoint',
+         :coordinates => self.to_coordinates}.to_json(options)
+      end
+      alias :as_geojson :to_json
+
       #Creates a new multi point from an array of points
       def self.from_points(points,srid= DEFAULT_SRID,with_z=false,with_m=false)
         multi_point= new(srid,with_z,with_m)
