@@ -4,12 +4,13 @@ require 'rake'
 begin
   require 'jeweler'
   Jeweler::Tasks.new do |gem|
-    gem.name = "nofxx-georuby"
+    gem.name = "marcusmateus-georuby"
     gem.summary = "Ruby data holder for OGC Simple Features"
     gem.description = "GeoRuby provides geometric data types from the OGC 'Simple Features' specification."
-    gem.email = "x@nofxx.com"
-    gem.homepage = "http://github.com/nofxx/georuby"
+    gem.email = "georuby@simplitex.com"
+    gem.homepage = "http://github.com/marcusmateus/georuby"
     gem.authors = ["Guilhem Vellut", "Marcos Piccinini", "Marcus Mateus"]
+    gem.add_runtime_dependency "json_pure", ">=1.4.6"
     gem.add_development_dependency "rspec", ">= 2.0.0"
     gem.add_development_dependency "dbf", ">= 1.2.9"
   end
