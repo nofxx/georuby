@@ -3,14 +3,14 @@ require 'rubygems'
 # Must require active_spport/core_ext/object and then json/pure
 # or the json module gets clobbered and geojson output
 # becomes invalid... ie. it never calls class specific to_json
-require 'active_support/core_ext/object'
-require 'json/pure'
+#require 'active_support/core_ext/object'
+#require 'json/pure'
 
-begin
-  require 'spec'
-rescue LoadError
+# begin
+#   require 'spec'
+# rescue LoadError
   require 'rspec'
-end
+#end
 
 $:.unshift(File.dirname(__FILE__) + '/../lib')
 require 'geo_ruby'
@@ -43,7 +43,7 @@ module GeorubyMatchers
         [:x, :y, :z, :m].each_with_index do |c, i|
           next unless val = @expect[i]
           if val.kind_of? Numeric
-            actual.send(c).should be_close(val, 0.1)
+            actual.send(c).should be_within(0.1).of(val)
           else
             actual.send(c).should eql(val)
           end

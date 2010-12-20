@@ -112,8 +112,8 @@ describe Point do
 
     it "should instantiate a point from polar coordinates" do
       point = Point.from_r_t(1.4142,45)
-      point.y.should be_close(1, 0.00001)
-      point.x.should be_close(1, 0.00001)
+      point.y.should be_within(0.1).of(1)
+      point.x.should be_within(0.1).of(1)
     end
 
     it "should instantiate from coordinates x,y" do
@@ -153,30 +153,30 @@ describe Point do
     end
 
     it "should parse lat long" do
-      Point.from_latlong("-20° 47' 26.37","-20° 47' 26.37").x.should be_close(-20.790658, 0.00001)
-      Point.from_latlong("20° 47' 26.378","20° 47' 26.378").y.should be_close(20.790658, 0.00001)
+      Point.from_latlong("-20° 47' 26.37","-20° 47' 26.37").x.should be_within(0.00001).of(-20.790658)
+      Point.from_latlong("20° 47' 26.378","20° 47' 26.378").y.should be_within(0.00001).of(20.790658)
     end
 
     it "should parse lat long w/o sec" do
-      Point.from_latlong("-20°47′26″","-20°47′26″").x.should be_close(-20.790555, 0.00001)
-      Point.from_latlong("20°47′26″","20°47′26″").y.should be_close(20.790555, 0.00001)
+      Point.from_latlong("-20°47′26″","-20°47′26″").x.should be_within(0.00001).of(-20.790555)
+      Point.from_latlong("20°47′26″","20°47′26″").y.should be_within(0.00001).of(20.790555)
     end
 
     it "should accept with W or S notation" do
-      Point.from_latlong("20° 47' 26.37 W","20° 47' 26.37 S").x.should be_close(-20.790658, 0.00001)
-      Point.from_latlong("20° 47' 26.37 W","20° 47' 26.37 S").y.should be_close(-20.790658, 0.00001)
+      Point.from_latlong("20° 47' 26.37 W","20° 47' 26.37 S").x.should be_within(0.00001).of(-20.790658)
+      Point.from_latlong("20° 47' 26.37 W","20° 47' 26.37 S").y.should be_within(0.00001).of(-20.790658)
     end
 
     it "should instantiate a point from positive degrees" do
       point = Point.from_latlong('47`20 06.09E','22`50 77.35N')
-      point.y.should be_close(22.8548194, 0.000001)
-      point.x.should be_close(47.335025, 0.000001)
+      point.y.should be_within(0.000001).of(22.8548194)
+      point.x.should be_within(0.000001).of(47.335025)
     end
 
     it "should instantiate a point from negative degrees" do
       point = Point.from_latlong('47`20 06.09W','22`50 77.35S')
-      point.y.should be_close(-22.8548194, 0.000001)
-      point.x.should be_close(-47.335025, 0.000001)
+      point.y.should be_within(0.000001).of(-22.8548194)
+      point.x.should be_within(0.000001).of(-47.335025)
     end
 
     it "should print out nicely" do
@@ -210,17 +210,17 @@ describe Point do
 
     it "and a 3th grade child should calculate euclidian distance" do
       @p1.euclidian_distance(@p2).
-        should be_close(1.4142135623731, 0.00000001)
+        should be_within(0.00000001).of(1.4142135623731)
     end
 
     it "should calculate spherical distance" do
       @p1.spherical_distance(@p2).
-        should be_close(157225.358003181,0.00000001)
+        should be_within(0.00000001).of(157225.358003181)
     end
 
     it "should calculate ellipsoidal distance" do
       @p1.ellipsoidal_distance(@p2).
-        should be_close(156876.149400742, 0.00000001)
+        should be_within(0.00000001).of(156876.149400742)
     end
 
     describe "Orthogonal Distance" do
@@ -230,7 +230,7 @@ describe Point do
       end
 
       it "should calcula orthogonal distance from a line (90 deg)" do
-        @p1.orthogonal_distance(@line).should be_close(1.414, 0.001)
+        @p1.orthogonal_distance(@line).should be_within(0.001).of(1.414)
       end
 
       it "should calcula orthogonal distance very close..." do
@@ -238,41 +238,41 @@ describe Point do
       end
 
       it "should calcula orthogonal distance from a line (90 deg)" do
-        @p2.orthogonal_distance(@line).should be_close(2.828, 0.001)
+        @p2.orthogonal_distance(@line).should be_within(0.001).of(2.828)
       end
 
       it "should calcula orthogonal distance from a line (0 deg)" do
-        @p2.orthogonal_distance(@line2).should be_close(1.0, 0.1)
+        @p2.orthogonal_distance(@line2).should be_within(0.1).of(1.0)
       end
 
       it "should calcula orthogonal distance from a line (0 deg)" do
-        @p2.orthogonal_distance(@line2).should be_close(1.0, 0.1)
+        @p2.orthogonal_distance(@line2).should be_within(0.1).of(1.0)
       end
 
     end
 
     it "should calculate the bearing from apoint to another in degrees" do
-      @p1.bearing_to(@p2).should be_close(45.0, 0.01)
+      @p1.bearing_to(@p2).should be_within(0.01).of(45.0)
     end
 
     it "should calculate the bearing from apoint to another in degrees" do
       p3 = Point.from_x_y(1,-1)
-      @p1.bearing_to(p3).should be_close(180.0, 0.01)
+      @p1.bearing_to(p3).should be_within(0.01).of(180.0)
     end
 
     it "should calculate the bearing from apoint to another in degrees" do
       p3 = Point.from_x_y(-1,-1)
-      @p1.bearing_to(p3).should be_close(225.0, 0.01)
+      @p1.bearing_to(p3).should be_within(0.01).of(225.0)
     end
 
     it "should calculate the bearing from apoint to another in degrees" do
       p3 = Point.from_x_y(-1,1)
-      @p1.bearing_to(p3).should be_close(270.0, 0.01)
+      @p1.bearing_to(p3).should be_within(0.01).of(270.0)
     end
 
     it "should calculate the bearing from apoint to another in degrees" do
       p3 = Point.from_x_y(2,-1)
-      @p1.bearing_to(p3).should be_close(153.4349488, 0.0001)
+      @p1.bearing_to(p3).should be_within(0.0001).of(153.4349488)
     end
 
     it "should calculate a clone point bearing to 0" do
@@ -335,15 +335,15 @@ describe Point do
     end
 
     it "should print r (polar coords)" do
-      @point.r.should be_close(34.214154, 0.00001)
+      @point.r.should be_within(0.000001).of(34.214154)
     end
 
     it "should print theta as degrees" do
-      @point.theta_deg.should be_close(289.184406352127, 0.0001)
+      @point.theta_deg.should be_within(0.0001).of(289.184406352127)
     end
 
     it "should print theta as radians" do
-      @point.theta_rad.should be_close(5.04722003626982, 0.0001)
+      @point.theta_rad.should be_within(0.0001).of(5.04722003626982)
     end
 
     it "should output as polar" do

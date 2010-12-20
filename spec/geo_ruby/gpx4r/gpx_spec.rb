@@ -33,8 +33,8 @@ describe Gpx4r do
     end
 
     it "should read X and Y" do
-      @gpxfile[0].x.should be_close(9.093942, 0.0001)
-      @gpxfile[0].y.should be_close(48.731813, 0.0001)
+      @gpxfile[0].x.should be_within(0.0001).of(9.093942)
+      @gpxfile[0].y.should be_within(0.0001).of(48.731813)
     end
 
     it "should read Z and M" do
@@ -43,8 +43,8 @@ describe Gpx4r do
     end
 
     it "should read X and Y 2" do
-      @gpxfile2[0].x.should be_close(-71.119277, 0.0001)
-      @gpxfile2[0].y.should be_close(42.438878, 0.0001)
+      @gpxfile2[0].x.should be_within(0.0001).of(-71.119277)
+      @gpxfile2[0].y.should be_within(0.0001).of(42.438878)
     end
 
     it "should read Z and M 2" do
@@ -53,8 +53,8 @@ describe Gpx4r do
     end
 
     it "should read X and Y 3" do
-      @gpxfile3[0].x.should be_close(-149.8358011, 0.0001)
-      @gpxfile3[0].y.should be_close(-17.5326508, 0.0001)
+      @gpxfile3[0].x.should be_within(0.0001).of(-149.8358011)
+      @gpxfile3[0].y.should be_within(0.0001).of(-17.5326508)
     end
 
     it "should read Z and M 3" do
@@ -74,14 +74,14 @@ describe Gpx4r do
 
     it "should return a envelope" do
       @gpxfile.envelope.should be_instance_of Envelope
-      @gpxfile.envelope.lower_corner.x.should be_close(9.08128, 0.001)
-      @gpxfile.envelope.lower_corner.y.should be_close(48.7169, 0.001)
+      @gpxfile.envelope.lower_corner.x.should be_within(0.001).of(9.08128)
+      @gpxfile.envelope.lower_corner.y.should be_within(0.001).of(48.7169)
     end
 
     it "should return a envelope 3" do
       @gpxfile3.envelope.should be_instance_of Envelope
-      @gpxfile3.envelope.lower_corner.x.should be_close(-149.8422613, 0.001)
-      @gpxfile3.envelope.lower_corner.y.should be_close(-17.547636, 0.001)
+      @gpxfile3.envelope.lower_corner.x.should be_within(0.001).of(-149.8422613)
+      @gpxfile3.envelope.lower_corner.y.should be_within(0.001).of(-17.547636)
     end
 
     it "should return it as a polygon" do

@@ -21,7 +21,7 @@ describe Geometry do
   it "should instantiate from hex ewkb" do
     point = Geometry.from_hex_ewkb("01010000207B000000CDCCCCCCCCCC28406666666666A64640")
     point.class.should == Point
-    point.x.should be_close(12.4, 0.1)
+    point.x.should be_within(0.1).of(12.4)
   end
 
   it "should output as_ewkb" do

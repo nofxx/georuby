@@ -25,16 +25,16 @@ describe Shp4r do
     it "should parse record 1" do
       rec = @shpfile[0]
       rec.geometry.should be_kind_of Point
-      rec.geometry.x.should be_close(-90.08375, 0.00001)
-      rec.geometry.y.should be_close(34.39996, 0.00001)
+      rec.geometry.x.should be_within(0.00001).of(-90.08375)
+      rec.geometry.y.should be_within(0.00001).of(34.39996)
       rec.data["Hoyoyo"].should eql(6)
     end
 
     it "should parse record 2" do
       rec = @shpfile[1]
       rec.geometry.should be_kind_of Point
-      rec.geometry.x.should be_close(-87.82580, 0.00001)
-      rec.geometry.y.should be_close(33.36416, 0.00001)
+      rec.geometry.x.should be_within(0.00001).of(-87.82580)
+      rec.geometry.y.should be_within(0.00001).of(33.36416)
       rec.data["Hoyoyo"].should eql(9)
     end
 
