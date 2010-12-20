@@ -101,7 +101,7 @@ module GeoRuby
       def parse_geometry_collection(geohash, srid)
         srid = srid_from_crs(geohash['crs']) || srid
         geometries = geohash['geometries'].map{|g| parse_geometry(g,srid)}
-        GeometryCollection.from_geometries(geometries)
+        GeometryCollection.from_geometries(geometries,srid)
       end
 
       def parse_geojson_feature(geohash, srid)

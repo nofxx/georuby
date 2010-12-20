@@ -9,7 +9,7 @@ begin
     gem.description = "GeoRuby provides geometric data types from the OGC 'Simple Features' specification."
     gem.email = "x@nofxx.com"
     gem.homepage = "http://github.com/nofxx/georuby"
-    gem.authors = ["Guilhem Vellut", "Marcos Piccinini"]
+    gem.authors = ["Guilhem Vellut", "Marcos Piccinini", "Marcus Mateus"]
     gem.add_development_dependency "rspec", ">= 2.0.0"
     gem.add_development_dependency "dbf", ">= 1.2.9"
   end
