@@ -27,15 +27,6 @@ module GeoRuby
 
       def initialize(factory)
         @factory = factory
-        @parse_options ={
-          1 => method(:parse_point),
-          2 => method(:parse_line_string),
-          3 => method(:parse_polygon),
-          4 => method(:parse_multi_point),
-          5 => method(:parse_multi_line_string),
-          6 => method(:parse_multi_polygon),
-          7 => method(:parse_geometry_collection)
-        }
       end
 
       #Parses the ewkb string passed as argument and notifies the factory of events
@@ -70,8 +61,21 @@ module GeoRuby
           @srid= @srid || DEFAULT_SRID
         end
 
-        if @parse_options.has_key? @geometry_type
-          @parse_options[@geometry_type].call
+	case @geometry_type
+	when 1
+          parse_point
+	when 2
+          parse_line_string
+	when 3
+          parse_polygon
+	when 4
+          parse_multi_point
+	when 5
+          parse_multi_line_string
+	when 6
+          parse_multi_polygon
+	when 7
+          parse_geometry_collection
         else
           raise EWKBFormatError::new("Unknown geometry type")
         end
