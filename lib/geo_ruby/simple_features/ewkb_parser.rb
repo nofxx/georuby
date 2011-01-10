@@ -61,20 +61,20 @@ module GeoRuby
           @srid= @srid || DEFAULT_SRID
         end
 
-	case @geometry_type
-	when 1
+        case @geometry_type
+        when 1
           parse_point
-	when 2
+        when 2
           parse_line_string
-	when 3
+        when 3
           parse_polygon
-	when 4
+        when 4
           parse_multi_point
-	when 5
+        when 5
           parse_multi_line_string
-	when 6
+        when 6
           parse_multi_polygon
-	when 7
+        when 7
           parse_geometry_collection
         else
           raise EWKBFormatError::new("Unknown geometry type")
