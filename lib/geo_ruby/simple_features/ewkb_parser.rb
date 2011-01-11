@@ -27,41 +27,40 @@ module GeoRuby
 
       def initialize(factory)
         @factory = factory
+	@position = 0
       end
 
       #Parses the ewkb string passed as argument and notifies the factory of events
       def parse(ewkb)
         @factory.reset
-        @unpack_structure=UnpackStructure::new(ewkb)
-        @with_z = false
-        @with_m = false
+        @unpack_structure = UnpackStructure::new(ewkb)
         parse_geometry
         @unpack_structure.done
-        @srid=nil
       end
 
       private
-      def parse_geometry
-        @unpack_structure.endianness=@unpack_structure.read_byte
-        @geometry_type = @unpack_structure.read_uint
 
-        if (@geometry_type & Z_MASK) != 0
-          @with_z=true
-          @geometry_type = @geometry_type & ~Z_MASK
+      def parse_geometry
+        @unpack_structure.endianness = @unpack_structure.read_byte
+        geometry_type = @unpack_structure.read_uint
+
+        if (geometry_type & Z_MASK) != 0
+          @with_z = true
+          geometry_type = geometry_type & ~Z_MASK
         end
-        if (@geometry_type & M_MASK) != 0
-          @with_m=true
-          @geometry_type = @geometry_type & ~M_MASK
+        if (geometry_type & M_MASK) != 0
+          @with_m = true
+          geometry_type = geometry_type & ~M_MASK
         end
-        if (@geometry_type & SRID_MASK) != 0
+        if (geometry_type & SRID_MASK) != 0
           @srid = @unpack_structure.read_uint
-          @geometry_type = @geometry_type & ~SRID_MASK
+          geometry_type = geometry_type & ~SRID_MASK
         else
           #to manage multi geometries : the srid is not present in sub_geometries, therefore we take the srid of the parent ; if it is the root, we take the default srid
-          @srid= @srid || DEFAULT_SRID
+          @srid ||= DEFAULT_SRID
         end
 
-        case @geometry_type
+        case geometry_type
         when 1
           parse_point
         when 2
@@ -129,8 +128,7 @@ module GeoRuby
 
       def parse_point
         @factory.begin_geometry(Point,@srid)
-        x = @unpack_structure.read_double
-        y = @unpack_structure.read_double
+        x, y = *@unpack_structure.read_point
         if ! (@with_z or @with_m) #most common case probably
           @factory.add_point_x_y(x,y)
         elsif @with_m and @with_z
@@ -151,56 +149,59 @@ module GeoRuby
 
     #Parses HexEWKB strings. In reality, it just transforms the HexEWKB string into the equivalent EWKB string and lets the EWKBParser do the actual parsing.
     class HexEWKBParser < EWKBParser
-      def initialize(factory)
-        super(factory)
-      end
+
       #parses an HexEWKB string
       def parse(hexewkb)
         super(decode_hex(hexewkb))
       end
+
       #transforms a HexEWKB string into an EWKB string
       def decode_hex(hexewkb)
         [hexewkb].pack("H*")
       end
     end
 
-    class HexEWKBParser < EWKBParser
-     #transforms a HexEWKB string into an EWKB string
-     # Patched for speedup
-
-   end
-
     class UnpackStructure #:nodoc:
-      NDR=1
-      XDR=0
+      NDR = 1
+      XDR = 0
+
       def initialize(ewkb)
-        @position=0
-        @ewkb=ewkb
+        @position = 0
+        @ewkb = ewkb
       end
+
       def done
         raise EWKBFormatError::new("Trailing data") if @position != @ewkb.length
       end
+
+      def read_point
+        i = @position
+        @position += 16
+        raise EWKBFormatError::new("Truncated data") if @ewkb.length < @position
+        @ewkb.unpack("@#{i}#@double_mark#@double_mark@*")
+      end
+
       def read_double
-        i=@position
+        i = @position
         @position += 8
-        packed_double = @ewkb[i...@position]
-        raise EWKBFormatError::new("Truncated data") if packed_double.nil? or packed_double.length < 8
-        packed_double.unpack(@double_mark)[0]
+        raise EWKBFormatError::new("Truncated data") if @ewkb.length < @position
+        @ewkb.unpack("@#{i}#@double_mark@*").first
       end
+
       def read_uint
-        i=@position
+        i = @position
         @position += 4
-        packed_uint = @ewkb[i...@position]
-        raise EWKBFormatError::new("Truncated data") if packed_uint.nil? or packed_uint.length < 4
-        packed_uint.unpack(@uint_mark)[0]
+        raise EWKBFormatError::new("Truncated data") if @ewkb.length < @position
+        @ewkb.unpack("@#{i}#@uint_mark@*").first
       end
+
       def read_byte
         i = @position
         @position += 1
-        packed_byte = @ewkb[i...@position]
-        raise EWKBFormatError::new("Truncated data") if packed_byte.nil? or packed_byte.length < 1
-        packed_byte.unpack("C")[0]
+        raise EWKBFormatError::new("Truncated data") if @ewkb.length < @position
+        @ewkb.unpack("@#{i}C@*").first
       end
+
       def endianness=(byte_order)
         if(byte_order == NDR)
           @uint_mark="V"
