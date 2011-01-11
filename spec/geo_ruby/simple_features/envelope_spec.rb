@@ -2,7 +2,8 @@ require File.expand_path(File.dirname(__FILE__) + '/../../spec_helper')
 
 describe Envelope do
   before(:each) do
-    @env = Envelope.from_points([Point.from_x_y(10,20),Point.from_x_y(20,30)])
+    @srid = 4269
+    @env = Envelope.from_points([Point.from_x_y(10,20, @srid),Point.from_x_y(20,30, @srid)], @srid)
   end
 
   it "should initialize" do
@@ -36,6 +37,7 @@ describe Envelope do
   it "should have a center" do
     @env.center.x.should eql(15)
     @env.center.y.should eql(25)
+    @env.center.srid.should eql(@env.srid)
   end
 
   it "should print a kml_representation" do

@@ -50,7 +50,7 @@ module GeoRuby
 
       #Sends back the center of the envelope
       def center
-        Point.from_x_y((lower_corner.x + upper_corner.x)/2,(lower_corner.y + upper_corner.y)/2)
+        Point.from_x_y((lower_corner.x + upper_corner.x)/2,(lower_corner.y + upper_corner.y)/2, srid)
       end
 
       #Zoom level
