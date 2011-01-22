@@ -27,15 +27,17 @@ module GeoRuby
 
       def initialize(factory)
         @factory = factory
-	@position = 0
       end
 
       #Parses the ewkb string passed as argument and notifies the factory of events
       def parse(ewkb)
         @factory.reset
+        @with_z = false
+        @with_m = false
         @unpack_structure = UnpackStructure::new(ewkb)
         parse_geometry
         @unpack_structure.done
+        @srid = nil
       end
 
       private
