@@ -10,7 +10,6 @@ begin
     gem.email = "georuby@simplitex.com"
     gem.homepage = "http://github.com/nofxx/georuby"
     gem.authors = ["Guilhem Vellut", "Marcos Piccinini", "Marcus Mateus", "Doug Cole"]
-    gem.add_runtime_dependency "json_pure", ">=1.4.6"
     gem.add_development_dependency "rspec", ">= 2.0.0"
     gem.add_development_dependency "dbf", ">= 1.2.9"
   end
