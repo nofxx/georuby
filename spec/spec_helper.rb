@@ -9,7 +9,7 @@ require 'rubygems'
 # begin
 #   require 'spec'
 # rescue LoadError
-  require 'rspec'
+require 'rspec'
 #end
 
 $:.unshift(File.dirname(__FILE__) + '/../lib')
@@ -17,6 +17,7 @@ require 'geo_ruby'
 require 'geo_ruby/shp'
 require 'geo_ruby/gpx'
 require 'geo_ruby/geojson'
+require 'geo_ruby/georss'
 
 include GeoRuby
 include SimpleFeatures

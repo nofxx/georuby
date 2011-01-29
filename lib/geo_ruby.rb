@@ -1,5 +1,5 @@
-$:.unshift(File.dirname(__FILE__)) unless
-  $:.include?(File.dirname(__FILE__)) || $:.include?(File.expand_path(File.dirname(__FILE__)))
+# $:.unshift(File.dirname(__FILE__)) #unless
+#  $:.include?(File.dirname(__FILE__)) || $:.include?(File.expand_path(File.dirname(__FILE__)))
 
 require 'geo_ruby/simple_features/helper'
 require 'geo_ruby/simple_features/ewkt_parser'
@@ -15,9 +15,9 @@ require 'geo_ruby/simple_features/multi_polygon'
 require 'geo_ruby/simple_features/geometry_collection'
 require 'geo_ruby/simple_features/envelope'
 require 'geo_ruby/simple_features/geometry_factory'
-require 'geo_ruby/simple_features/georss_parser'
 
-# Include if you need
+# Require if you need
 # require 'geo_ruby/shp4r/shp'
 # require 'geo_ruby/gpx4r/gpx'
-# require 'geo_ruby/simple_features/geojson_parser'
+# require 'geo_ruby/geojson'
+# require 'geo_ruby/georss'
