@@ -1,6 +1,6 @@
-require File.expand_path(File.dirname(__FILE__) + '/../../spec_helper')
+require File.expand_path(File.dirname(__FILE__) + '/../spec_helper')
 
-DATA_DIR = File.dirname(__FILE__) + '/../../data/geojson/'
+DATA_DIR = File.dirname(__FILE__) + '/../data/geojson/'
 
 # All geojson test examples are from the GeoJSON spec unless otherwise
 # specified
@@ -111,13 +111,13 @@ describe GeojsonParser do
   it "should create a specified Feature" do
     feature_json = <<-EOJ
       {
-        "type":"Feature", 
-        "id":"OpenLayers.Feature.Vector_314", 
-        "properties":{"prop0": "value0"}, 
+        "type":"Feature",
+        "id":"OpenLayers.Feature.Vector_314",
+        "properties":{"prop0": "value0"},
         "geometry":{
-          "type":"Point", 
+          "type":"Point",
           "coordinates":[97.03125, 39.7265625]
-        } 
+        }
       }
     EOJ
     f = Geometry.from_geojson(feature_json)

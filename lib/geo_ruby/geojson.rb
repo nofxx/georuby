@@ -1,5 +1,4 @@
 # GeoJSON parser based on the v1.0 spec at http://geojson.org/geojson-spec.html
-require 'json/pure'
 
 module GeoRuby
   module SimpleFeatures
@@ -10,7 +9,7 @@ module GeoRuby
     # Class added to support geojson 'Feature' objects
     class GeojsonFeature
       attr_accessor :geometry, :properties, :id
-      
+
       def initialize(geometry, properties = {}, id = nil)
         @geometry = geometry
         @properties = properties
@@ -21,7 +20,7 @@ module GeoRuby
         if (self.class != other.class)
           false
         else
-          (self.id == other.id) && (self.geometry == other.geometry) && (self.properties == other.properties) 
+          (self.id == other.id) && (self.geometry == other.geometry) && (self.properties == other.properties)
         end
       end
 
@@ -65,7 +64,7 @@ module GeoRuby
 
     class GeojsonParser
       attr_reader :geometry
-      
+
       def parse(geojson, srid=DEFAULT_SRID)
         @geometry = nil
         geohash = JSON.parse(geojson)
@@ -87,7 +86,7 @@ module GeoRuby
           GeojsonFormatError.new('Unknown GeoJSON type')
         end
       end
-      
+
       def parse_geometry(geohash, srid)
         srid = srid_from_crs(geohash['crs']) || srid
         if geohash['type'] == 'GeometryCollection'
@@ -120,7 +119,7 @@ module GeoRuby
       end
 
       def srid_from_crs(crs)
-        # We somehow need to map crs to srid, currently only support for EPSG 
+        # We somehow need to map crs to srid, currently only support for EPSG
         if crs && crs['type'] == 'OGC'
           urn = crs['properties']['urn'].split(':')
           return urn.last if urn[4] == 'EPSG'
