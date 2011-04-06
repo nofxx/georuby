@@ -238,7 +238,7 @@ module GeoRuby
           @shp.seek(16,IO::SEEK_CUR)#extent
           ms = Array.new(num_points) {@shp.read(8).unpack("E")[0]}
           points = Array.new(num_points) do |i|
-            Point.from_x_y_z_m(xys[i][0],xys[i][1],zs[i],ms[i])
+            GeoRuby::SimpleFeatures::Point.from_x_y_z_m(xys[i][0],xys[i][1],zs[i],ms[i])
           end
           linear_rings = Array.new(num_parts) do |i|
             GeoRuby::SimpleFeatures::LinearRing.from_points(points[(parts[i])...(parts[i+1])],GeoRuby::SimpleFeatures::default_srid,true,true)
@@ -256,7 +256,7 @@ module GeoRuby
           ms = Array.new(num_points) {@shp.read(8).unpack("E")[0]}
 
           points = Array.new(num_points) do |i|
-            Point.from_x_y_z_m(xys[i][0],xys[i][1],zs[i],ms[i])
+            GeoRuby::SimpleFeatures::Point.from_x_y_z_m(xys[i][0],xys[i][1],zs[i],ms[i])
           end
 
           geometry = GeoRuby::SimpleFeatures::MultiPoint.from_points(points,GeoRuby::SimpleFeatures::default_srid,true,true)
@@ -274,7 +274,7 @@ module GeoRuby
           @shp.seek(16,IO::SEEK_CUR)
           ms = Array.new(num_points) {@shp.read(8).unpack("E")[0]}
           points = Array.new(num_points) do |i|
-            Point.from_x_y_m(xys[i][0],xys[i][1],ms[i])
+            GeoRuby::SimpleFeatures::Point.from_x_y_m(xys[i][0],xys[i][1],ms[i])
           end
           line_strings = Array.new(num_parts) do |i|
             GeoRuby::SimpleFeatures::LineString.from_points(points[(parts[i])...(parts[i+1])],GeoRuby::SimpleFeatures::default_srid,false,true)
@@ -293,7 +293,7 @@ module GeoRuby
           @shp.seek(16,IO::SEEK_CUR)
           ms = Array.new(num_points) {@shp.read(8).unpack("E")[0]}
           points = Array.new(num_points) do |i|
-            Point.from_x_y_m(xys[i][0],xys[i][1],ms[i])
+            GeoRuby::SimpleFeatures::Point.from_x_y_m(xys[i][0],xys[i][1],ms[i])
           end
           linear_rings = Array.new(num_parts) do |i|
             GeoRuby::SimpleFeatures::LinearRing.from_points(points[(parts[i])...(parts[i+1])],GeoRuby::SimpleFeatures::default_srid,false,true)
@@ -309,7 +309,7 @@ module GeoRuby
           ms = Array.new(num_points) {@shp.read(8).unpack("E")[0]}
 
           points = Array.new(num_points) do |i|
-            Point.from_x_y_m(xys[i][0],xys[i][1],ms[i])
+            GeoRuby::SimpleFeatures::Point.from_x_y_m(xys[i][0],xys[i][1],ms[i])
           end
 
           geometry = GeoRuby::SimpleFeatures::MultiPoint.from_points(points,GeoRuby::SimpleFeatures::default_srid,false,true)
