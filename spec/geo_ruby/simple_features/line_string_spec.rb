@@ -12,26 +12,44 @@ module LineSpecHelper
 end
 
 describe LineString do
+
   include LineSpecHelper
 
-  before(:each) do
-    @line = LineString.from_points([mock(Point)])
+  describe "Instance Methods" do
+
+    let(:line) { LineString.from_points([mock(Point)]) }
+
+    it "should instantiate" do
+      violated unless line
+    end
+
+    it "should have binary_geometry_type 2" do
+      line.binary_geometry_type.should eql(2)
+    end
+
+    it "should have text_geometry_type" do
+      line.text_geometry_type.should eql("LINESTRING")
+    end
+
+    it "should have a points array" do
+      line.points.should be_instance_of(Array)
+    end
+
   end
 
-  it "should instantiate" do
-    violated unless @line
-  end
+  describe "Valid LineString" do
 
-  it "should have binary_geometry_type 2" do
-    @line.binary_geometry_type.should eql(2)
-  end
+    let(:line) { LineString.from_points([Point.xy(1,1), Point.xy(2,2), Point.xy(3,3)]) }
 
-  it "should have text_geometry_type" do
-    @line.text_geometry_type.should eql("LINESTRING")
-  end
+    it "should check orientation" do
+      line.should_not be_clockwise
+    end
 
-  it "should have a points array" do
-    @line.points.should be_instance_of(Array)
+    it "should check orientation" do
+      l = LineString.from_points([Point.from_x_y(20,20), Point.from_x_y(10,10), Point.from_x_y(-10,10)])
+      l.should be_clockwise
+    end
+
   end
 
   describe "tu converted" do
@@ -148,40 +166,38 @@ describe LineString do
 
   describe "> Instantiated" do
 
-    before(:each) do
-      @line = LineString.from_points(mock_points(7))
-    end
+    let (:line) { LineString.from_points(mock_points(7)) }
 
     it "should be closed if the last point equals the first" do
-      @line.push(@line.first)
-      @line.should be_closed
-      @line.length.should eql(8)
+      line.push(line.first)
+      line.should be_closed
+      line.length.should eql(8)
     end
 
     it "should print the text representation" do
-      @line.text_representation.should eql("0 0,1 1,2 2,3 3,4 4,5 5,6 6")
+      line.text_representation.should eql("0 0,1 1,2 2,3 3,4 4,5 5,6 6")
     end
 
     it "should print the georss_simple_representation" do
-      @line.georss_simple_representation({:geom_attr => nil}).
+      line.georss_simple_representation({:geom_attr => nil}).
         should eql("<georss:line>0 0 1 1 2 2 3 3 4 4 5 5 6 6</georss:line>\n")
     end
 
     it "should map the georss_poslist" do
-      @line.georss_poslist.should eql("0 0 1 1 2 2 3 3 4 4 5 5 6 6")
+      line.georss_poslist.should eql("0 0 1 1 2 2 3 3 4 4 5 5 6 6")
     end
 
     it "should print the kml_representation" do
-      @line.kml_representation.should
+      line.kml_representation.should
         eql("<LineString>\n<coordinates>0,0 1,1 2,2 3,3 4,4 5,5 6,6</coordinates>\n</LineString>\n")
     end
 
     it "should print the kml_poslist without reverse or z" do
-      @line.kml_poslist({}).should eql("0,0 1,1 2,2 3,3 4,4 5,5 6,6")
+      line.kml_poslist({}).should eql("0,0 1,1 2,2 3,3 4,4 5,5 6,6")
     end
 
     it "should print the kml_poslist reverse" do
-      @line.kml_poslist({:reverse => true}).should eql("6,6 5,5 4,4 3,3 2,2 1,1 0,0")
+      line.kml_poslist({:reverse => true}).should eql("6,6 5,5 4,4 3,3 2,2 1,1 0,0")
     end
   end
 
@@ -208,9 +224,7 @@ describe LineString do
 
   describe "Simplify" do
 
-    before do
-      @line = LineString.from_coordinates([[6,0],[4,1],[3,4],[4,6],[5,8],[5,9],[4,10],[6,15]], 4326)
-    end
+    let(:line) { LineString.from_coordinates([[6,0],[4,1],[3,4],[4,6],[5,8],[5,9],[4,10],[6,15]], 4326) }
 
     it "should simplify a simple linestring" do
       line =  LineString.from_coordinates([[12,15],[14,17],[17, 20]], 4326)
@@ -218,27 +232,27 @@ describe LineString do
     end
 
     it "should simplify a harder linestring" do
-      @line.simplify(6).should have(6).points
-      @line.simplify(9).should have(4).points
-      @line.simplify(10).should have(3).points
+      line.simplify(6).should have(6).points
+      line.simplify(9).should have(4).points
+      line.simplify(10).should have(3).points
     end
 
     it "should barely touch it" do
-      @line.simplify(1).should have(7).points
+      line.simplify(1).should have(7).points
     end
 
     it "should simplify to five points" do
-      @line.simplify(7).should have(5).points
+      line.simplify(7).should have(5).points
     end
 
     it "should flatten it" do
-      @line.simplify(11).should have(2).points
+      line.simplify(11).should have(2).points
     end
 
     it "should be the first and last in a flatten" do
-      line = @line.simplify(11)
-      line[0].should be_a_point(6, 0)
-      line[1].should be_a_point(6, 15)
+      l = line.simplify(11)
+      l[0].should be_a_point(6, 0)
+      l[1].should be_a_point(6, 15)
     end
 
   end

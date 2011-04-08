@@ -24,14 +24,14 @@ module GeoRuby
       end
       alias :closed? :is_closed
 
-      def orientation
+      def clockwise?
         tuples = @points.zip(
           @points[1..-1] + [@points[0]],
           @points[2..-1] + [@points[0], @points[1]])
         tuples.map!{ |a,b,c| b.x * (c.y - a.y)  }
         sum = tuples.inject(0.0){ |sum, elem| sum+elem }
 
-        sum < 0.0 ? :clockwise : :anticlockwise
+        sum < 0.0
       end
 
       #Bounding box in 2D/3D. Returns an array of 2 points

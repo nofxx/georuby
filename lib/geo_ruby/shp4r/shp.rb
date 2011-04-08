@@ -191,7 +191,7 @@ module GeoRuby
             GeoRuby::SimpleFeatures::LinearRing.from_points(points[(parts[i])...(parts[i+1])])
           end
           # geometry = GeoRuby::SimpleFeatures::MultiPolygon.from_polygons([GeoRuby::SimpleFeatures::Polygon.from_linear_rings(linear_rings)])
-          outer, inner = linear_rings.partition { |lr| lr.orientation == :clockwise}
+          outer, inner = linear_rings.partition { |lr| lr.clockwise? }
 
           # Make polygons from the outer rings so we can concatenate
           # them with inner rings.
