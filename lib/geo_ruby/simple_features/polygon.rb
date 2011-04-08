@@ -4,7 +4,8 @@ module GeoRuby
 
   module SimpleFeatures
 
-    #Represents a polygon as an array of linear rings (see LinearRing). No check is performed regarding the validity of the geometries forming the polygon.
+    # Represents a polygon as an array of linear rings (see LinearRing).
+    # No check is performed regarding the validity of the geometries forming the polygon.
     class Polygon < Geometry
       #the list of rings forming the polygon
       attr_reader :rings
@@ -89,6 +90,11 @@ module GeoRuby
         "POLYGON"
       end
 
+      # Contains a point?
+      def contains_point?(point)
+        !@rings.select { |lr| lr.contains_point? point }.empty?
+      end
+
       #georss simple representation : outputs only the outer ring
       def georss_simple_representation(options)
         georss_ns = options[:georss_ns] || "georss"
@@ -128,7 +134,7 @@ module GeoRuby
         end
         result += "</Polygon>\n"
       end
-      
+
       def to_coordinates
         rings.map{|lr| lr.to_coordinates}
       end

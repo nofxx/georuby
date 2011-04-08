@@ -2,7 +2,21 @@ require File.expand_path(File.dirname(__FILE__) + '/../../spec_helper')
 
 describe Polygon do
 
-  describe "tu conveted" do
+  describe "Instance Methods" do
+
+    let(:poly) { Polygon.from_coordinates([[[0,0],[4,0],[4,4],[0,4],[0,0]],[[1,1],[3,1],[3,3],[1,3],[1,1]]],256) }
+
+    it "should check if contains point" do
+      poly.contains_point?(Point.from_x_y(3, 3)).should be_true
+    end
+
+    it "should check if not contains point" do
+      poly.contains_point?(Point.from_x_y(5, 5)).should be_false
+    end
+
+  end
+
+  describe "tu converted" do
     #no test of the binary representation for linear_rings : always with polygons and like line_string
     it "should test_polygon_creation" do
       linear_ring1 = LinearRing.from_coordinates([[12.4,-45.3],[45.4,41.6],[4.456,1.0698],[12.4,-45.3]],256)
