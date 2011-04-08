@@ -241,9 +241,9 @@ module GeoRuby
             GeoRuby::SimpleFeatures::Point.from_x_y_z_m(xys[i][0],xys[i][1],zs[i],ms[i])
           end
           line_strings = Array.new(num_parts) do |i|
-            GeoRuby::SimpleFeatures::LineString.from_points(points[(parts[i])...(parts[i+1])],GeoRuby::SimpleFeatures::default_srid,true,true)
+            GeoRuby::SimpleFeatures::LineString.from_points(points[(parts[i])...(parts[i+1])],GeoRuby::SimpleFeatures::DEFAULT_SRID,true,true)
           end
-          geometry = GeoRuby::SimpleFeatures::MultiLineString.from_line_strings(line_strings,GeoRuby::SimpleFeatures::default_srid,true,true)
+          geometry = GeoRuby::SimpleFeatures::MultiLineString.from_line_strings(line_strings,GeoRuby::SimpleFeatures::DEFAULT_SRID,true,true)
 
 
         when ShpType::POLYGONZ
@@ -262,9 +262,9 @@ module GeoRuby
             GeoRuby::SimpleFeatures::Point.from_x_y_z_m(xys[i][0],xys[i][1],zs[i],ms[i])
           end
           linear_rings = Array.new(num_parts) do |i|
-            GeoRuby::SimpleFeatures::LinearRing.from_points(points[(parts[i])...(parts[i+1])],GeoRuby::SimpleFeatures::default_srid,true,true)
+            GeoRuby::SimpleFeatures::LinearRing.from_points(points[(parts[i])...(parts[i+1])],GeoRuby::SimpleFeatures::DEFAULT_SRID,true,true)
           end
-          geometry = GeoRuby::SimpleFeatures::MultiPolygon.from_polygons([GeoRuby::SimpleFeatures::Polygon.from_linear_rings(linear_rings)],GeoRuby::SimpleFeatures::default_srid,true,true)
+          geometry = GeoRuby::SimpleFeatures::MultiPolygon.from_polygons([GeoRuby::SimpleFeatures::Polygon.from_linear_rings(linear_rings)],GeoRuby::SimpleFeatures::DEFAULT_SRID,true,true)
 
 
         when ShpType::MULTIPOINTZ
@@ -280,7 +280,7 @@ module GeoRuby
             GeoRuby::SimpleFeatures::Point.from_x_y_z_m(xys[i][0],xys[i][1],zs[i],ms[i])
           end
 
-          geometry = GeoRuby::SimpleFeatures::MultiPoint.from_points(points,GeoRuby::SimpleFeatures::default_srid,true,true)
+          geometry = GeoRuby::SimpleFeatures::MultiPoint.from_points(points,GeoRuby::SimpleFeatures::DEFAULT_SRID,true,true)
 
         when ShpType::POINTM
           x, y, m = @shp.read(24).unpack("E3")
@@ -298,9 +298,9 @@ module GeoRuby
             GeoRuby::SimpleFeatures::Point.from_x_y_m(xys[i][0],xys[i][1],ms[i])
           end
           line_strings = Array.new(num_parts) do |i|
-            GeoRuby::SimpleFeatures::LineString.from_points(points[(parts[i])...(parts[i+1])],GeoRuby::SimpleFeatures::default_srid,false,true)
+            GeoRuby::SimpleFeatures::LineString.from_points(points[(parts[i])...(parts[i+1])],GeoRuby::SimpleFeatures::DEFAULT_SRID,false,true)
           end
-          geometry = GeoRuby::SimpleFeatures::MultiLineString.from_line_strings(line_strings,GeoRuby::SimpleFeatures::default_srid,false,true)
+          geometry = GeoRuby::SimpleFeatures::MultiLineString.from_line_strings(line_strings,GeoRuby::SimpleFeatures::DEFAULT_SRID,false,true)
 
 
         when ShpType::POLYGONM
@@ -317,9 +317,9 @@ module GeoRuby
             GeoRuby::SimpleFeatures::Point.from_x_y_m(xys[i][0],xys[i][1],ms[i])
           end
           linear_rings = Array.new(num_parts) do |i|
-            GeoRuby::SimpleFeatures::LinearRing.from_points(points[(parts[i])...(parts[i+1])],GeoRuby::SimpleFeatures::default_srid,false,true)
+            GeoRuby::SimpleFeatures::LinearRing.from_points(points[(parts[i])...(parts[i+1])],GeoRuby::SimpleFeatures::DEFAULT_SRID,false,true)
           end
-          geometry = GeoRuby::SimpleFeatures::MultiPolygon.from_polygons([GeoRuby::SimpleFeatures::Polygon.from_linear_rings(linear_rings)],GeoRuby::SimpleFeatures::default_srid,false,true)
+          geometry = GeoRuby::SimpleFeatures::MultiPolygon.from_polygons([GeoRuby::SimpleFeatures::Polygon.from_linear_rings(linear_rings)],GeoRuby::SimpleFeatures::DEFAULT_SRID,false,true)
 
 
         when ShpType::MULTIPOINTM
@@ -333,7 +333,7 @@ module GeoRuby
             GeoRuby::SimpleFeatures::Point.from_x_y_m(xys[i][0],xys[i][1],ms[i])
           end
 
-          geometry = GeoRuby::SimpleFeatures::MultiPoint.from_points(points,GeoRuby::SimpleFeatures::default_srid,false,true)
+          geometry = GeoRuby::SimpleFeatures::MultiPoint.from_points(points,GeoRuby::SimpleFeatures::DEFAULT_SRID,false,true)
         else
           geometry = nil
         end
