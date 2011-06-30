@@ -5,11 +5,11 @@
 
 Gem::Specification.new do |s|
   s.name = %q{georuby}
-  s.version = "1.9.1"
+  s.version = "1.9.3"
 
   s.required_rubygems_version = Gem::Requirement.new(">= 0") if s.respond_to? :required_rubygems_version=
   s.authors = ["Guilhem Vellut", "Marcos Piccinini", "Marcus Mateus", "Doug Cole"]
-  s.date = %q{2011-03-05}
+  s.date = %q{2011-06-30}
   s.description = %q{GeoRuby provides geometric data types from the OGC 'Simple Features' specification.}
   s.email = %q{georuby@simplitex.com}
   s.extra_rdoc_files = [
@@ -17,11 +17,14 @@ Gem::Specification.new do |s|
     "README.rdoc"
   ]
   s.files = [
+    "Gemfile",
+    "Gemfile.lock",
     "History.txt",
     "LICENSE",
     "README.rdoc",
     "Rakefile",
     "VERSION",
+    "georuby.gemspec",
     "lib/geo_ruby.rb",
     "lib/geo_ruby/geojson.rb",
     "lib/geo_ruby/georss.rb",
@@ -44,8 +47,10 @@ Gem::Specification.new do |s|
     "lib/geo_ruby/simple_features/multi_polygon.rb",
     "lib/geo_ruby/simple_features/point.rb",
     "lib/geo_ruby/simple_features/polygon.rb",
+    "nofxx-georuby.gemspec",
     "spec/data/geojson/feature_collection.json",
     "spec/data/georss/atom.xml",
+    "spec/data/georss/gml.xml",
     "spec/data/georss/w3c.xml",
     "spec/data/gpx/fells_loop.gpx",
     "spec/data/gpx/long.gpx",
@@ -89,42 +94,33 @@ Gem::Specification.new do |s|
   ]
   s.homepage = %q{http://github.com/nofxx/georuby}
   s.require_paths = ["lib"]
-  s.rubygems_version = %q{1.5.2}
+  s.rubygems_version = %q{1.3.7}
   s.summary = %q{Ruby data holder for OGC Simple Features}
-  s.test_files = [
-    "spec/geo_ruby/geojson_spec.rb",
-    "spec/geo_ruby/georss.rb",
-    "spec/geo_ruby/georss_spec.rb",
-    "spec/geo_ruby/gpx4r/gpx_spec.rb",
-    "spec/geo_ruby/shp4r/shp_spec.rb",
-    "spec/geo_ruby/simple_features/envelope_spec.rb",
-    "spec/geo_ruby/simple_features/ewkb_parser_spec.rb",
-    "spec/geo_ruby/simple_features/ewkt_parser_spec.rb",
-    "spec/geo_ruby/simple_features/geometry_collection_spec.rb",
-    "spec/geo_ruby/simple_features/geometry_factory_spec.rb",
-    "spec/geo_ruby/simple_features/geometry_spec.rb",
-    "spec/geo_ruby/simple_features/line_string_spec.rb",
-    "spec/geo_ruby/simple_features/linear_ring_spec.rb",
-    "spec/geo_ruby/simple_features/multi_line_string_spec.rb",
-    "spec/geo_ruby/simple_features/multi_point_spec.rb",
-    "spec/geo_ruby/simple_features/multi_polygon_spec.rb",
-    "spec/geo_ruby/simple_features/point_spec.rb",
-    "spec/geo_ruby/simple_features/polygon_spec.rb",
-    "spec/geo_ruby_spec.rb",
-    "spec/spec_helper.rb"
-  ]
 
   if s.respond_to? :specification_version then
+    current_version = Gem::Specification::CURRENT_SPECIFICATION_VERSION
     s.specification_version = 3
 
     if Gem::Version.new(Gem::VERSION) >= Gem::Version.new('1.2.0') then
+      s.add_development_dependency(%q<dbf>, [">= 1.5.0"])
+      s.add_development_dependency(%q<rspec>, [">= 2.3.0"])
+      s.add_development_dependency(%q<bundler>, [">= 1.0.0"])
+      s.add_development_dependency(%q<rcov>, [">= 0"])
       s.add_development_dependency(%q<rspec>, [">= 2.0.0"])
       s.add_development_dependency(%q<dbf>, [">= 1.2.9"])
     else
+      s.add_dependency(%q<dbf>, [">= 1.5.0"])
+      s.add_dependency(%q<rspec>, [">= 2.3.0"])
+      s.add_dependency(%q<bundler>, [">= 1.0.0"])
+      s.add_dependency(%q<rcov>, [">= 0"])
       s.add_dependency(%q<rspec>, [">= 2.0.0"])
       s.add_dependency(%q<dbf>, [">= 1.2.9"])
     end
   else
+    s.add_dependency(%q<dbf>, [">= 1.5.0"])
+    s.add_dependency(%q<rspec>, [">= 2.3.0"])
+    s.add_dependency(%q<bundler>, [">= 1.0.0"])
+    s.add_dependency(%q<rcov>, [">= 0"])
     s.add_dependency(%q<rspec>, [">= 2.0.0"])
     s.add_dependency(%q<dbf>, [">= 1.2.9"])
   end
