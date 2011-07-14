@@ -15,7 +15,7 @@ module GeoRuby
     module Dbf
       class Record
         def [](v)
-          attributes[v.downcase]
+          attributes[v]
         end
       end
 
