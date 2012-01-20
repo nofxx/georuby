@@ -37,11 +37,15 @@ module GeoRuby
         geometries.map{|ls| ls.to_coordinates}
       end
 
+      def as_json(options = {})
+        {:type => 'MultiLineString',
+         :coordinates => self.to_coordinates}
+      end
+
       # simple geojson representation
       # TODO add CRS / SRID support?
       def to_json(options = {})
-        {:type => 'MultiLineString',
-         :coordinates => self.to_coordinates}.to_json(options)
+        as_json(options).to_json(options)
       end
       alias :as_geojson :to_json
       
