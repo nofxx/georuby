@@ -202,11 +202,15 @@ module GeoRuby
         points.map{|p| p.to_coordinates }
       end
 
+      def as_json(options = {})
+        {:type => 'LineString',
+         :coordinates => self.to_coordinates}
+      end
+
       # simple geojson representation
       # TODO add CRS / SRID support?
       def to_json(options = {})
-        {:type => 'LineString',
-         :coordinates => self.to_coordinates}.to_json(options)
+        as_json(options).to_json(options)
       end
       alias :as_geojson :to_json
 

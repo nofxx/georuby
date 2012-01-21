@@ -23,13 +23,17 @@ module GeoRuby
       end
     end
 
-    def to_json(options={})
+    def as_json(options={})
       output = {}
       output[:type] = 'Feature'
       output[:geometry] = geometry
       output[:properties] = properties
       output[:id] = id unless id.nil?
       output.to_json(options)
+    end
+
+    def to_json(options = {})
+      as_json(options).to_json
     end
     alias :as_geojson :to_json
   end
