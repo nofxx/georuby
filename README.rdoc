@@ -11,6 +11,10 @@ It also supports various output and input formats (GeoRSS, KML, Shapefile).
 
 OGC:"http://www.opengis.org/docs/99-049.pdf"
 
+GeoRuby is written in pure Ruby.
+If you are looking for Proj/Geos/ext rubygem checkout:
+rgeo:"https://github.com/dazuma/rgeo"
+
 
 == Available data types
 
