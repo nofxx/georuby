@@ -1,48 +1,33 @@
-require 'rubygems'
-require 'rake'
+require 'bundler'
+Bundler.setup
 
-begin
-  require 'jeweler'
-  Jeweler::Tasks.new do |gem|
-    gem.name = "georuby"
-    gem.summary = "Ruby data holder for OGC Simple Features"
-    gem.description = "GeoRuby provides geometric data types from the OGC 'Simple Features' specification."
-    gem.email = "georuby@simplitex.com"
-    gem.homepage = "http://github.com/nofxx/georuby"
-    gem.authors = ["Guilhem Vellut", "Marcos Piccinini", "Marcus Mateus", "Doug Cole"]
-    gem.add_development_dependency "rspec", ">= 2.0.0"
-    gem.add_development_dependency "dbf", ">= 1.2.9"
-  end
-rescue LoadError
-  puts "Jeweler not available. Install it with: sudo gem install technicalpickles-jeweler -s http://gems.github.com"
+require "rspec"
+require "rspec/core/rake_task"
+
+$LOAD_PATH.unshift File.expand_path("../lib", __FILE__)
+require "geo_ruby/version"
+
+desc "Builds the gem"
+task :gem => :build
+task :build do
+  system "gem build georuby.gemspec"
+  Dir.mkdir("pkg") unless Dir.exists?("pkg")
+  system "mv georuby-#{GeoRuby::VERSION}.gem pkg/"
 end
 
-# require 'spec/rake/spectask'
-# Spec::Rake::SpecTask.new(:spec) do |spec|
-#   spec.libs << 'lib' << 'spec'
-#   spec.spec_files = FileList['spec/**/*_spec.rb']
-# end
-
-# Spec::Rake::SpecTask.new(:rcov) do |spec|
-#   spec.libs << 'lib' << 'spec'
-#   spec.pattern = 'spec/**/*_spec.rb'
-#   spec.rcov = true
-# end
-
-# task :default => :spec
-
-require 'rake/rdoctask'
-Rake::RDocTask.new do |rdoc|
-  if File.exist?('VERSION.yml')
-    config = YAML.load(File.read('VERSION.yml'))
-    version = "#{config[:major]}.#{config[:minor]}.#{config[:patch]}"
-  else
-    version = ""
-  end
-
-  rdoc.rdoc_dir = 'rdoc'
-  rdoc.title = "geo_ruby #{version}"
-  rdoc.rdoc_files.include('README*')
-  rdoc.rdoc_files.include('lib/**/*.rb')
+task :install => :build do
+  system "sudo gem install pkg/georuby-#{GeoRuby::VERSION}.gem"
 end
+
+task :release => :build do
+  system "git tag -a v#{GeoRuby::VERSION} -m 'Tagging #{GeoRuby::VERSION}'"
+  system "git push --tags"
+  system "gem push pkg/georuby-#{GeoRuby::VERSION}.gem"
+end
+
+RSpec::Core::RakeTask.new(:spec) do |spec|
+  spec.pattern = "spec/**/*_spec.rb"
+end
+
+task :default => [:spec]
 
