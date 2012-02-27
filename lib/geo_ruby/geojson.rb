@@ -1,4 +1,11 @@
 # GeoJSON parser based on the v1.0 spec at http://geojson.org/geojson-spec.html
+require 'rubygems'
+begin
+  require 'json'
+rescue LoadError
+  puts "You've loaded GeoRuby GeoJSON Support."
+  puts "Please install any 'json' provider gem. `gem install json`"
+end
 
 module GeoRuby
   #Raised when an error in the GeoJSON string is detected
