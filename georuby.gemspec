@@ -20,9 +20,6 @@ Gem::Specification.new do |s|
   s.require_paths = ["lib"]
   s.rubygems_version = %q{1.3.7}
 
-  s.add_runtime_dependency(%q<redis>, [">= 0"])
-  s.add_runtime_dependency(%q<serialport>, [">= 0"])
-  s.add_runtime_dependency(%q<eventmachine>, [">= 0"])
   s.add_development_dependency(%q<dbf>, [">= 1.2.9"])
   s.add_development_dependency(%q<rspec>, [">= 2.0.0"])
 end
