@@ -19,9 +19,9 @@ module GeoRuby
         end
       end
 
-      class Field < Column
-        def initialize(name, type, length, decimal = 0)
-          super(name, type, length, decimal)
+      class Field < Column::Base
+        def initialize(name, type, length, decimal = 0, version=1, encoding=nil)
+          super(name, type, length, decimal, version, encoding)
         end
       end
 
