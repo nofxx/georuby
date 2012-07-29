@@ -167,9 +167,8 @@ module GeoRuby
       end
 
       def kml_poslist(options) #:nodoc:
-        # again replacing allow_z undocumented option with detection of z coordinate
-        pos_list = if self.with_z
-           map {|point| "#{point.x},#{point.y},#{point.z}" }
+        pos_list = if options[:allow_z]
+           map {|point| "#{point.x},#{point.y},#{options[:fixed_z] || point.z || 0}" }
         else
           map {|point| "#{point.x},#{point.y}" }
         end
