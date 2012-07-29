@@ -18,6 +18,7 @@ require 'geo_ruby/shp'
 require 'geo_ruby/gpx'
 require 'geo_ruby/geojson'
 require 'geo_ruby/georss'
+require 'geo_ruby/kml'
 
 include GeoRuby
 include SimpleFeatures
