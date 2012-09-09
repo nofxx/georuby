@@ -12,21 +12,26 @@ module GeoRuby
         super(srid,with_z,with_m)
       end
 
+      # fix kml export
+      alias_method :orig_kml_representation, :kml_representation
+      def kml_representation(options = {})
+        orig_kml_representation(options).gsub('LineString', 'LinearRing')
+      end
 
-    # Does this linear string contain the given point?  We use the
-    # algorithm described here:
-    #
-    # http://www.ecse.rpi.edu/Homepages/wrf/Research/Short_Notes/pnpoly.html
-    def contains_point?(point)
-      x, y = point.x, point.y
-      tuples = @points.zip(@points[1..-1] + [@points[0]])
-      crossings =
-        tuples.select do |a, b|
-          (b.y > y != a.y > y) && (x < (a.x - b.x) * (y - b.y) / (a.y - b.y) + b.x)
-        end
+      # Does this linear string contain the given point?  We use the
+      # algorithm described here:
+      #
+      # http://www.ecse.rpi.edu/Homepages/wrf/Research/Short_Notes/pnpoly.html
+      def contains_point?(point)
+        x, y = point.x, point.y
+        tuples = @points.zip(@points[1..-1] + [@points[0]])
+        crossings =
+          tuples.select do |a, b|
+            (b.y > y != a.y > y) && (x < (a.x - b.x) * (y - b.y) / (a.y - b.y) + b.x)
+          end
 
-      crossings.size % 2 == 1
-    end
+        crossings.size % 2 == 1
+      end
     end
 
   end
