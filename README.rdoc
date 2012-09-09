@@ -1,9 +1,7 @@
 = GeoRuby
 
 
-This is a fork of GeoRuby with some updates and extra funcionality.
-
-It is intended as a holder for geometric data. The data model roughly
+This is intended as a holder for geometric data. The data model roughly
 follows the OGC "Simple Features for SQL" specification, so it should
 play nice with data returned from PostGIS or any Spatial Extensions (MongoDB, MySQL...).
 Although without any kind of advanced functionalities (such as geometric operators or reprojections).
@@ -12,7 +10,7 @@ It also supports various output and input formats (GeoRSS, KML, Shapefile).
 OGC:"http://www.opengis.org/docs/99-049.pdf"
 
 GeoRuby is written in pure Ruby.
-If you are looking for Proj/Geos/ext rubygem checkout:
+If you are looking for Proj/Geos/ext C rubygem checkout:
 rgeo:"https://github.com/dazuma/rgeo"
 
 
@@ -36,7 +34,11 @@ On top of this an Envelope class is available, to contain the bounding box of a 
 
 To install the latest version, just type:
 
-      gem install nofxx-georuby
+      gem install georuby
+
+Or include on your projects`s Gemfile:
+
+      gem 'georuby'
 
 
 == Use
