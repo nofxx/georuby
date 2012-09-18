@@ -18,7 +18,7 @@ module GeoRuby
 
       #Bounding box in 2D/3D. Returns an array of 2 points
       def bounding_box
-        max_x, min_x, max_y, min_y = -Float::MAX, Float::MAX, -Float::MAX, Float::MAX, -Float::MAX, Float::MAX
+        max_x, min_x, max_y, min_y = -Float::MAX, Float::MAX, -Float::MAX, Float::MAX
         if with_z
           max_z, min_z = -Float::MAX, Float::MAX
           each do |geometry|
