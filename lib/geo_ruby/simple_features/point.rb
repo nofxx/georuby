@@ -117,6 +117,7 @@ module GeoRuby
 
         dot = a * c + b * d
         len = c * c + d * d
+        return 0.0 if len.zero?
         res = dot / len
 
         xx, yy = if res < 0
@@ -307,7 +308,7 @@ module GeoRuby
         as_json(options).to_json(options)
       end
       alias :as_geojson :to_json
-    
+
       #creates a point from an array of coordinates
       def self.from_coordinates(coords,srid=DEFAULT_SRID,with_z=false,with_m=false)
         if ! (with_z or with_m)
@@ -322,26 +323,26 @@ module GeoRuby
       end
 
       #creates a point from the X and Y coordinates
-      def self.from_x_y(x,y,srid=DEFAULT_SRID)
+      def self.from_x_y(x, y, srid=DEFAULT_SRID)
         point= new(srid)
         point.set_x_y(x,y)
       end
 
       #creates a point from the X, Y and Z coordinates
-      def self.from_x_y_z(x,y,z,srid=DEFAULT_SRID)
+      def self.from_x_y_z(x, y, z, srid=DEFAULT_SRID)
         point= new(srid,true)
         point.set_x_y_z(x,y,z)
       end
 
       #creates a point from the X, Y and M coordinates
-      def self.from_x_y_m(x,y,m,srid=DEFAULT_SRID)
+      def self.from_x_y_m(x, y, m, srid=DEFAULT_SRID)
         point= new(srid,false,true)
         point.m=m
         point.set_x_y(x,y)
       end
 
       #creates a point from the X, Y, Z and M coordinates
-      def self.from_x_y_z_m(x,y,z,m,srid=DEFAULT_SRID)
+      def self.from_x_y_z_m(x, y, z, m, srid=DEFAULT_SRID)
         point= new(srid,true,true)
         point.m=m
         point.set_x_y_z(x,y,z)
@@ -349,7 +350,7 @@ module GeoRuby
 
       #creates a point using polar coordinates
       #r and theta(degrees)
-      def self.from_r_t(r,t,srid=DEFAULT_SRID)
+      def self.from_r_t(r, t, srid=DEFAULT_SRID)
         t *= DEG2RAD
         x = r * Math.cos(t)
         y = r * Math.sin(t)
@@ -358,7 +359,7 @@ module GeoRuby
       end
 
       #creates a point using coordinates like 22`34 23.45N
-      def self.from_latlong(lat,lon,srid=DEFAULT_SRID)
+      def self.from_latlong(lat, lon, srid=DEFAULT_SRID)
         p = [lat,lon].map do |l|
           sig, deg, min, sec, cen = l.scan(/(-)?(\d{1,2})\D*(\d{2})\D*(\d{2})(\D*(\d{1,3}))?/).flatten
           sig = true if l =~ /W|S/
@@ -372,7 +373,9 @@ module GeoRuby
       #aliasing the constructors in case you want to use lat/lon instead of y/x
       class << self
         alias :xy               :from_x_y
+        alias :from_xy          :from_x_y
         alias :xyz              :from_x_y_z
+        alias :from_xyz         :from_x_y_z
         alias :from_lon_lat_z   :from_x_y_z
         alias :from_lon_lat     :from_x_y
         alias :from_lon_lat_z   :from_x_y_z
