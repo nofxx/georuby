@@ -30,15 +30,26 @@ They can be in 2D, 3DZ, 3DM, and 4D.
 
 On top of this an Envelope class is available, to contain the bounding box of a geometry.
 
+
 == Installation
 
 To install the latest version, just type:
 
-      gem install georuby
+    gem install georuby
+
 
 Or include on your projects`s Gemfile:
 
-      gem 'georuby'
+    gem 'georuby'
+
+
+Optional, require if you need support to:
+
+    require 'geo_ruby/shp4r/shp'
+    require 'geo_ruby/gpx4r/gpx'
+    require 'geo_ruby/geojson'
+    require 'geo_ruby/georss'
+    require 'geo_ruby/kml'
 
 
 == Use
