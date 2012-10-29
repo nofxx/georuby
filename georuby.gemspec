@@ -24,4 +24,5 @@ Gem::Specification.new do |s|
   s.add_development_dependency "dbf", ">= 1.7.0"
   s.add_development_dependency 'json', ">= 1.6.5"
   s.add_development_dependency "rspec", ">= 2.3.0"
+  s.add_development_dependency "rake"
 end
