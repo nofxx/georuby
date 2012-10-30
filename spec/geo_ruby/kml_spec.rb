@@ -1,6 +1,6 @@
 require File.expand_path(File.dirname(__FILE__) + '/../spec_helper')
 
-describe KmlParser do
+describe GeoRuby::KmlParser do
   before(:all) do
     POINT = "<Point><coordinates>-82.4898187291883,34.2473206042649</coordinates></Point>"
     LINESTRING = "<LineString><coordinates>-122.365662,37.826988 -122.365202,37.826302 -122.364581,37.82655 -122.365038,37.827237</coordinates></LineString>"
@@ -14,11 +14,11 @@ describe KmlParser do
   end
   
   before(:each) do
-    @factory = GeometryFactory.new
-    @kml_parser = KmlParser.new(@factory)
+    @factory = GeoRuby::SimpleFeatures::GeometryFactory.new
+    @kml_parser = described_class.new(@factory)
   end
   
-  it "should parse a Point correctly" do
+  it "should parse a GeoRuby::SimpleFeatures::Point correctly" do
     @kml_parser.parse(POINT)
     g = @factory.geometry
     g.should_not eql(nil)
@@ -26,7 +26,7 @@ describe KmlParser do
     g.as_kml.gsub(/\n/,'').should eql(POINT) 
   end
   
-  it "should parse a LineString correctly" do
+  it "should parse a GeoRuby::SimpleFeatures::LineString correctly" do
     @kml_parser.parse(LINESTRING)
     g = @factory.geometry
     g.should_not eql(nil)
@@ -40,7 +40,7 @@ describe KmlParser do
     g.as_kml.gsub(/\n/,'').should eql(LINEARRING)
   end
   
-  it "should parse a Polygon correctly" do
+  it "should parse a GeoRuby::SimpleFeatures::Polygon correctly" do
     @kml_parser.parse(POLYGON)
     g = @factory.geometry
     g.should_not eql(nil)

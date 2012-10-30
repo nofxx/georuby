@@ -2,15 +2,15 @@ require File.expand_path(File.dirname(__FILE__) + '/../spec_helper')
 
 RSS_DATA_DIR = File.dirname(__FILE__) + '/../data/georss/'
 
-describe GeorssParser do
+describe GeoRuby::GeorssParser do
 
   it "should parse an rss file" do
-    geo = GeorssParser.new.parse(File.read(RSS_DATA_DIR + "/w3c.xml"))
-    geo.should be_a Point
+    geo = subject.parse(File.read(RSS_DATA_DIR + "/w3c.xml"))
+    geo.should be_a GeoRuby::SimpleFeatures::Point
   end
 
   it "test_point_creation" do
-    point = Point.from_x_y(3,4)
+    point = GeoRuby::SimpleFeatures::Point.from_x_y(3,4)
 
     point.as_georss(:dialect => :simple, :elev => 45.7, :featuretypetag => "hoyoyo").gsub("\n","").should eql("<georss:point featuretypetag=\"hoyoyo\" elev=\"45.7\">4 3</georss:point>")
     point.as_georss(:dialect => :w3cgeo).gsub("\n","").should eql("<geo:lat>4</geo:lat><geo:long>3</geo:long>")
@@ -20,7 +20,7 @@ describe GeorssParser do
   end
 
   it "test_line_string" do
-    ls = LineString.from_points([Point.from_lon_lat_z(12.4,-45.3,56),Point.from_lon_lat_z(45.4,41.6,45)],123,true)
+    ls = GeoRuby::SimpleFeatures::LineString.from_points([GeoRuby::SimpleFeatures::Point.from_lon_lat_z(12.4,-45.3,56),GeoRuby::SimpleFeatures::Point.from_lon_lat_z(45.4,41.6,45)],123,true)
 
     ls.as_georss.gsub("\n","").should eql("<georss:line>-45.3 12.4 41.6 45.4</georss:line>")
     ls.as_georss(:dialect => :w3cgeo).gsub("\n","").should eql("<geo:lat>-45.3</geo:lat><geo:long>12.4</geo:long>")
@@ -30,9 +30,9 @@ describe GeorssParser do
   end
 
   it "test_polygon" do
-    linear_ring1 = LinearRing.from_coordinates([[12.4,-45.3],[45.4,41.6],[4.456,1.0698],[12.4,-45.3]],256)
-    linear_ring2 = LinearRing.from_coordinates([[2.4,5.3],[5.4,1.4263],[14.46,1.06],[2.4,5.3]],256)
-    polygon = Polygon.from_linear_rings([linear_ring1,linear_ring2],256)
+    linear_ring1 = GeoRuby::SimpleFeatures::LinearRing.from_coordinates([[12.4,-45.3],[45.4,41.6],[4.456,1.0698],[12.4,-45.3]],256)
+    linear_ring2 = GeoRuby::SimpleFeatures::LinearRing.from_coordinates([[2.4,5.3],[5.4,1.4263],[14.46,1.06],[2.4,5.3]],256)
+    polygon = GeoRuby::SimpleFeatures::Polygon.from_linear_rings([linear_ring1,linear_ring2],256)
 
     polygon.as_georss(:georss_ns => "hoyoyo").gsub("\n","").should eql("<hoyoyo:polygon>-45.3 12.4 41.6 45.4 1.0698 4.456 -45.3 12.4</hoyoyo:polygon>")
     polygon.as_georss(:dialect => :w3cgeo, :w3cgeo_ns => "bouyoul").gsub("\n","").should eql("<bouyoul:lat>-45.3</bouyoul:lat><bouyoul:long>12.4</bouyoul:long>")
@@ -42,7 +42,7 @@ describe GeorssParser do
   end
 
   it "test_geometry_collection" do
-    gc = GeometryCollection.from_geometries([Point.from_x_y(4.67,45.4,256),LineString.from_coordinates([[5.7,12.45],[67.55,54]],256)],256)
+    gc = GeoRuby::SimpleFeatures::GeometryCollection.from_geometries([GeoRuby::SimpleFeatures::Point.from_x_y(4.67,45.4,256),GeoRuby::SimpleFeatures::LineString.from_coordinates([[5.7,12.45],[67.55,54]],256)],256)
 
     #only the first geometry is output
     gc.as_georss(:dialect => :simple,:floor => 4).gsub("\n","").should eql("<georss:point floor=\"4\">45.4 4.67</georss:point>")
@@ -53,9 +53,9 @@ describe GeorssParser do
   end
 
   it "test_envelope" do
-    linear_ring1 = LinearRing.from_coordinates([[12,-45,5],[45,41,6],[4,1,8],[12.4,-45,3]],256,true)
-    linear_ring2 = LinearRing.from_coordinates([[2,5,9],[5.4,1,-5.4],[14,1,34],[2,5,3]],256,true)
-    polygon = Polygon.from_linear_rings([linear_ring1,linear_ring2],256,true)
+    linear_ring1 = GeoRuby::SimpleFeatures::LinearRing.from_coordinates([[12,-45,5],[45,41,6],[4,1,8],[12.4,-45,3]],256,true)
+    linear_ring2 = GeoRuby::SimpleFeatures::LinearRing.from_coordinates([[2,5,9],[5.4,1,-5.4],[14,1,34],[2,5,3]],256,true)
+    polygon = GeoRuby::SimpleFeatures::Polygon.from_linear_rings([linear_ring1,linear_ring2],256,true)
 
     e = polygon.envelope
 
@@ -70,35 +70,35 @@ describe GeorssParser do
   it "test_point_georss_read" do
     #W3CGeo
     str = "   <geo:lat >12.3</geo:lat >\n\t  <geo:long>   4.56</geo:long> "
-    geom = Geometry.from_georss(str)
-    geom.class.should eql(Point)
+    geom = GeoRuby::SimpleFeatures::Geometry.from_georss(str)
+    geom.class.should eql(GeoRuby::SimpleFeatures::Point)
     geom.lat.should eql(12.3)
     geom.lon.should eql(4.56)
 
     str = " <geo:Point> \n \t  <geo:long>   4.56</geo:long> \n\t  <geo:lat >12.3</geo:lat > </geo:Point>  "
-    geom = Geometry.from_georss(str)
-    geom.class.should eql(Point)
+    geom = GeoRuby::SimpleFeatures::Geometry.from_georss(str)
+    geom.class.should eql(GeoRuby::SimpleFeatures::Point)
     geom.lat.should eql(12.3)
     geom.lon.should eql(4.56)
 
     #gml
     str = " <georss:where> \t\r  <gml:Point  > \t <gml:pos> 4 \t 3 </gml:pos> </gml:Point> </georss:where>"
-    geom = Geometry.from_georss(str)
-    geom.class.should eql(Point)
+    geom = GeoRuby::SimpleFeatures::Geometry.from_georss(str)
+    geom.class.should eql(GeoRuby::SimpleFeatures::Point)
     geom.lat.should eql(4.0)
     geom.lon.should eql(3.0)
 
     #simple
     str = "<georss:point > 4 \r\t  3 \t</georss:point >"
-    geom  = Geometry.from_georss(str)
-    geom.class.should eql(Point)
+    geom  = GeoRuby::SimpleFeatures::Geometry.from_georss(str)
+    geom.class.should eql(GeoRuby::SimpleFeatures::Point)
     geom.lat.should eql(4.0)
     geom.lon.should eql(3.0)
 
     #simple with tags
     str = "<georss:point featuretypetag=\"hoyoyo\"  elev=\"45.7\" \n floor=\"2\" relationshiptag=\"puyopuyo\" radius=\"42\" > 4 \n 3 \t</georss:point >"
-    geom,tags = Geometry.from_georss_with_tags(str)
-    geom.class.should eql(Point)
+    geom,tags = GeoRuby::SimpleFeatures::Geometry.from_georss_with_tags(str)
+    geom.class.should eql(GeoRuby::SimpleFeatures::Point)
     geom.lat.should eql(4.0)
     geom.lon.should eql(3.0)
     tags.featuretypetag.should eql("hoyoyo")
@@ -109,65 +109,65 @@ describe GeorssParser do
   end
 
   it "test_line_string_georss_read" do
-    ls = LineString.from_points([Point.from_lon_lat(12.4,-45.3),Point.from_lon_lat(45.4,41.6)])
+    ls = GeoRuby::SimpleFeatures::LineString.from_points([GeoRuby::SimpleFeatures::Point.from_lon_lat(12.4,-45.3),GeoRuby::SimpleFeatures::Point.from_lon_lat(45.4,41.6)])
 
     str = "<georss:line > -45.3 12.4 \n \r41.6\t 45.4</georss:line>"
-    geom  = Geometry.from_georss(str)
-    geom.class.should eql(LineString)
+    geom  = GeoRuby::SimpleFeatures::Geometry.from_georss(str)
+    geom.class.should eql(GeoRuby::SimpleFeatures::LineString)
     ls.should == geom
 
     str = "<georss:where><gml:LineString><gml:posList>-45.3 12.4 41.6 45.4</gml:posList></gml:LineString></georss:where>"
-    geom  = Geometry.from_georss(str)
-    geom.class.should eql(LineString)
+    geom = GeoRuby::SimpleFeatures::Geometry.from_georss(str)
+    geom.class.should eql(GeoRuby::SimpleFeatures::LineString)
     ls.should == geom
   end
 
   it "test_polygon_georss_read" do
-    linear_ring = LinearRing.from_coordinates([[12.4,-45.3],[45.4,41.6],[4.456,1.0698],[12.4,-45.3]])
-    polygon = Polygon.from_linear_rings([linear_ring])
+    linear_ring = GeoRuby::SimpleFeatures::LinearRing.from_coordinates([[12.4,-45.3],[45.4,41.6],[4.456,1.0698],[12.4,-45.3]])
+    polygon = GeoRuby::SimpleFeatures::Polygon.from_linear_rings([linear_ring])
 
     str = "<hoyoyo:polygon featuretypetag=\"42\"  > -45.3 12.4 41.6 \n\r 45.4 1.0698 \r 4.456 -45.3 12.4 </hoyoyo:polygon>"
-    geom = Geometry.from_georss(str)
-    geom.class.should eql(Polygon)
+    geom = GeoRuby::SimpleFeatures::Geometry.from_georss(str)
+    geom.class.should eql(GeoRuby::SimpleFeatures::Polygon)
     polygon.should == geom
 
     str = "<georss:where>\r\t \n  <gml:Polygon><gml:exterior>   <gml:LinearRing><gml:posList> -45.3 \n\r 12.4 41.6 \n\t 45.4 1.0698 4.456 -45.3 12.4</gml:posList></gml:LinearRing></gml:exterior></gml:Polygon></georss:where>"
-    geom = Geometry.from_georss(str)
-    geom.class.should eql(Polygon)
+    geom = GeoRuby::SimpleFeatures::Geometry.from_georss(str)
+    geom.class.should eql(GeoRuby::SimpleFeatures::Polygon)
     polygon.should == geom
   end
 
   it "test_envelope_georss_read" do
-    e = Envelope.from_coordinates([[4.456,-45.3],[45.4,41.6]])
+    e = GeoRuby::SimpleFeatures::Envelope.from_coordinates([[4.456,-45.3],[45.4,41.6]])
 
     str = "<georss:box  >-45.3 4.456 \n41.6 45.4</georss:box>"
-    geom = Geometry.from_georss(str)
-    geom.class.should eql(Envelope)
+    geom = GeoRuby::SimpleFeatures::Geometry.from_georss(str)
+    geom.class.should eql(GeoRuby::SimpleFeatures::Envelope)
     geom.should == e
 
     str = "<georss:where><gml:Envelope><gml:lowerCorner>-45.3 \n 4.456</gml:lowerCorner><gml:upperCorner>41.6 \t\n 45.4</gml:upperCorner></gml:Envelope></georss:where>"
-    geom = Geometry.from_georss(str)
-    geom.class.should eql(Envelope)
+    geom = GeoRuby::SimpleFeatures::Geometry.from_georss(str)
+    geom.class.should eql(GeoRuby::SimpleFeatures::Envelope)
     geom.should == e
   end
 
   it "test_kml_read" do
-    g = Geometry.from_kml("<Point><coordinates>45,12,25</coordinates></Point>")
-    g.should be_a Point
-    g.should == Point.from_x_y_z('45','12','25')
+    g = GeoRuby::SimpleFeatures::Geometry.from_kml("<Point><coordinates>45,12,25</coordinates></Point>")
+    g.should be_a GeoRuby::SimpleFeatures::Point
+    g.should == GeoRuby::SimpleFeatures::Point.from_x_y_z('45','12','25')
 
-    g = Geometry.from_kml("<LineString>
+    g = GeoRuby::SimpleFeatures::Geometry.from_kml("<LineString>
       <extrude>1</extrude>
       <tessellate>1</tessellate>
       <coordinates>
         -122.364383,37.824664,0 -122.364152,37.824322,0
       </coordinates>
     </LineString>")
-    g.should be_a LineString
+    g.should be_a GeoRuby::SimpleFeatures::LineString
     g.length.should eql(2)
-    g.should == LineString.from_points([Point.from_x_y_z('-122.364383','37.824664','0'),Point.from_x_y_z('-122.364152','37.824322','0')],4326,true)
+    g.should == GeoRuby::SimpleFeatures::LineString.from_points([GeoRuby::SimpleFeatures::Point.from_x_y_z('-122.364383','37.824664','0'),GeoRuby::SimpleFeatures::Point.from_x_y_z('-122.364152','37.824322','0')],4326,true)
 
-    g = Geometry.from_kml("<Polygon>
+    g = GeoRuby::SimpleFeatures::Geometry.from_kml("<Polygon>
       <extrude>1</extrude>
       <altitudeMode>relativeToGround</altitudeMode>
       <outerBoundaryIs>
@@ -204,22 +204,22 @@ describe GeorssParser do
         </LinearRing>
       </innerBoundaryIs>
     </Polygon>")
-    g.should be_a Polygon
+    g.should be_a GeoRuby::SimpleFeatures::Polygon
     g.length.should eql(3)
   end
 
   it "test_to_kml_for_point_does_not_raise_type_error_if_geom_data_not_provided" do
-    point = Point.from_coordinates([1.6,2.8],123)
+    point = GeoRuby::SimpleFeatures::Point.from_coordinates([1.6,2.8],123)
     lambda { point.kml_representation }.should_not raise_error(TypeError)
   end
 
   it "test_to_kml_for_polygon_does_not_raise_type_error_if_geom_data_not_provided" do
-    polygon =  Polygon.from_coordinates([[[12.4,-45.3],[45.4,41.6],[4.456,1.0698],[12.4,-45.3]],[[2.4,5.3],[5.4,1.4263],[14.46,1.06],[2.4,5.3]]],256)
+    polygon =  GeoRuby::SimpleFeatures::Polygon.from_coordinates([[[12.4,-45.3],[45.4,41.6],[4.456,1.0698],[12.4,-45.3]],[[2.4,5.3],[5.4,1.4263],[14.46,1.06],[2.4,5.3]]],256)
     lambda { polygon.kml_representation }.should_not raise_error(TypeError)
   end
 
   it "test_to_kml_for_line_string_does_not_raise_type_error_if_geom_data_not_provided" do
-    ls = LineString.from_coordinates([[5.7,12.45],[67.55,54]],256)
+    ls = GeoRuby::SimpleFeatures::LineString.from_coordinates([[5.7,12.45],[67.55,54]],256)
     lambda { ls.kml_representation }.should_not raise_error(TypeError)
   end
 

@@ -8,6 +8,7 @@ rescue LoadError
 end
 
 module GeoRuby
+  
   #Raised when an error in the GeoJSON string is detected
   class GeojsonFormatError < StandardError
   end
@@ -73,6 +74,7 @@ module GeoRuby
 
 
   class GeojsonParser
+    include GeoRuby::SimpleFeatures
     attr_reader :geometry
 
     def parse(geojson, srid=DEFAULT_SRID)
