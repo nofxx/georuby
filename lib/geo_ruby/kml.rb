@@ -61,7 +61,7 @@ module GeoRuby
     def accumulate_end(e); @buffer << "</#{e[0]}>"; end
     
     def parse_coordinates(buffer)
-      if(buffer =~ /<coordinates>(.+)<\/coordinates>/)
+      if(buffer =~ /<coordinates>(.+)<\/coordinates>/m)
         $1.gsub(/\n/, " ").strip.split(/\s+/).each do |coord|
           x,y,z = coord.split(',')
           if(x.nil? || y.nil?) 

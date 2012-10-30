@@ -1,23 +1,20 @@
 require File.expand_path(File.dirname(__FILE__) + '/../../spec_helper')
 
-include GeoRuby::Gpx4r
-include GeoRuby::SimpleFeatures
-
-describe Gpx4r do
+describe GeoRuby::Gpx4r do
 
   it "should add gpx extension and raise if doesn't exists" do
     lambda do
       File.should_receive(:exists?).with("short.gpx").and_return(false)
-      GpxFile.open('short').should be_true
-    end.should raise_error MalformedGpxException
+      GeoRuby::Gpx4r::GpxFile.open('short').should be_true
+    end.should raise_error GeoRuby::Gpx4r::MalformedGpxException
   end
 
   describe "Waypoints" do
 
     before(:all) do
-      @gpxfile = GpxFile.open(File.dirname(__FILE__) + '/../../data/gpx/short.gpx', :with_z => true, :with_m => true)
-      @gpxfile2 = GpxFile.open(File.dirname(__FILE__) + '/../../data/gpx/fells_loop', :with_z => true, :with_m => true)
-      @gpxfile3 = GpxFile.open(File.dirname(__FILE__) + '/../../data/gpx/tracktreks.gpx', :with_z => true)
+      @gpxfile = GeoRuby::Gpx4r::GpxFile.open(File.dirname(__FILE__) + '/../../data/gpx/short.gpx', :with_z => true, :with_m => true)
+      @gpxfile2 = GeoRuby::Gpx4r::GpxFile.open(File.dirname(__FILE__) + '/../../data/gpx/fells_loop', :with_z => true, :with_m => true)
+      @gpxfile3 = GeoRuby::Gpx4r::GpxFile.open(File.dirname(__FILE__) + '/../../data/gpx/tracktreks.gpx', :with_z => true)
     end
 
     it "should open and parse" do
@@ -63,43 +60,43 @@ describe Gpx4r do
     end
 
     it "should return it as a linestring" do
-      @gpxfile.as_line_string.should be_instance_of LineString
-      @gpxfile.as_polyline.should be_instance_of LineString
+      @gpxfile.as_line_string.should be_instance_of GeoRuby::SimpleFeatures::LineString
+      @gpxfile.as_polyline.should be_instance_of GeoRuby::SimpleFeatures::LineString
     end
 
     it "should return it as a linestring 3" do
-      @gpxfile3.as_line_string.should be_instance_of LineString
-      @gpxfile3.as_polyline.should be_instance_of LineString
+      @gpxfile3.as_line_string.should be_instance_of GeoRuby::SimpleFeatures::LineString
+      @gpxfile3.as_polyline.should be_instance_of GeoRuby::SimpleFeatures::LineString
     end
 
     it "should return a envelope" do
-      @gpxfile.envelope.should be_instance_of Envelope
+      @gpxfile.envelope.should be_instance_of GeoRuby::SimpleFeatures::Envelope
       @gpxfile.envelope.lower_corner.x.should be_within(0.001).of(9.08128)
       @gpxfile.envelope.lower_corner.y.should be_within(0.001).of(48.7169)
     end
 
     it "should return a envelope 3" do
-      @gpxfile3.envelope.should be_instance_of Envelope
+      @gpxfile3.envelope.should be_instance_of GeoRuby::SimpleFeatures::Envelope
       @gpxfile3.envelope.lower_corner.x.should be_within(0.001).of(-149.8422613)
       @gpxfile3.envelope.lower_corner.y.should be_within(0.001).of(-17.547636)
     end
 
     it "should return it as a polygon" do
       [@gpxfile, @gpxfile2, @gpxfile3].each do |g|
-        g.as_polygon.should be_instance_of Polygon
-        g.as_polygon[0].should be_instance_of LinearRing
+        g.as_polygon.should be_instance_of GeoRuby::SimpleFeatures::Polygon
+        g.as_polygon[0].should be_instance_of GeoRuby::SimpleFeatures::LinearRing
         g.as_polygon[0].should be_closed
         g.as_polygon[1].should be_nil
       end
     end
 
     it "should close the polygon" do
-      se = Point.from_x_y(-44, -23)
-      sw = Point.from_x_y(-42, -22)
-      nw = Point.from_x_y(-42, -25)
-      ne = Point.from_x_y(-44, -21)
+      se = GeoRuby::SimpleFeatures::Point.from_x_y(-44, -23)
+      sw = GeoRuby::SimpleFeatures::Point.from_x_y(-42, -22)
+      nw = GeoRuby::SimpleFeatures::Point.from_x_y(-42, -25)
+      ne = GeoRuby::SimpleFeatures::Point.from_x_y(-44, -21)
       @gpxfile.instance_variable_set(:@points, [se,sw,nw,ne])
-      @gpxfile.as_polygon.should == Polygon.from_points([[se,sw,nw,ne,se]])
+      @gpxfile.as_polygon.should == GeoRuby::SimpleFeatures::Polygon.from_points([[se,sw,nw,ne,se]])
     end
   end
 

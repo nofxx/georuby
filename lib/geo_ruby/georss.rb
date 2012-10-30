@@ -21,6 +21,7 @@ module GeoRuby
   #Parses GeoRSS strings
   #You can also use directly the static method Geometry.from_georss
   class GeorssParser
+    include GeoRuby::SimpleFeatures
     attr_reader :georss_tags, :geometry
 
     #Parses the georss geometry  passed as argument and notifies the factory of events

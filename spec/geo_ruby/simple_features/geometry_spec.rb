@@ -1,32 +1,29 @@
 require File.expand_path(File.dirname(__FILE__) + '/../../spec_helper')
 
-describe Geometry do
-  before(:each) do
-    @geo = Geometry.new
-  end
+describe GeoRuby::SimpleFeatures::Geometry do
 
   it "should instantiate" do
-    violated unless @geo
+    violated unless subject
   end
 
   it "should have a default srid" do
-    @geo.srid.should eql(4326) #Geometry.default_srid)
+    subject.srid.should eql(4326) #Geometry.default_srid)
   end
 
   it "should change srid" do
-    geo = Geometry.new(225)
+    geo = GeoRuby::SimpleFeatures::Geometry.new(225)
     geo.srid.should eql(225)
   end
 
   it "should instantiate from hex ewkb" do
-    point = Geometry.from_hex_ewkb("01010000207B000000CDCCCCCCCCCC28406666666666A64640")
-    point.class.should == Point
+    point = GeoRuby::SimpleFeatures::Geometry.from_hex_ewkb("01010000207B000000CDCCCCCCCCCC28406666666666A64640")
+    point.class.should == GeoRuby::SimpleFeatures::Point
     point.x.should be_within(0.1).of(12.4)
   end
 
   it "should output as_ewkb" do
-    @geo.stub!(:binary_geometry_type).and_return(1)
-    @geo.stub!(:binary_representation).and_return(1)
-    @geo.as_ewkb.should eql("\001\001\000\000 \346\020\000\000\001")
+    subject.stub!(:binary_geometry_type).and_return(1)
+    subject.stub!(:binary_representation).and_return(1)
+    subject.as_ewkb.should eql("\001\001\000\000 \346\020\000\000\001")
   end
 end
