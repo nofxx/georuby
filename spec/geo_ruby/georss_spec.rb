@@ -154,7 +154,7 @@ describe GeorssParser do
   it "test_kml_read" do
     g = Geometry.from_kml("<Point><coordinates>45,12,25</coordinates></Point>")
     g.should be_a Point
-    g.should == Point.from_x_y_z(45,12,25)
+    g.should == Point.from_x_y_z('45','12','25')
 
     g = Geometry.from_kml("<LineString>
       <extrude>1</extrude>
@@ -165,7 +165,7 @@ describe GeorssParser do
     </LineString>")
     g.should be_a LineString
     g.length.should eql(2)
-    g.should == LineString.from_points([Point.from_x_y_z(-122.364383,37.824664,0),Point.from_x_y_z(-122.364152,37.824322,0)],4326,true)
+    g.should == LineString.from_points([Point.from_x_y_z('-122.364383','37.824664','0'),Point.from_x_y_z('-122.364152','37.824322','0')],4326,true)
 
     g = Geometry.from_kml("<Polygon>
       <extrude>1</extrude>
