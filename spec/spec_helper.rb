@@ -6,22 +6,14 @@ require 'rubygems'
 #require 'active_support/core_ext/object'
 #require 'json/pure'
 
-# begin
-#   require 'spec'
-# rescue LoadError
 require 'rspec'
-#end
 
-$:.unshift(File.dirname(__FILE__) + '/../lib')
 require 'geo_ruby'
 require 'geo_ruby/shp'
 require 'geo_ruby/gpx'
 require 'geo_ruby/geojson'
 require 'geo_ruby/georss'
 require 'geo_ruby/kml'
-
-include GeoRuby
-include SimpleFeatures
 
 module GeorubyMatchers
 
@@ -52,7 +44,7 @@ module GeorubyMatchers
           end
         end
       end
-      actual.should be_instance_of(Point)
+      actual.should be_instance_of(GeoRuby::SimpleFeatures::Point)
     end
 
     def failure_message;          "expected #{@expect} but received #{@actual.inspect}";    end

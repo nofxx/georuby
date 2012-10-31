@@ -1,29 +1,29 @@
 require File.expand_path(File.dirname(__FILE__) + '/../../spec_helper')
 
-describe Envelope do
+describe GeoRuby::SimpleFeatures::Envelope do
   before(:each) do
     @srid = 4269
-    @env = Envelope.from_points([Point.from_x_y(10,20, @srid),Point.from_x_y(20,30, @srid)], @srid)
+    @env = GeoRuby::SimpleFeatures::Envelope.from_points([GeoRuby::SimpleFeatures::Point.from_x_y(10,20, @srid),GeoRuby::SimpleFeatures::Point.from_x_y(20,30, @srid)], @srid)
   end
 
   it "should initialize" do
-    @env.should be_instance_of(Envelope)
+    @env.should be_instance_of(GeoRuby::SimpleFeatures::Envelope)
   end
 
   it "converted tu" do
-    linear_ring = LinearRing.from_coordinates([[12.4,-45.3],[45.4,41.6],[4.456,1.0698],[12.4,-45.3]],256)
-    polygon = Polygon.from_linear_rings([linear_ring],256)
+    linear_ring = GeoRuby::SimpleFeatures::LinearRing.from_coordinates([[12.4,-45.3],[45.4,41.6],[4.456,1.0698],[12.4,-45.3]],256)
+    polygon = GeoRuby::SimpleFeatures::Polygon.from_linear_rings([linear_ring],256)
     e = polygon.envelope
 
-    e.lower_corner.class.should eql(Point)
-    e.upper_corner.class.should eql(Point)
+    e.lower_corner.class.should eql(GeoRuby::SimpleFeatures::Point)
+    e.upper_corner.class.should eql(GeoRuby::SimpleFeatures::Point)
 
     e.lower_corner.x.should eql(4.456)
     e.lower_corner.y.should eql(-45.3)
     e.upper_corner.x.should eql(45.4)
     e.upper_corner.y.should eql(41.6)
 
-    line_string = LineString.from_coordinates([[13.6,-49.3],[45.4,44.6],[14.2,1.09],[13.6,-49.3]],256)
+    line_string = GeoRuby::SimpleFeatures::LineString.from_coordinates([[13.6,-49.3],[45.4,44.6],[14.2,1.09],[13.6,-49.3]],256)
     e2 = line_string.envelope
 
     e3 = e.extend(e2)

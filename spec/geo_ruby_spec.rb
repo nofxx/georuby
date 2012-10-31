@@ -2,26 +2,21 @@ require File.expand_path(File.dirname(__FILE__) + '/spec_helper')
 
 # Time to add your specs!
 # http://rspec.info/
-describe "GeoRuby Stuff" do
-
+describe GeoRuby do
+  
   it "should instantiate Geometry" do
     @geo = GeoRuby::SimpleFeatures::Geometry.new
-    @geo.class.should eql(Geometry)
-  end
-
-  it "should instantiate from SimpleFeatures for compatibility" do
-    @geo = GeoRuby::SimpleFeatures::Geometry.new
-    @geo.class.should eql(Geometry)
+    @geo.class.should eql(::GeoRuby::SimpleFeatures::Geometry)
   end
 
   it "should instantiate Point" do
-    @point = Point.new
-    @point.should be_instance_of(Point)
+    @point = GeoRuby::SimpleFeatures::Point.new
+    @point.should be_instance_of(::GeoRuby::SimpleFeatures::Point)
   end
 
   it "should instantiate Line" do
-    @line = LineString.new
-    @line.should be_instance_of(LineString)
+    @line = GeoRuby::SimpleFeatures::LineString.new
+    @line.should be_instance_of(::GeoRuby::SimpleFeatures::LineString)
   end
 
 end
