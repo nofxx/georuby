@@ -40,20 +40,20 @@ module GeoRuby
         if(with_z)
           max_z, min_z = -Float::MAX,Float::MAX
           each do |point|
-            max_y = point.y if point.y.to_f > max_y.to_f
-            min_y = point.y if point.y.to_f < min_y.to_f
-            max_x = point.x if point.x.to_f > max_x.to_f
-            min_x = point.x if point.x.to_f < min_x.to_f
-            max_z = point.z if point.z.to_f > max_z.to_f
-            min_z = point.z if point.z.to_f < min_z.to_f
+            max_y = point.y if point.y > max_y
+            min_y = point.y if point.y < min_y
+            max_x = point.x if point.x > max_x
+            min_x = point.x if point.x < min_x
+            max_z = point.z if point.z > max_z
+            min_z = point.z if point.z < min_z
           end
           [Point.from_x_y_z(min_x,min_y,min_z),Point.from_x_y_z(max_x,max_y,max_z)]
         else
           each do |point|
-            max_y = point.y if point.y.to_f > max_y.to_f
-            min_y = point.y if point.y.to_f < min_y.to_f
-            max_x = point.x if point.x.to_f > max_x.to_f
-            min_x = point.x if point.x.to_f < min_x.to_f
+            max_y = point.y if point.y > max_y
+            min_y = point.y if point.y < min_y
+            max_x = point.x if point.x > max_x
+            min_x = point.x if point.x < min_x
           end
           [Point.from_x_y(min_x,min_y),Point.from_x_y(max_x,max_y)]
         end
