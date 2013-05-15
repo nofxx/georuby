@@ -76,4 +76,12 @@ describe GeoRuby::KmlParser do
     g.with_z.should eql(true)
     # g.as_kml(:altitude_mode => "clampToGround").gsub(/\n/,'').should eql(LINESTRING3D)
   end
+
+  it "should yield a polygon with a functional bounding box" do
+    @kml_parser.parse(POLYGON)
+    g = @factory.geometry
+    lambda {
+      g.bounding_box
+    }.should_not raise_error
+  end
 end
