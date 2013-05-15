@@ -26,12 +26,12 @@ module GeoRuby
             sw = bbox[0]
             ne = bbox[1]
 
-            max_y = ne.y if ne.y > max_y
-            min_y = sw.y if sw.y < min_y
-            max_x = ne.x if ne.x > max_x
-            min_x = sw.x if sw.x < min_x
-            max_z = ne.z if ne.z > max_z
-            min_z = sw.z if sw.z < min_z
+            max_y = ne.y if ne.y.to_f > max_y.to_f
+            min_y = sw.y if sw.y.to_f < min_y.to_f
+            max_x = ne.x if ne.x.to_f > max_x.to_f
+            min_x = sw.x if sw.x.to_f < min_x.to_f
+            max_z = ne.z if ne.z.to_f > max_z.to_f
+            min_z = sw.z if sw.z.to_f < min_z.to_f
           end
           [Point.from_x_y_z(min_x,min_y,min_z),Point.from_x_y_z(max_x,max_y,max_z)]
         else
@@ -40,10 +40,10 @@ module GeoRuby
             sw = bbox[0]
             ne = bbox[1]
 
-            max_y = ne.y if ne.y > max_y
-            min_y = sw.y if sw.y < min_y
-            max_x = ne.x if ne.x > max_x
-            min_x = sw.x if sw.x < min_x
+            max_y = ne.y if ne.y.to_f > max_y.to_f
+            min_y = sw.y if sw.y.to_f < min_y.to_f
+            max_x = ne.x if ne.x.to_f > max_x.to_f
+            min_x = sw.x if sw.x.to_f < min_x.to_f
           end
           [Point.from_x_y(min_x,min_y),Point.from_x_y(max_x,max_y)]
         end
@@ -54,8 +54,8 @@ module GeoRuby
           max_m, min_m = -Float::MAX, Float::MAX
           each do |lr|
             lrmr = lr.m_range
-            max_m = lrmr[1] if lrmr[1] > max_m
-            min_m = lrmr[0] if lrmr[0] < min_m
+            max_m = lrmr[1] if lrmr[1].to_f > max_m.to_f
+            min_m = lrmr[0] if lrmr[0].to_f < min_m.to_f
           end
           [min_m,max_m]
         else
