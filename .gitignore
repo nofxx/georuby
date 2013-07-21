@@ -4,3 +4,4 @@ pkg/*.tgz
 pkg/**/*
 coverage/*
 doc/*
+Gemfile.lock
