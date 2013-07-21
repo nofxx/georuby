@@ -148,7 +148,7 @@ thoroughly so caveat emptor and backup before performing any destructive operati
 
 You can read and convert GPX Files to LineString/Polygon:
 
-     gpxfile = GpxFile.open(tour.gpx')
+     gpxfile = GpxFile.open('tour.gpx')
      gpxfile.as_line_string
      => GeoRuby::SimpleFeatures::LineString..
 
