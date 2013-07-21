@@ -21,8 +21,8 @@ Gem::Specification.new do |s|
   s.rubygems_version = %q{1.3.7}
 
   s.add_development_dependency "nokogiri", ["~> 1.5.5"]
-  s.add_development_dependency "dbf", ">= 1.7.0"
+  s.add_development_dependency "dbf", ">= 2.0.6"
   s.add_development_dependency 'json', ">= 1.6.5"
-  s.add_development_dependency "rspec", ">= 2.3.0"
+  s.add_development_dependency "rspec", ">= 2.14.0"
   s.add_development_dependency "rake"
 end
