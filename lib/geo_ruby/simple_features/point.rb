@@ -26,17 +26,17 @@ module GeoRuby
       end
       #sets all coordinates in one call. Use the +m+ accessor to set the m.
       def set_x_y_z(x,y,z)
-        @x=x
-        @y=y
-        @z=z
+        @x = x && !x.is_a?(Numeric) ? x.to_f : x
+        @y = y && !y.is_a?(Numeric) ? y.to_f : y
+        @z = z && !z.is_a?(Numeric) ? z.to_f : z
         self
       end
       alias :set_lon_lat_z :set_x_y_z
 
       #sets all coordinates of a 2D point in one call
       def set_x_y(x,y)
-        @x=x
-        @y=y
+        @x = x && !x.is_a?(Numeric) ? x.to_f : x
+        @y = y && !y.is_a?(Numeric) ? y.to_f : y
         self
       end
       alias :set_lon_lat :set_x_y

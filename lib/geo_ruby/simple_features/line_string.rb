@@ -63,8 +63,8 @@ module GeoRuby
         if with_m
           max_m, min_m = -Float::MAX, Float::MAX
           each do |point|
-            max_m = point.m if point.m > max_m
-            min_m = point.m if point.m < min_m
+            max_m = point.m if point.m.to_f > max_m
+            min_m = point.m if point.m.to_f < min_m
           end
           [min_m,max_m]
         else
