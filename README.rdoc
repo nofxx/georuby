@@ -1,16 +1,15 @@
 = GeoRuby
 
 
-This is intended as a holder for geometric data. The data model roughly
-follows the OGC "Simple Features for SQL" specification, so it should
-play nice with data returned from PostGIS or any Spatial Extensions (MongoDB, MySQL...).
-Although without any kind of advanced functionalities (such as geometric operators or reprojections).
+This is intended as a holder for geometric data.
+The data model roughly follows the OGC "Simple Features for SQL" specification,
+so it should play nice with data returned from PostGIS or any Spatial Extensions (MongoDB, MySQL...).
 It also supports various output and input formats (GeoRSS, KML, Shapefile).
+GeoRuby is written in pure Ruby.
 
 OGC:"http://www.opengis.org/docs/99-049.pdf"
 
-GeoRuby is written in pure Ruby.
-If you are looking for Proj/Geos/ext C rubygem checkout:
+If you are looking for Proj/Geos (geometric operators or reprojections) rubygem checkout: (C extension)
 rgeo:"https://github.com/dazuma/rgeo"
 
 
@@ -43,13 +42,14 @@ Or include on your projects`s Gemfile:
     gem 'georuby'
 
 
-Optional, require if you need support to:
+Optional, require if you need the functionality:
 
-    require 'geo_ruby/shp4r/shp'
-    require 'geo_ruby/gpx4r/gpx'
-    require 'geo_ruby/geojson'
-    require 'geo_ruby/georss'
-    require 'geo_ruby/kml'
+
+    require 'geo_ruby/shp4r/shp'    # Shapefile
+    require 'geo_ruby/gpx4r/gpx'    # GPX data
+    require 'geo_ruby/geojson'      # GeoJSON
+    require 'geo_ruby/georss'       # GeoRSS
+    require 'geo_ruby/kml'          # KML data
 
 
 == Use
@@ -152,7 +152,9 @@ You can read and convert GPX Files to LineString/Polygon:
      gpxfile.as_line_string
      => GeoRuby::SimpleFeatures::LineString..
 
+
 === GeoJSON Support
+
 Basic GeoJSON support has been implemented per v1.0 of the {spec}[http://geojson.org/geojson-spec.html].
 
 USAGE:
@@ -169,10 +171,19 @@ TODO:
 
 GeoJSON support implemented by {Marcus Mateus}[http://github.com/marcusmateus] and released courtesy {SimpliTex}[http://simplitex.com].
 
+
+=== Extra Features
+
+- Writing of ESRI shapefiles
+- Reading of ESRI shapefiles
+- Tool to import spatial features in MySQL and PostGIS from a SHP file
+
+
 === Acknowledgement
 
 The SHP reading part uses the DBF library (http://rubyforge.org/projects/dbf/) by Keith Morrison (http://infused.org).
 Thanks also to Pramukta Kumar and Pete Schwamb for their contributions.
+
 
 === License
 
@@ -185,11 +196,6 @@ Any questions, enhancement proposals, bug notifications or corrections
 can be sent to mailto:guilhem.vellut@gmail.com.
 
 
-=== Changes since the last version
-
-- Writing of ESRI shapefiles
-- Reading of ESRI shapefiles
-- Addition of a small tool to import spatial features in MySQL and PostGIS from a SHP file
 
 
 === Coming in the next versions
