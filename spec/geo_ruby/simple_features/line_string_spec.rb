@@ -7,7 +7,7 @@ module LineSpecHelper
   end
 
   def mock_point(x=1,y=2)
-    mock(GeoRuby::SimpleFeatures::Point, :x => x, :y => y, :text_representation => "#{x} #{y}")
+    double(GeoRuby::SimpleFeatures::Point, :x => x, :y => y, :text_representation => "#{x} #{y}")
   end
 end
 
@@ -17,7 +17,7 @@ describe GeoRuby::SimpleFeatures::LineString do
 
   describe "Instance Methods" do
 
-    let(:line) { GeoRuby::SimpleFeatures::LineString.from_points([mock(GeoRuby::SimpleFeatures::Point)]) }
+    let(:line) { GeoRuby::SimpleFeatures::LineString.from_points([double(GeoRuby::SimpleFeatures::Point)]) }
 
     it "should instantiate" do
       violated unless line
@@ -203,9 +203,9 @@ describe GeoRuby::SimpleFeatures::LineString do
 
   describe "> Distances..." do
     before(:each) do
-      @p1 = mock(GeoRuby::SimpleFeatures::Point)
-      @p2 = mock(GeoRuby::SimpleFeatures::Point)
-      @p3 = mock(GeoRuby::SimpleFeatures::Point)
+      @p1 = double(GeoRuby::SimpleFeatures::Point)
+      @p2 = double(GeoRuby::SimpleFeatures::Point)
+      @p3 = double(GeoRuby::SimpleFeatures::Point)
       @line = GeoRuby::SimpleFeatures::LineString.from_points([@p1,@p2,@p3])
     end
 

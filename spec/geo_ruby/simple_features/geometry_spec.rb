@@ -22,8 +22,8 @@ describe GeoRuby::SimpleFeatures::Geometry do
   end
 
   it "should output as_ewkb" do
-    subject.stub!(:binary_geometry_type).and_return(1)
-    subject.stub!(:binary_representation).and_return(1)
+    subject.stub(:binary_geometry_type).and_return(1)
+    subject.stub(:binary_representation).and_return(1)
     subject.as_ewkb.should eql("\001\001\000\000 \346\020\000\000\001")
   end
 end
