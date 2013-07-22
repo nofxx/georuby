@@ -12,6 +12,7 @@ Gem::Specification.new do |s|
   s.description = %q{GeoRuby provides geometric data types from the OGC 'Simple Features' specification.}
   s.summary = %q{Ruby data holder for OGC Simple Features}
   s.email = %q{x@nofxx.com}
+  s.license = 'MIT'
 
   #s.extensions = ["ext/georuby/extconf.rb"]
   s.files = Dir.glob("{lib,spec}/**/*") + %w(README.rdoc Rakefile)
