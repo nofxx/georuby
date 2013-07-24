@@ -12,6 +12,9 @@ OGC:"http://www.opengis.org/docs/99-049.pdf"
 If you are looking for Proj/Geos (geometric operators or reprojections) rubygem checkout: (C extension)
 rgeo:"https://github.com/dazuma/rgeo"
 
+[![Gem Version](https://badge.fury.io/rb/georuby.png)](http://badge.fury.io/rb/georuby)
+[![Code Climate](https://codeclimate.com/github/nofxx/georuby.png)](https://codeclimate.com/github/nofxx/georuby)
+
 
 == Available data types
 

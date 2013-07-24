@@ -5,7 +5,7 @@ $:.unshift lib unless $:.include?(lib)
 require 'geo_ruby/version'
 
 Gem::Specification.new do |s|
-  s.name = %q{georuby}
+  s.name    = "georuby"
   s.version = GeoRuby::VERSION
 
   s.authors = ["Guilhem Vellut", "Marcos Piccinini", "Marcus Mateus", "Doug Cole"]
