@@ -16,7 +16,7 @@ rgeo:"https://github.com/dazuma/rgeo"
 [![Code Climate](https://codeclimate.com/github/nofxx/georuby.png)](https://codeclimate.com/github/nofxx/georuby)
 [![Build Status](https://travis-ci.org/nofxx/georuby.png?branch=master)](https://travis-ci.org/nofxx/georuby)
 [![Build Status](https://travis-ci.org/nofxx/georuby.png?branch=master)](https://travis-ci.org/nofxx/georuby)
-
+[![Coverage Status](https://coveralls.io/repos/nofxx/georuby/badge.png)](https://coveralls.io/r/nofxx/georuby)
 
 Available data types
 --------------------
