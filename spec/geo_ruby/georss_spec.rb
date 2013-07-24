@@ -151,7 +151,7 @@ describe GeoRuby::GeorssParser do
     geom.should == e
   end
 
-  it "test_kml_read" do
+  it "reads KML" do
     g = GeoRuby::SimpleFeatures::Geometry.from_kml("<Point><coordinates>45,12,25</coordinates></Point>")
     g.should be_a GeoRuby::SimpleFeatures::Point
     g.should == GeoRuby::SimpleFeatures::Point.from_x_y_z('45','12','25')
@@ -208,19 +208,19 @@ describe GeoRuby::GeorssParser do
     g.length.should eql(3)
   end
 
-  it "test_to_kml_for_point_does_not_raise_type_error_if_geom_data_not_provided" do
+  it "does not raise type error if point geom data not provided" do
     point = GeoRuby::SimpleFeatures::Point.from_coordinates([1.6,2.8],123)
-    lambda { point.kml_representation }.should_not raise_error(TypeError)
+    lambda { point.kml_representation }.should_not raise_error
   end
 
-  it "test_to_kml_for_polygon_does_not_raise_type_error_if_geom_data_not_provided" do
+  it "does not raise type error if polygon geom data not provided" do
     polygon =  GeoRuby::SimpleFeatures::Polygon.from_coordinates([[[12.4,-45.3],[45.4,41.6],[4.456,1.0698],[12.4,-45.3]],[[2.4,5.3],[5.4,1.4263],[14.46,1.06],[2.4,5.3]]],256)
-    lambda { polygon.kml_representation }.should_not raise_error(TypeError)
+    lambda { polygon.kml_representation }.should_not raise_error
   end
 
-  it "test_to_kml_for_line_string_does_not_raise_type_error_if_geom_data_not_provided" do
+  it "does not raise type error if linestring geom data not provided" do
     ls = GeoRuby::SimpleFeatures::LineString.from_coordinates([[5.7,12.45],[67.55,54]],256)
-    lambda { ls.kml_representation }.should_not raise_error(TypeError)
+    lambda { ls.kml_representation }.should_not raise_error
   end
 
 end
