@@ -1,5 +1,5 @@
-= GeoRuby
-
+GeoRuby
+=======
 
 This is intended as a holder for geometric data.
 The data model roughly follows the OGC "Simple Features for SQL" specification,
@@ -16,7 +16,8 @@ rgeo:"https://github.com/dazuma/rgeo"
 [![Code Climate](https://codeclimate.com/github/nofxx/georuby.png)](https://codeclimate.com/github/nofxx/georuby)
 
 
-== Available data types
+Available data types
+--------------------
 
 The following geometric data types are provided :
 - Point
@@ -33,7 +34,8 @@ They can be in 2D, 3DZ, 3DM, and 4D.
 On top of this an Envelope class is available, to contain the bounding box of a geometry.
 
 
-== Installation
+Installation
+------------
 
 To install the latest version, just type:
 
@@ -55,10 +57,11 @@ Optional, require if you need the functionality:
     require 'geo_ruby/kml'          # KML data
 
 
-== Use
+Use
+===
 
-
-=== Simple Examples
+Simple Examples
+----------------
 
 Creating a 3D Point:
 
@@ -70,7 +73,8 @@ Creating a LineString:
      LineString.from_coordinates([[1,1],[2,2]],4326))
 
 
-=== Input and output
+Input and output
+----------------
 
 These geometries can be input and output in WKB/EWKB/WKT/EWKT format as well as
 the related HexWKB and HexEWKB formats. HexEWKB and WKB are the default form under
@@ -95,7 +99,8 @@ the altitude data will not be output even if present. Envelopes output a LatLonA
 For the output, the following geometric types are supported : Point, LineString, Polygon.
 
 
-=== SHP reading et writing
+SHP reading et writing
+---
 
 Georuby has support for reading ESRI shapefiles (http://www.esri.com/library/whitepapers/pdfs/shapefile.pdf).
 A tool called <tt>shp2sql.rb</tt> is also provided: it shows how to use the SHP reading functionality together
@@ -147,7 +152,8 @@ Also currently, error reporting is minimal and it has not been tested that
 thoroughly so caveat emptor and backup before performing any destructive operation.
 
 
-=== GPX Reading
+GPX Reading
+---
 
 You can read and convert GPX Files to LineString/Polygon:
 
@@ -156,7 +162,8 @@ You can read and convert GPX Files to LineString/Polygon:
      => GeoRuby::SimpleFeatures::LineString..
 
 
-=== GeoJSON Support
+GeoJSON Support
+-------
 
 Basic GeoJSON support has been implemented per v1.0 of the {spec}[http://geojson.org/geojson-spec.html].
 
@@ -188,17 +195,10 @@ The SHP reading part uses the DBF library (http://rubyforge.org/projects/dbf/) b
 Thanks also to Pramukta Kumar and Pete Schwamb for their contributions.
 
 
-=== License
-
-GeoRuby is released under the MIT license.
-
-
 == Support (Original GeoRuby gem)
 
 Any questions, enhancement proposals, bug notifications or corrections
 can be sent to mailto:guilhem.vellut@gmail.com.
-
-
 
 
 === Coming in the next versions
