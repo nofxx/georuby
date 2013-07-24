@@ -14,6 +14,7 @@ rgeo:"https://github.com/dazuma/rgeo"
 
 [![Gem Version](https://badge.fury.io/rb/georuby.png)](http://badge.fury.io/rb/georuby)
 [![Code Climate](https://codeclimate.com/github/nofxx/georuby.png)](https://codeclimate.com/github/nofxx/georuby)
+[![Build Status](https://travis-ci.org/nofxx/georuby.png?branch=master)](https://travis-ci.org/nofxx/georuby)
 
 
 Available data types
