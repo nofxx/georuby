@@ -7,4 +7,8 @@ group :test do
   gem "json"
   gem "rspec"
   gem "nokogiri"
+
+  if ENV["CI"]
+    gem "coveralls", require: false
+  end
 end
