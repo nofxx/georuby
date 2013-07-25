@@ -15,6 +15,11 @@ require 'geo_ruby/geojson'
 require 'geo_ruby/georss'
 require 'geo_ruby/kml'
 
+if ENV["CI"]
+  require 'coveralls'
+  Coveralls.wear!
+end
+
 module GeorubyMatchers
 
   class BeGeometric
@@ -63,4 +68,3 @@ end
 RSpec.configure do |config|
   config.include GeorubyMatchers
 end
-
