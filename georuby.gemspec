@@ -15,7 +15,7 @@ Gem::Specification.new do |s|
   s.license = 'MIT'
 
   #s.extensions = ["ext/georuby/extconf.rb"]
-  s.files = Dir.glob("{lib,spec}/**/*") + %w(README.rdoc Rakefile)
+  s.files = Dir.glob("{lib,spec}/**/*") + %w(README.md Rakefile)
 
   s.homepage = %q{http://github.com/nofxx/georuby}
   s.require_paths = ["lib"]
