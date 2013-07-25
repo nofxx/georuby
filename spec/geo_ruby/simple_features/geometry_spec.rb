@@ -1,3 +1,5 @@
+# -*- coding: binary -*-
+
 require File.expand_path(File.dirname(__FILE__) + '/../../spec_helper')
 
 describe GeoRuby::SimpleFeatures::Geometry do
@@ -25,5 +27,11 @@ describe GeoRuby::SimpleFeatures::Geometry do
     subject.stub(:binary_geometry_type).and_return(1)
     subject.stub(:binary_representation).and_return(1)
     subject.as_ewkb.should eql("\001\001\000\000 \346\020\000\000\001")
+  end
+
+  it "should output as_ewkb (utf8 issue)" do
+    subject.stub(:binary_geometry_type).and_return(1)
+    subject.stub(:binary_representation).and_return(1)
+    subject.as_ewkb.should eql("\x01\x01\x00\x00 \xE6\x10\x00\x00\x01")
   end
 end
