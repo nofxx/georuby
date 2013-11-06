@@ -208,15 +208,23 @@ describe GeoRuby::SimpleFeatures::Point do
       GeoRuby::SimpleFeatures::Point.from_x_y(-47.11, 20.2).as_lat.should eql("-47°06′36″")
     end
 
-    it "should print out nicely lat" do
+    it "should print out nicely lat with opts" do
+      GeoRuby::SimpleFeatures::Point.from_x_y(-47.11, 20.2).as_lat(:full => true).should eql("-47°06′36.00″")
+    end
+
+    it "should print out nicely lat with opts" do
       GeoRuby::SimpleFeatures::Point.from_x_y(-47.11, 20.2).as_lat(:full => true,:coord => true).should eql("47°06′36.00″S")
     end
 
-    it "should print out nicely lat" do
+    it "should print out nicely long" do
       GeoRuby::SimpleFeatures::Point.from_x_y(-47.11, 20.2).as_long.should eql("20°11′60″")
     end
 
-    it "should print out nicely lat" do
+    it "should print out nicely long with opts" do
+      GeoRuby::SimpleFeatures::Point.from_x_y(-47.11, 20.2).as_long(:full => true).should eql("20°11′60.00″")
+    end
+
+    it "should print out nicely long with opts" do
       GeoRuby::SimpleFeatures::Point.from_x_y(-47.11, 20.2).as_long(:full => true,:coord => true).should eql("20°11′60.00″E")
     end
 
@@ -347,6 +355,18 @@ describe GeoRuby::SimpleFeatures::Point do
 
     it "should print as kml too" do
       point.kml_representation.should eql("<Point>\n<coordinates>-11.2431,32.3141</coordinates>\n</Point>\n")
+    end
+
+    it "should print as html too" do
+      point.html_representation.should eql("<span class='geo'><abbr class='latitude' title='-11.2431'>11°14′35″S</abbr><abbr class='longitude' title='32.3141'>32°18′51″E</abbr></span>")
+    end
+
+    it "should print as html too with opts" do
+      point.html_representation(coord: false).should eql("<span class='geo'><abbr class='latitude' title='-11.2431'>-11°14′35″</abbr><abbr class='longitude' title='32.3141'>32°18′51″</abbr></span>")
+    end
+
+    it "should print as html too with opts" do
+      point.html_representation(full: true).should eql("<span class='geo'><abbr class='latitude' title='-11.2431'>11°14′35.16″S</abbr><abbr class='longitude' title='32.3141'>32°18′50.76″E</abbr></span>")
     end
 
     it "should print as georss" do

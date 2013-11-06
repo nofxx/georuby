@@ -218,33 +218,41 @@ module GeoRuby
       def georss_gml_representation(options) #:nodoc:
         georss_ns = options[:georss_ns] || "georss"
         gml_ns = options[:gml_ns] || "gml"
-        result = "<#{georss_ns}:where>\n<#{gml_ns}:Point>\n<#{gml_ns}:pos>"
-        result += "#{y} #{x}"
-        result += "</#{gml_ns}:pos>\n</#{gml_ns}:Point>\n</#{georss_ns}:where>\n"
+        out = "<#{georss_ns}:where>\n<#{gml_ns}:Point>\n<#{gml_ns}:pos>"
+        out += "#{y} #{x}"
+        out += "</#{gml_ns}:pos>\n</#{gml_ns}:Point>\n</#{georss_ns}:where>\n"
       end
 
       # outputs the geometry in kml format : options are <tt>:id</tt>, <tt>:tesselate</tt>, <tt>:extrude</tt>,
       # <tt>:altitude_mode</tt>. If the altitude_mode option is not present, the Z (if present) will not be output (since
       # it won't be used by GE anyway: clampToGround is the default)
       def kml_representation(options = {}) #:nodoc:
-        result = "<Point#{options[:id_attr]}>\n"
-        result += options[:geom_data] if options[:geom_data]
-        result += "<coordinates>#{x},#{y}"
-        result += ",#{options[:fixed_z] || z ||0}" if options[:allow_z]
-        result += "</coordinates>\n"
-        result += "</Point>\n"
+        out = "<Point#{options[:id_attr]}>\n"
+        out += options[:geom_data] if options[:geom_data]
+        out += "<coordinates>#{x},#{y}"
+        out += ",#{options[:fixed_z] || z ||0}" if options[:allow_z]
+        out += "</coordinates>\n"
+        out += "</Point>\n"
+      end
+
+      def html_representation(options = {})
+        options[:coord] = true if options[:coord].nil?
+        out =  "<span class='geo'>"
+        out += "<abbr class='latitude' title='#{x}'>#{as_lat(options)}</abbr>"
+        out += "<abbr class='longitude' title='#{y}'>#{as_long(options)}</abbr>"
+        out += "</span>"
       end
 
       # Human representation of the geom, don't use directly, use:
       # #as_lat, #as_long, #as_latlong
-      def human_representation(opts = { }, g = { :x => x, :y => y })
+      def human_representation(options = { }, g = { :x => x, :y => y })
         g.map do |k, v|
           deg = v.to_i.abs
           min = (60 * (v.abs - deg)).to_i
           labs = (v * 1000000).abs / 1000000
           sec = ((((labs - labs.to_i) * 60) - ((labs - labs.to_i) * 60).to_i) * 100000) * 60 / 100000
-          str = opts[:full] ? "%.i°%.2i′%05.2f″" :  "%.i°%.2i′%02.0f″"
-          if opts[:coord]
+          str = options[:full] ? "%.i°%.2i′%05.2f″" :  "%.i°%.2i′%02.0f″"
+          if options[:coord]
             out = str % [deg,min,sec]
             out += k == :x ? v > 0 ? "N" : "S" : v > 0 ? "E" : "W"
           else
@@ -255,21 +263,21 @@ module GeoRuby
 
       # Outputs the geometry coordinate in human format:
       # 47°52′48″N
-      def as_lat(opts = {})
-        human_representation(opts, { x: x }).join
+      def as_lat(options = {})
+        human_representation(options, { x: x }).join
       end
 
       # Outputs the geometry coordinate in human format:
       # -20°06′00W″
-      def as_long(opts = {})
-        human_representation(opts, { y: y }).join
+      def as_long(options = {})
+        human_representation(options, { y: y }).join
       end
       alias :as_lng :as_long
 
       # Outputs the geometry in coordinates format:
       # 47°52′48″, -20°06′00″
-      def as_latlong(opts = {})
-        human_representation(opts).join(", ")
+      def as_latlong(options = {})
+        human_representation(options).join(", ")
       end
       alias :as_ll :as_latlong
 
