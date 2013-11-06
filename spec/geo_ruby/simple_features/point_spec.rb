@@ -13,6 +13,10 @@ describe GeoRuby::SimpleFeatures::Point do
     point.should be_a_point
   end
 
+  it "should have a text geometry type" do
+    point.text_geometry_type.should eq("POINT")
+  end
+
   it "should have a very nice matcher" do
     point.should be_a_point(0.0, 0.0)
   end
@@ -98,6 +102,11 @@ describe GeoRuby::SimpleFeatures::Point do
       point.z.should eql(-30)
     end
 
+    it "should store correctly a 3d point" do
+      point = GeoRuby::SimpleFeatures::Point.from_x_y_z(-10,-20,-30)
+      point.to_coordinates.should eq([-10, -20, -30])
+    end
+
     it "should instantiate a 3d(m) point" do
       point = GeoRuby::SimpleFeatures::Point.from_x_y_m(10,20,30)
       point.x.should eql(10)
@@ -113,6 +122,12 @@ describe GeoRuby::SimpleFeatures::Point do
       point.z.should eql(30)
       point.m.should eql(40)
       point.srid.should eql(123)
+    end
+
+    it "should store correctly a 4d point" do
+      point = GeoRuby::SimpleFeatures::Point.from_x_y_z_m(-10,-20,-30, 1)
+      point.m.should eql(1)
+      point.to_coordinates.should eq([-10, -20, -30])
     end
 
     it "should instantiate a point from polar coordinates" do
@@ -383,6 +398,16 @@ describe GeoRuby::SimpleFeatures::Point do
 
     it "should print theta as radians" do
       point.theta_rad.should be_within(0.0001).of(5.04722003626982)
+    end
+
+    it "should print theta when x is zero y > 0" do
+      pt = GeoRuby::SimpleFeatures::Point.from_x_y(0.0, 32.3141)
+      pt.theta_rad.should be_within(0.0001).of(1.5707963267948966)
+    end
+
+    it "should print theta when x is zero y < 0" do
+      pt = GeoRuby::SimpleFeatures::Point.from_x_y(0.0, -32.3141)
+      pt.theta_rad.should be_within(0.0001).of(4.71238898038469)
     end
 
     it "should output as polar" do
