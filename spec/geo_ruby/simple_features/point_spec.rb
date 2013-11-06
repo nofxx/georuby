@@ -188,20 +188,36 @@ describe GeoRuby::SimpleFeatures::Point do
       GeoRuby::SimpleFeatures::Point.from_x_y(47.88, -20.1).as_latlong.should eql("47°52′48″, -20°06′00″")
     end
 
-    it "should print out nicely" do
+    it "should print out nicely latlong" do
       GeoRuby::SimpleFeatures::Point.from_x_y(-20.78, 20.78).as_latlong(:full => true).should eql("-20°46′48.00″, 20°46′48.00″")
     end
 
-    it "should print out nicely" do
+    it "should print out nicely latlong" do
       GeoRuby::SimpleFeatures::Point.from_x_y(47.11, -20.2).as_latlong(:full => true).should eql("47°06′36.00″, -20°11′60.00″")
     end
 
-    it "should print out nicely" do
+    it "should print out nicely latlong" do
       GeoRuby::SimpleFeatures::Point.from_x_y(47.11, -20.2).as_latlong(:coord => true).should eql("47°06′36″N, 20°11′60″W")
     end
 
-    it "should print out nicely" do
+    it "should print out nicely latlong" do
       GeoRuby::SimpleFeatures::Point.from_x_y(-47.11, 20.2).as_latlong(:full => true,:coord => true).should eql("47°06′36.00″S, 20°11′60.00″E")
+    end
+
+    it "should print out nicely lat" do
+      GeoRuby::SimpleFeatures::Point.from_x_y(-47.11, 20.2).as_lat.should eql("-47°06′36″")
+    end
+
+    it "should print out nicely lat" do
+      GeoRuby::SimpleFeatures::Point.from_x_y(-47.11, 20.2).as_lat(:full => true,:coord => true).should eql("47°06′36.00″S")
+    end
+
+    it "should print out nicely lat" do
+      GeoRuby::SimpleFeatures::Point.from_x_y(-47.11, 20.2).as_long.should eql("20°11′60″")
+    end
+
+    it "should print out nicely lat" do
+      GeoRuby::SimpleFeatures::Point.from_x_y(-47.11, 20.2).as_long(:full => true,:coord => true).should eql("20°11′60.00″E")
     end
 
   end

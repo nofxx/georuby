@@ -3,14 +3,14 @@ require "geo_ruby/simple_features/geometry"
 
 module GeoRuby
   module SimpleFeatures
-    #Represents a point. It is in 3D if the Z coordinate is not +nil+.
+    # Represents a point. It is in 3D if the Z coordinate is not +nil+.
     class Point < Geometry
       DEG2RAD = 0.0174532925199433
       HALFPI  = 1.5707963267948966
       attr_accessor :x,:y,:z,:m
       attr_reader :r, :t # radium and theta
 
-      #if you prefer calling the coordinates lat and lon (or lng, for GeoKit compatibility)
+      # if you prefer calling the coordinates lat and lon (or lng, for GeoKit compatibility)
       alias :lon :x
       alias :lng :x
       alias :lat :y
@@ -18,14 +18,14 @@ module GeoRuby
       alias :tet :t
       alias :tetha :t
 
-      def initialize(srid=DEFAULT_SRID,with_z=false,with_m=false)
-        super(srid,with_z,with_m)
+      def initialize(srid = DEFAULT_SRID, with_z = false, with_m = false)
+        super(srid, with_z, with_m)
         @x = @y = 0.0
         @z=0.0 #default value : meaningful if with_z
         @m=0.0 #default value : meaningful if with_m
       end
       #sets all coordinates in one call. Use the +m+ accessor to set the m.
-      def set_x_y_z(x,y,z)
+      def set_x_y_z(x, y, z)
         @x = x && !x.is_a?(Numeric) ? x.to_f : x
         @y = y && !y.is_a?(Numeric) ? y.to_f : y
         @z = z && !z.is_a?(Numeric) ? z.to_f : z
@@ -34,15 +34,15 @@ module GeoRuby
       alias :set_lon_lat_z :set_x_y_z
 
       #sets all coordinates of a 2D point in one call
-      def set_x_y(x,y)
+      def set_x_y(x, y)
         @x = x && !x.is_a?(Numeric) ? x.to_f : x
         @y = y && !y.is_a?(Numeric) ? y.to_f : y
         self
       end
       alias :set_lon_lat :set_x_y
 
-      #Return the distance between the 2D points (ie taking care only of the x and y coordinates), assuming
-      #the points are in projected coordinates. Euclidian distance in whatever unit the x and y ordinates are.
+      # Return the distance between the 2D points (ie taking care only of the x and y coordinates), assuming
+      # the points are in projected coordinates. Euclidian distance in whatever unit the x and y ordinates are.
       def euclidian_distance(point)
         Math.sqrt((point.x - x)**2 + (point.y - y)**2)
       end
@@ -51,7 +51,7 @@ module GeoRuby
       # with a radius of 6471000m
       # Assumes x is the lon and y the lat, in degrees (Changed in version 1.1).
       # The user has to make sure using this distance makes sense (ie she should be in latlon coordinates)
-      def spherical_distance(point,r=6370997.0)
+      def spherical_distance(point, r = 6370997.0)
         dlat = (point.lat - lat) * DEG2RAD / 2
         dlon = (point.lon - lon) * DEG2RAD / 2
 
@@ -60,10 +60,10 @@ module GeoRuby
         r * c
       end
 
-      #Ellipsoidal distance in m using Vincenty's formula. Lifted entirely from Chris Veness's code at http://www.movable-type.co.uk/scripts/LatLongVincenty.html and adapted for Ruby. Assumes the x and y are the lon and lat in degrees.
-      #a is the semi-major axis (equatorial radius) of the ellipsoid
-      #b is the semi-minor axis (polar radius) of the ellipsoid
-      #Their values by default are set to the ones of the WGS84 ellipsoid
+      # Ellipsoidal distance in m using Vincenty's formula. Lifted entirely from Chris Veness's code at http://www.movable-type.co.uk/scripts/LatLongVincenty.html and adapted for Ruby. Assumes the x and y are the lon and lat in degrees.
+      # a is the semi-major axis (equatorial radius) of the ellipsoid
+      # b is the semi-minor axis (polar radius) of the ellipsoid
+      # Their values by default are set to the ones of the WGS84 ellipsoid
       def ellipsoidal_distance(point, a = 6378137.0, b = 6356752.3142)
         f = (a-b) / a
         l = (point.lon - lon) * DEG2RAD
@@ -132,7 +132,7 @@ module GeoRuby
         Math.sqrt((@x - xx) ** 2 + (@y - yy) ** 2)
       end
 
-      #Bearing from a point to another, in degrees.
+      # Bearing from a point to another, in degrees.
       def bearing_to(other)
         return 0 if self == other
         a,b =  other.x - self.x, other.y - self.y
@@ -140,7 +140,7 @@ module GeoRuby
         a < 0 ? 360 - res : res
       end
 
-      #Bearing from a point to another as symbols. (:n, :s, :sw, :ne...)
+      # Bearing from a point to another as symbols. (:n, :s, :sw, :ne...)
       def bearing_text(other)
         case bearing_to(other)
         when 1..22    then :n
@@ -156,7 +156,7 @@ module GeoRuby
         end
       end
 
-      #Bounding box in 2D/3D. Returns an array of 2 points
+      # Bounding box in 2D/3D. Returns an array of 2 points
       def bounding_box
         unless with_z
           [Point.from_x_y(@x,@y),Point.from_x_y(@x,@y)]
@@ -169,13 +169,13 @@ module GeoRuby
         [@m,@m]
       end
 
-      #tests the equality of the position of points + m
+      # Tests the equality of the position of points + m
       def ==(other)
         return false unless other.kind_of?(Point)
         @x == other.x and @y == other.y and @z == other.z and @m == other.m
       end
 
-      #binary representation of a point. It lacks some headers to be a valid EWKB representation.
+      # Binary representation of a point. It lacks some headers to be a valid EWKB representation.
       def binary_representation(allow_z=true,allow_m=true) #:nodoc:
         bin_rep = [@x.to_f,@y.to_f].pack("EE")
         bin_rep += [@z.to_f].pack("E") if @with_z and allow_z #Default value so no crash
@@ -183,12 +183,12 @@ module GeoRuby
         bin_rep
       end
 
-      #WKB geometry type of a point
+      # WKB geometry type of a point
       def binary_geometry_type#:nodoc:
         1
       end
 
-      #text representation of a point
+      # Text representation of a point
       def text_representation(allow_z=true,allow_m=true) #:nodoc:
         tex_rep = "#{@x} #{@y}"
         tex_rep += " #{@z}" if @with_z and allow_z
@@ -196,25 +196,25 @@ module GeoRuby
         tex_rep
       end
 
-      #WKT geometry type of a point
+      # WKT geometry type of a point
       def text_geometry_type #:nodoc:
         "POINT"
       end
 
-      #georss simple representation
+      # georss simple representation
       def georss_simple_representation(options) #:nodoc:
         georss_ns = options[:georss_ns] || "georss"
         geom_attr = options[:geom_attr]
         "<#{georss_ns}:point#{geom_attr}>#{y} #{x}</#{georss_ns}:point>\n"
       end
 
-      #georss w3c representation
+      # georss w3c representation
       def georss_w3cgeo_representation(options) #:nodoc:
         w3cgeo_ns = options[:w3cgeo_ns] || "geo"
         "<#{w3cgeo_ns}:lat>#{y}</#{w3cgeo_ns}:lat>\n<#{w3cgeo_ns}:long>#{x}</#{w3cgeo_ns}:long>\n"
       end
 
-      #georss gml representation
+      # georss gml representation
       def georss_gml_representation(options) #:nodoc:
         georss_ns = options[:georss_ns] || "georss"
         gml_ns = options[:gml_ns] || "gml"
@@ -223,9 +223,9 @@ module GeoRuby
         result += "</#{gml_ns}:pos>\n</#{gml_ns}:Point>\n</#{georss_ns}:where>\n"
       end
 
-      #outputs the geometry in kml format : options are <tt>:id</tt>, <tt>:tesselate</tt>, <tt>:extrude</tt>,
-      #<tt>:altitude_mode</tt>. If the altitude_mode option is not present, the Z (if present) will not be output (since
-      #it won't be used by GE anyway: clampToGround is the default)
+      # outputs the geometry in kml format : options are <tt>:id</tt>, <tt>:tesselate</tt>, <tt>:extrude</tt>,
+      # <tt>:altitude_mode</tt>. If the altitude_mode option is not present, the Z (if present) will not be output (since
+      # it won't be used by GE anyway: clampToGround is the default)
       def kml_representation(options = {}) #:nodoc:
         result = "<Point#{options[:id_attr]}>\n"
         result += options[:geom_data] if options[:geom_data]
@@ -235,30 +235,43 @@ module GeoRuby
         result += "</Point>\n"
       end
 
-      # Outputs the geometry in coordinates format:
-      # 47°52′48″, -20°06′00″
-      def as_latlong(opts = { })
-        val = []
-        [x,y].each_with_index do |l,i|
-          deg = l.to_i.abs
-          min = (60 * (l.abs - deg)).to_i
-          labs = (l * 1000000).abs / 1000000
+      # Human representation of the geom, don't use directly, use:
+      # #as_lat, #as_long, #as_latlong
+      def human_representation(opts = { }, g = { :x => x, :y => y })
+        g.map do |k, v|
+          deg = v.to_i.abs
+          min = (60 * (v.abs - deg)).to_i
+          labs = (v * 1000000).abs / 1000000
           sec = ((((labs - labs.to_i) * 60) - ((labs - labs.to_i) * 60).to_i) * 100000) * 60 / 100000
           str = opts[:full] ? "%.i°%.2i′%05.2f″" :  "%.i°%.2i′%02.0f″"
           if opts[:coord]
             out = str % [deg,min,sec]
-            if i == 0
-              out += l > 0 ? "N" : "S"
-            else
-              out += l > 0 ? "E" : "W"
-            end
-            val << out
+            out += k == :x ? v > 0 ? "N" : "S" : v > 0 ? "E" : "W"
           else
-            val << str % [l.to_i, min, sec]
+            str % [v.to_i, min, sec]
           end
         end
-        val.join(", ")
       end
+
+      # Outputs the geometry coordinate in human format:
+      # 47°52′48″N
+      def as_lat(opts = {})
+        human_representation(opts, { x: x }).join
+      end
+
+      # Outputs the geometry coordinate in human format:
+      # -20°06′00W″
+      def as_long(opts = {})
+        human_representation(opts, { y: y }).join
+      end
+      alias :as_lng :as_long
+
+      # Outputs the geometry in coordinates format:
+      # 47°52′48″, -20°06′00″
+      def as_latlong(opts = {})
+        human_representation(opts).join(", ")
+      end
+      alias :as_ll :as_latlong
 
       # Polar stuff
       #
