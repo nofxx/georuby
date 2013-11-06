@@ -10,7 +10,8 @@ module GeoRuby
       attr_accessor :x,:y,:z,:m
       attr_reader :r, :t # radium and theta
 
-      # If you prefer calling the coordinates lat and lon (or lng, for GeoKit compatibility)
+      # If you prefer calling the coordinates lat and lon
+      # (or lng, for GeoKit compatibility)
       alias :lon :x
       alias :lng :x
       alias :lat :y
@@ -25,7 +26,8 @@ module GeoRuby
         @m = 0.0 #default value : meaningful if with_m
       end
 
-      # Sets all coordinates in one call. Use the +m+ accessor to set the m.
+      # Sets all coordinates in one call.
+      # Use the +m+ accessor to set the m.
       def set_x_y_z(x, y, z)
         @x = x && !x.is_a?(Numeric) ? x.to_f : x
         @y = y && !y.is_a?(Numeric) ? y.to_f : y
@@ -34,7 +36,7 @@ module GeoRuby
       end
       alias :set_lon_lat_z :set_x_y_z
 
-      #sets all coordinates of a 2D point in one call
+      # Sets all coordinates of a 2D point in one call
       def set_x_y(x, y)
         @x = x && !x.is_a?(Numeric) ? x.to_f : x
         @y = y && !y.is_a?(Numeric) ? y.to_f : y
@@ -42,21 +44,26 @@ module GeoRuby
       end
       alias :set_lon_lat :set_x_y
 
-      # Return the distance between the 2D points (ie taking care only of the x and y coordinates), assuming
-      # the points are in projected coordinates. Euclidian distance in whatever unit the x and y ordinates are.
+      # Return the distance between the 2D points (ie taking care only
+      # of the x and y coordinates), assuming the points are in
+      # projected coordinates.
+      #
+      # Euclidian distance in whatever unit the x and y ordinates are.
       def euclidian_distance(point)
         Math.sqrt((point.x - x)**2 + (point.y - y)**2)
       end
 
       # Spherical distance in meters, using 'Haversine' formula.
       # with a radius of 6471000m
-      # Assumes x is the lon and y the lat, in degrees (Changed in version 1.1).
-      # The user has to make sure using this distance makes sense (ie she should be in latlon coordinates)
+      # Assumes x is the lon and y the lat, in degrees.
+      # The user has to make sure using this distance makes sense
+      # (ie she should be in latlon coordinates)
       def spherical_distance(point, r = 6370997.0)
         dlat = (point.lat - lat) * DEG2RAD / 2
         dlon = (point.lon - lon) * DEG2RAD / 2
 
-        a = Math.sin(dlat)**2 + Math.cos(lat * DEG2RAD) * Math.cos(point.lat * DEG2RAD) * Math.sin(dlon)**2
+        a = Math.sin(dlat)**2 + Math.cos(lat * DEG2RAD) *
+          Math.cos(point.lat * DEG2RAD) * Math.sin(dlon)**2
         c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1-a))
         r * c
       end
@@ -321,9 +328,9 @@ module GeoRuby
       # TODO Perhaps should support with_m analogous to from_coordinates?
       def to_coordinates
         if with_z
-          [x,y,z]
+          [x, y, z]
         else
-          [x,y]
+          [x, y]
         end
       end
 

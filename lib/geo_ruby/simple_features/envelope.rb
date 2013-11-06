@@ -55,7 +55,7 @@ module GeoRuby
 
       #Zoom level
       def zoom
-        distance = lower_corner.spherical_distance(upper_corner)/10000
+        distance = lower_corner.spherical_distance(upper_corner) / 10_000
         @zoom = case distance
         when 150..9000  then 5
         when 80..149    then 6
@@ -156,7 +156,7 @@ module GeoRuby
       end
 
       #Creates a new envelope. Accept a sequence of point coordinates as argument : ((x,y),(x,y))
-      def self.from_coordinates(points,srid=DEFAULT_SRID,with_z=false)
+      def self.from_coordinates(points, srid = DEFAULT_SRID, with_z = false)
         e = Envelope.new(srid,with_z)
         e.lower_corner, e.upper_corner =  points.collect{|point_coords| Point.from_coordinates(point_coords,srid,with_z)}
         e
