@@ -1,5 +1,5 @@
 # -*- coding: utf-8 -*-
-require "geo_ruby/simple_features/geometry"
+require 'geo_ruby/simple_features/geometry'
 
 module GeoRuby
   module SimpleFeatures
@@ -10,7 +10,7 @@ module GeoRuby
       attr_accessor :x,:y,:z,:m
       attr_reader :r, :t # radium and theta
 
-      # if you prefer calling the coordinates lat and lon (or lng, for GeoKit compatibility)
+      # If you prefer calling the coordinates lat and lon (or lng, for GeoKit compatibility)
       alias :lon :x
       alias :lng :x
       alias :lat :y
@@ -21,10 +21,11 @@ module GeoRuby
       def initialize(srid = DEFAULT_SRID, with_z = false, with_m = false)
         super(srid, with_z, with_m)
         @x = @y = 0.0
-        @z=0.0 #default value : meaningful if with_z
-        @m=0.0 #default value : meaningful if with_m
+        @z = 0.0 #default value : meaningful if with_z
+        @m = 0.0 #default value : meaningful if with_m
       end
-      #sets all coordinates in one call. Use the +m+ accessor to set the m.
+
+      # Sets all coordinates in one call. Use the +m+ accessor to set the m.
       def set_x_y_z(x, y, z)
         @x = x && !x.is_a?(Numeric) ? x.to_f : x
         @y = y && !y.is_a?(Numeric) ? y.to_f : y
@@ -82,11 +83,13 @@ module GeoRuby
         while (lambda-lambdaP).abs > 1e-12 && --iterLimit>0
           sinLambda = Math.sin(lambda)
           cosLambda = Math.cos(lambda)
-          sinSigma = Math.sqrt((cosU2*sinLambda) * (cosU2*sinLambda) + (cosU1*sinU2-sinU1*cosU2*cosLambda) * (cosU1*sinU2-sinU1*cosU2*cosLambda))
+          sinSigma = Math.sqrt((cosU2 * sinLambda) * (cosU2 * sinLambda) +
+                               (cosU1 * sinU2 - sinU1 * cosU2 * cosLambda) *
+                               (cosU1 * sinU2 - sinU1 * cosU2 * cosLambda))
 
           return 0 if sinSigma == 0 #coincident points
 
-          cosSigma = sinU1*sinU2 + cosU1*cosU2*cosLambda
+          cosSigma = sinU1 * sinU2 + cosU1 * cosU2 * cosLambda
           sigma = Math.atan2(sinSigma, cosSigma)
           sinAlpha = cosU1 * cosU2 * sinLambda / sinSigma
           cosSqAlpha = 1 - sinAlpha*sinAlpha
@@ -158,10 +161,10 @@ module GeoRuby
 
       # Bounding box in 2D/3D. Returns an array of 2 points
       def bounding_box
-        unless with_z
-          [Point.from_x_y(@x,@y),Point.from_x_y(@x,@y)]
-        else
+        if with_z
           [Point.from_x_y_z(@x,@y,@z),Point.from_x_y_z(@x,@y,@z)]
+        else
+          [Point.from_x_y(@x,@y),Point.from_x_y(@x,@y)]
         end
       end
 
@@ -172,14 +175,14 @@ module GeoRuby
       # Tests the equality of the position of points + m
       def ==(other)
         return false unless other.kind_of?(Point)
-        @x == other.x and @y == other.y and @z == other.z and @m == other.m
+        @x == other.x && @y == other.y && @z == other.z && @m == other.m
       end
 
       # Binary representation of a point. It lacks some headers to be a valid EWKB representation.
       def binary_representation(allow_z=true,allow_m=true) #:nodoc:
-        bin_rep = [@x.to_f,@y.to_f].pack("EE")
-        bin_rep += [@z.to_f].pack("E") if @with_z and allow_z #Default value so no crash
-        bin_rep += [@m.to_f].pack("E") if @with_m and allow_m #idem
+        bin_rep = [@x.to_f,@y.to_f].pack('EE')
+        bin_rep += [@z.to_f].pack('E') if @with_z && allow_z #Default value so no crash
+        bin_rep += [@m.to_f].pack('E') if @with_m && allow_m #idem
         bin_rep
       end
 
@@ -191,14 +194,14 @@ module GeoRuby
       # Text representation of a point
       def text_representation(allow_z=true,allow_m=true) #:nodoc:
         tex_rep = "#{@x} #{@y}"
-        tex_rep += " #{@z}" if @with_z and allow_z
-        tex_rep += " #{@m}" if @with_m and allow_m
+        tex_rep += " #{@z}" if @with_z && allow_z
+        tex_rep += " #{@m}" if @with_m && allow_m
         tex_rep
       end
 
       # WKT geometry type of a point
       def text_geometry_type #:nodoc:
-        "POINT"
+        'POINT'
       end
 
       # georss simple representation
@@ -237,10 +240,10 @@ module GeoRuby
 
       def html_representation(options = {})
         options[:coord] = true if options[:coord].nil?
-        out =  "<span class='geo'>"
+        out =  '<span class=\'geo\'>'
         out += "<abbr class='latitude' title='#{x}'>#{as_lat(options)}</abbr>"
         out += "<abbr class='longitude' title='#{y}'>#{as_long(options)}</abbr>"
-        out += "</span>"
+        out += '</span>'
       end
 
       # Human representation of the geom, don't use directly, use:
@@ -249,12 +252,12 @@ module GeoRuby
         g.map do |k, v|
           deg = v.to_i.abs
           min = (60 * (v.abs - deg)).to_i
-          labs = (v * 1000000).abs / 1000000
-          sec = ((((labs - labs.to_i) * 60) - ((labs - labs.to_i) * 60).to_i) * 100000) * 60 / 100000
+          labs = (v * 1_000_000).abs / 1_000_000
+          sec = ((((labs - labs.to_i) * 60) - ((labs - labs.to_i) * 60).to_i) * 100_000) * 60 / 100_000
           str = options[:full] ? "%.i°%.2i′%05.2f″" :  "%.i°%.2i′%02.0f″"
           if options[:coord]
             out = str % [deg,min,sec]
-            out += k == :x ? v > 0 ? "N" : "S" : v > 0 ? "E" : "W"
+            out += k == :x ? v > 0 ? 'N' : 'S' : v > 0 ? 'E' : 'W'
           else
             str % [v.to_i, min, sec]
           end
@@ -277,7 +280,7 @@ module GeoRuby
       # Outputs the geometry in coordinates format:
       # 47°52′48″, -20°06′00″
       def as_latlong(options = {})
-        human_representation(options).join(", ")
+        human_representation(options).join(', ')
       end
       alias :as_ll :as_latlong
 
@@ -286,7 +289,9 @@ module GeoRuby
       # http://www.engineeringtoolbox.com/converting-cartesian-polar-coordinates-d_1347.html
       # http://rcoordinate.rubyforge.org/svn/point.rb
       # outputs radium
-      def r;      Math.sqrt(@x**2 + @y**2);      end
+      def r
+        Math.sqrt(@x**2 + @y**2)
+      end
 
       # outputs theta
       def theta_rad
@@ -299,10 +304,14 @@ module GeoRuby
       end
 
       # outputs theta in degrees
-      def theta_deg;        theta_rad / DEG2RAD;      end
+      def theta_deg
+        theta_rad / DEG2RAD
+      end
 
       # outputs an array containing polar distance and theta
-      def as_polar;        [r,t];      end
+      def as_polar
+        [r, t]
+      end
 
       # invert signal of all coordinates
       def -@
@@ -319,79 +328,78 @@ module GeoRuby
       end
 
       def as_json(options = {})
-        {:type => 'Point',
-         :coordinates => self.to_coordinates}
+        { :type => 'Point', :coordinates => self.to_coordinates }
       end
 
-      # simple geojson representation
+      # Simple geojson representation
       # TODO add CRS / SRID support?
       def to_json(options = {})
         as_json(options).to_json(options)
       end
       alias :as_geojson :to_json
 
-      #creates a point from an array of coordinates
-      def self.from_coordinates(coords,srid=DEFAULT_SRID,with_z=false,with_m=false)
-        if ! (with_z or with_m)
-          from_x_y(coords[0],coords[1],srid)
-        elsif with_z and with_m
-          from_x_y_z_m(coords[0],coords[1],coords[2],coords[3],srid)
+      # Creates a point from an array of coordinates
+      def self.from_coordinates(coords, srid = DEFAULT_SRID, with_z = false, with_m = false)
+        if ! (with_z || with_m)
+          from_x_y(coords[0], coords[1], srid)
+        elsif with_z && with_m
+          from_x_y_z_m(coords[0], coords[1], coords[2], coords[3], srid)
         elsif with_z
-          from_x_y_z(coords[0],coords[1],coords[2],srid)
+          from_x_y_z(coords[0], coords[1], coords[2], srid)
         else
-          from_x_y_m(coords[0],coords[1],coords[2],srid)
+          from_x_y_m(coords[0], coords[1], coords[2], srid)
         end
       end
 
-      #creates a point from the X and Y coordinates
-      def self.from_x_y(x, y, srid=DEFAULT_SRID)
-        point= new(srid)
-        point.set_x_y(x,y)
+      # Creates a point from the X and Y coordinates
+      def self.from_x_y(x, y, srid = DEFAULT_SRID)
+        point = new(srid)
+        point.set_x_y(x, y)
       end
 
-      #creates a point from the X, Y and Z coordinates
-      def self.from_x_y_z(x, y, z, srid=DEFAULT_SRID)
-        point= new(srid,true)
-        point.set_x_y_z(x,y,z)
+      # Creates a point from the X, Y and Z coordinates
+      def self.from_x_y_z(x, y, z, srid = DEFAULT_SRID)
+        point = new(srid, true)
+        point.set_x_y_z(x, y, z)
       end
 
-      #creates a point from the X, Y and M coordinates
-      def self.from_x_y_m(x, y, m, srid=DEFAULT_SRID)
-        point= new(srid,false,true)
-        point.m=m
-        point.set_x_y(x,y)
+      # Creates a point from the X, Y and M coordinates
+      def self.from_x_y_m(x, y, m, srid = DEFAULT_SRID)
+        point = new(srid, false, true)
+        point.m = m
+        point.set_x_y(x, y)
       end
 
-      #creates a point from the X, Y, Z and M coordinates
-      def self.from_x_y_z_m(x, y, z, m, srid=DEFAULT_SRID)
-        point= new(srid,true,true)
-        point.m=m
-        point.set_x_y_z(x,y,z)
+      # Creates a point from the X, Y, Z and M coordinates
+      def self.from_x_y_z_m(x, y, z, m, srid = DEFAULT_SRID)
+        point = new(srid, true, true)
+        point.m = m
+        point.set_x_y_z(x, y, z)
       end
 
-      #creates a point using polar coordinates
-      #r and theta(degrees)
-      def self.from_r_t(r, t, srid=DEFAULT_SRID)
+      # Creates a point using polar coordinates
+      # r and theta(degrees)
+      def self.from_r_t(r, t, srid = DEFAULT_SRID)
         t *= DEG2RAD
         x = r * Math.cos(t)
         y = r * Math.sin(t)
-        point= new(srid)
-        point.set_x_y(x,y)
+        point = new(srid)
+        point.set_x_y(x, y)
       end
 
-      #creates a point using coordinates like 22`34 23.45N
-      def self.from_latlong(lat, lon, srid=DEFAULT_SRID)
-        p = [lat,lon].map do |l|
+      # Creates a point using coordinates like 22`34 23.45N
+      def self.from_latlong(lat, lon, srid = DEFAULT_SRID)
+        p = [lat, lon].map do |l|
           sig, deg, min, sec, cen = l.scan(/(-)?(\d{1,2})\D*(\d{2})\D*(\d{2})(\D*(\d{1,3}))?/).flatten
           sig = true if l =~ /W|S/
           dec = deg.to_i + (min.to_i * 60 + "#{sec}#{cen}".to_f) / 3600
           sig ? dec * -1 : dec
         end
-        point= new(srid)
-        point.set_x_y(p[0],p[1])
+        point = new(srid)
+        point.set_x_y(p[0], p[1])
       end
 
-      #aliasing the constructors in case you want to use lat/lon instead of y/x
+      # Aliasing the constructors in case you like lat/lon instead of y/x
       class << self
         alias :xy               :from_x_y
         alias :from_xy          :from_x_y
