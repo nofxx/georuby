@@ -37,7 +37,7 @@ module GeoRuby
       output[:geometry] = geometry
       output[:properties] = properties
       output[:id] = id unless id.nil?
-      output.to_json(options)
+      output.as_json(options)
     end
 
     def to_json(options = {})
