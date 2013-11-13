@@ -73,7 +73,7 @@ module GeoRuby
       # b is the semi-minor axis (polar radius) of the ellipsoid
       # Their values by default are set to the ones of the WGS84 ellipsoid
       def ellipsoidal_distance(point, a = 6378137.0, b = 6356752.3142)
-        f = (a-b) / a
+        f = (a - b) / a
         l = (point.lon - lon) * DEG2RAD
 
         u1 = Math.atan((1-f) * Math.tan(lat * DEG2RAD ))
@@ -87,35 +87,43 @@ module GeoRuby
         lambdaP = 2 * Math::PI
         iterLimit = 20
 
-        while (lambda-lambdaP).abs > 1e-12 && --iterLimit>0
+        while (lambda - lambdaP).abs > 1e-12 && --iterLimit > 0
           sinLambda = Math.sin(lambda)
           cosLambda = Math.cos(lambda)
-          sinSigma = Math.sqrt((cosU2 * sinLambda) * (cosU2 * sinLambda) +
-                               (cosU1 * sinU2 - sinU1 * cosU2 * cosLambda) *
-                               (cosU1 * sinU2 - sinU1 * cosU2 * cosLambda))
+          sinSigma  =\
+          Math.sqrt((cosU2 * sinLambda) * (cosU2 * sinLambda) +
+                    (cosU1 * sinU2 - sinU1 * cosU2 * cosLambda) *
+                    (cosU1 * sinU2 - sinU1 * cosU2 * cosLambda))
 
-          return 0 if sinSigma == 0 #coincident points
+          return 0 if sinSigma == 0 # coincident points
 
-          cosSigma = sinU1 * sinU2 + cosU1 * cosU2 * cosLambda
-          sigma = Math.atan2(sinSigma, cosSigma)
-          sinAlpha = cosU1 * cosU2 * sinLambda / sinSigma
-          cosSqAlpha = 1 - sinAlpha*sinAlpha
-          cos2SigmaM = cosSigma - 2*sinU1*sinU2/cosSqAlpha
+          cosSigma   = sinU1 * sinU2 + cosU1 * cosU2 * cosLambda
+          sigma      = Math.atan2(sinSigma, cosSigma)
+          sinAlpha   = cosU1 * cosU2 * sinLambda / sinSigma
+          cosSqAlpha = 1 - sinAlpha * sinAlpha
+          cos2SigmaM = cosSigma - 2 * sinU1 * sinU2 / cosSqAlpha
 
-          cos2SigmaM = 0 if (cos2SigmaM.nan?) #equatorial line: cosSqAlpha=0
+          # equatorial line: cosSqAlpha=0
+          cos2SigmaM = 0 if (cos2SigmaM.nan?)
 
-          c = f/16*cosSqAlpha*(4+f*(4-3*cosSqAlpha))
+          c = f / 16 * cosSqAlpha * (4 + f * (4 - 3 * cosSqAlpha))
           lambdaP = lambda
-          lambda = l + (1-c) * f * sinAlpha * (sigma + c * sinSigma * (cos2SigmaM + c * cosSigma * (-1 + 2 * cos2SigmaM * cos2SigmaM)))
+          lambda = l + (1 - c) * f * sinAlpha * (sigma + c * sinSigma *
+            (cos2SigmaM + c * cosSigma * (-1 + 2 * cos2SigmaM *
+                cos2SigmaM)))
         end
+
         return NaN if iterLimit==0 #formula failed to converge
 
         uSq = cosSqAlpha * (a*a - b*b) / (b*b)
         a_bis = 1 + uSq/16384*(4096+uSq*(-768+uSq*(320-175*uSq)))
-        b_bis = uSq/1024 * (256+uSq*(-128+uSq*(74-47*uSq)))
-        deltaSigma = b_bis * sinSigma*(cos2SigmaM + b_bis/4*(cosSigma*(-1+2*cos2SigmaM*cos2SigmaM)- b_bis/6*cos2SigmaM*(-3+4*sinSigma*sinSigma)*(-3+4*cos2SigmaM*cos2SigmaM)))
+        b_bis = uSq/1024 * (256+uSq*(-128 + uSq * (74 - 47 * uSq)))
+        deltaSigma = b_bis * sinSigma * (cos2SigmaM + b_bis / 4 *
+          (cosSigma * (-1 + 2 * cos2SigmaM * cos2SigmaM) - b_bis / 6 *
+            cos2SigmaM * (-3 + 4 * sinSigma * sinSigma) * (-3 + 4 *
+              cos2SigmaM * cos2SigmaM)))
 
-        b*a_bis*(sigma-deltaSigma)
+        b * a_bis * (sigma - deltaSigma)
       end
 
       # Orthogonal Distance
@@ -130,13 +138,14 @@ module GeoRuby
         return 0.0 if len.zero?
         res = dot / len
 
-        xx, yy = if res < 0
-                   [head.x, head.y]
-                 elsif res > 1
-                   [tail.x, tail.y]
-                 else
-                   [head.x + res * c, head.y + res * d]
-                 end
+        xx, yy =\
+        if res < 0
+          [head.x, head.y]
+        elsif res > 1
+          [tail.x, tail.y]
+        else
+          [head.x + res * c, head.y + res * d]
+        end
         # todo benchmark if worth creating an instance
         # euclidian_distance(Point.from_x_y(xx, yy))
         Math.sqrt((@x - xx) ** 2 + (@y - yy) ** 2)
@@ -233,9 +242,12 @@ module GeoRuby
         out += "</#{gml_ns}:pos>\n</#{gml_ns}:Point>\n</#{georss_ns}:where>\n"
       end
 
-      # outputs the geometry in kml format : options are <tt>:id</tt>, <tt>:tesselate</tt>, <tt>:extrude</tt>,
-      # <tt>:altitude_mode</tt>. If the altitude_mode option is not present, the Z (if present) will not be output (since
-      # it won't be used by GE anyway: clampToGround is the default)
+      # outputs the geometry in kml format : options are
+      # <tt>:id</tt>, <tt>:tesselate</tt>, <tt>:extrude</tt>,
+      # <tt>:altitude_mode</tt>.
+      # If the altitude_mode option is not present, the Z (if present)
+      # will not be output (since it won't be used by GE anyway:
+      # clampToGround is the default)
       def kml_representation(options = {}) #:nodoc:
         out = "<Point#{options[:id_attr]}>\n"
         out += options[:geom_data] if options[:geom_data]
@@ -300,7 +312,7 @@ module GeoRuby
         Math.sqrt(@x**2 + @y**2)
       end
 
-      # outputs theta
+      # Outputs theta
       def theta_rad
         if @x.zero?
           @y < 0 ? 3 * HALFPI : HALFPI
@@ -310,17 +322,17 @@ module GeoRuby
         end
       end
 
-      # outputs theta in degrees
+      # Outputs theta in degrees
       def theta_deg
         theta_rad / DEG2RAD
       end
 
-      # outputs an array containing polar distance and theta
+      # Outputs an array containing polar distance and theta
       def as_polar
         [r, t]
       end
 
-      # invert signal of all coordinates
+      # Invert signal of all coordinates
       def -@
         set_x_y_z(-@x, -@y, -@z)
       end
@@ -332,6 +344,16 @@ module GeoRuby
         else
           [x, y]
         end
+      end
+
+      # Simple helper for 2D maps
+      def to_xy
+        [x, y]
+      end
+
+      # Simple helper for 3D maps
+      def to_xyz
+        [x, y, z]
       end
 
       def as_json(options = {})
