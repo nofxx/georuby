@@ -210,3 +210,7 @@ can be sent to mailto:guilhem.vellut@gmail.com.
 - More tests on writing shapefiles ; tests on real-world shapefiles
 - Better shp2sql import tool
 - Documentation
+
+
+[![Bitdeli Badge](https://d2weczhvl823v0.cloudfront.net/nofxx/georuby/trend.png)](https://bitdeli.com/free "Bitdeli Badge")
+
