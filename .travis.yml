@@ -9,6 +9,7 @@ rvm:
 jdk:
   - oraclejdk7
   - openjdk7
+env: CI='true'
 script: bundle exec rake spec
 matrix:
   allow_failures:
