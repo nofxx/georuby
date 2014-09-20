@@ -203,16 +203,8 @@ module GeoRuby
       end
 
       def as_json(options = {})
-        {:type => 'LineString',
-         :coordinates => self.to_coordinates}
+        {:type => 'LineString', :coordinates => self.to_coordinates}
       end
-
-      # simple geojson representation
-      # TODO add CRS / SRID support?
-      def to_json(options = {})
-        as_json(options).to_json(options)
-      end
-      alias :as_geojson :to_json
 
       #Creates a new line string. Accept an array of points as argument
       def self.from_points(points,srid=DEFAULT_SRID,with_z=false,with_m=false)

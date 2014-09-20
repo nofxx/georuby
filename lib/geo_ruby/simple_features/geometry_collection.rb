@@ -103,16 +103,8 @@ module GeoRuby
       end
 
       def as_json(options = {})
-        {:type => 'GeometryCollection',
-         :geometries => self.geometries}
+        {:type => 'GeometryCollection', :geometries => self.geometries}
       end
-
-      # simple geojson representation
-      # TODO add CRS / SRID support?
-      def to_json(options = {})
-        as_json(options).to_json(options)
-      end
-      alias :as_geojson :to_json
 
       #georss simple representation : outputs only the first geometry of the collection
       def georss_simple_representation(options)#:nodoc:

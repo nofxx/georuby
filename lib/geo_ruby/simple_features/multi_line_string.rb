@@ -32,23 +32,15 @@ module GeoRuby
       def to_line_string(join = true)
         LineString.from_points(points)
       end
-      
+
       def to_coordinates
         geometries.map{|ls| ls.to_coordinates}
       end
 
       def as_json(options = {})
-        {:type => 'MultiLineString',
-         :coordinates => self.to_coordinates}
+        {:type => 'MultiLineString', :coordinates => self.to_coordinates}
       end
 
-      # simple geojson representation
-      # TODO add CRS / SRID support?
-      def to_json(options = {})
-        as_json(options).to_json(options)
-      end
-      alias :as_geojson :to_json
-      
       #Creates a new multi line string from an array of line strings
       def self.from_line_strings(line_strings,srid=DEFAULT_SRID,with_z=false,with_m=false)
         multi_line_string = new(srid,with_z,with_m)

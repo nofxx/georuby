@@ -357,15 +357,8 @@ module GeoRuby
       end
 
       def as_json(options = {})
-        { :type => 'Point', :coordinates => self.to_coordinates }
+        {:type => 'Point', :coordinates => self.to_coordinates }
       end
-
-      # Simple geojson representation
-      # TODO add CRS / SRID support?
-      def to_json(options = {})
-        as_json(options).to_json(options)
-      end
-      alias :as_geojson :to_json
 
       # Creates a point from an array of coordinates
       def self.from_coordinates(coords, srid = DEFAULT_SRID, with_z = false, with_m = false)

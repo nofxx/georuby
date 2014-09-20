@@ -155,6 +155,13 @@ module GeoRuby#:nodoc:
         kml_representation(options.merge(:id_attr => id_attr, :geom_data => geom_data, :allow_z => allow_z, :fixed_z => fixed_z))
       end
 
+      # simple geojson representation
+      # TODO add CRS / SRID support?
+      def to_json(options = {})
+        as_json(options).to_json(options)
+      end
+      alias :as_geojson :to_json
+
       # Creates a geometry based on a EWKB string. The actual class returned depends of the content of the string passed as argument. Since WKB strings are a subset of EWKB, they are also valid.
       def self.from_ewkb(ewkb)
         factory = GeometryFactory::new

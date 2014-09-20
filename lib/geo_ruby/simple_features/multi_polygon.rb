@@ -40,13 +40,6 @@ module GeoRuby
          :coordinates => self.to_coordinates}
       end
 
-      # simple geojson representation
-      # TODO add CRS / SRID support?
-      def to_json(options = {})
-        as_json(options).to_json(options)
-      end
-      alias :as_geojson :to_json
-
       #Creates a multi polygon from an array of polygons
       def self.from_polygons(polygons,srid=DEFAULT_SRID,with_z=false,with_m=false)
         multi_polygon = new(srid,with_z,with_m)
