@@ -171,10 +171,11 @@ Basic GeoJSON support has been implemented per v1.0 of the {spec}[http://geojson
 
 USAGE:
 
- input - GeoRuby::SimpleFeatures::Geometry.from_geojson(geojson_string)
- output - call #as_geojson or #to_json on any SimpleFeature Geometry instance
+ input - `GeoRuby::SimpleFeatures::Geometry.from_geojson(geojson_string)`
+ output - call `#as_geojson` or `#to_json` on any SimpleFeature Geometry instance
 
 TODO:
+
  * Refactor to support extremely large GeoJSON input streams / files. Currently
    the entire GeoJSON representation must be loaded into memory as a String
  * Improve srid/crs support on input and add support on output
@@ -184,26 +185,26 @@ TODO:
 GeoJSON support implemented by {Marcus Mateus}[http://github.com/marcusmateus] and released courtesy {SimpliTex}[http://simplitex.com].
 
 
-=== Extra Features
+### Extra Features
 
 - Writing of ESRI shapefiles
 - Reading of ESRI shapefiles
 - Tool to import spatial features in MySQL and PostGIS from a SHP file
 
 
-=== Acknowledgement
+### Acknowledgement
 
 The SHP reading part uses the DBF library (http://rubyforge.org/projects/dbf/) by Keith Morrison (http://infused.org).
 Thanks also to Pramukta Kumar and Pete Schwamb for their contributions.
 
 
-== Support (Original GeoRuby gem)
+## Support (Original GeoRuby gem)
 
 Any questions, enhancement proposals, bug notifications or corrections
-can be sent to mailto:guilhem.vellut@gmail.com.
+can be sent to guilhem.vellut@gmail.com.
 
 
-=== Coming in the next versions
+### Coming in the next versions
 
 - Schema modification of existing shapefiles
 - More error reporting when writing shapefiles
