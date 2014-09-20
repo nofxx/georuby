@@ -8,7 +8,7 @@ rescue LoadError
 end
 
 module GeoRuby
-  
+
   #Raised when an error in the GeoJSON string is detected
   class GeojsonFormatError < StandardError
   end
@@ -37,7 +37,7 @@ module GeoRuby
       output[:geometry] = geometry
       output[:properties] = properties
       output[:id] = id unless id.nil?
-      output.as_json(options)
+      output.to_json(options)
     end
 
     def to_json(options = {})
@@ -65,9 +65,12 @@ module GeoRuby
       true
     end
 
+    def as_json(options = {})
+      {:type => 'FeatureCollection', :features => features}
+    end
+
     def to_json(options = {})
-      {:type => 'FeatureCollection',
-        :features => features}.to_json(options)
+      as_json(options).to_json
     end
     alias :as_geojson :to_json
   end
@@ -138,5 +141,7 @@ module GeoRuby
       end
       return nil
     end
-  end
-end
+
+  end #GeojsonParser
+
+end #GeoRuby
