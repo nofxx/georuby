@@ -188,8 +188,8 @@ describe GeoRuby::SimpleFeatures::LineString do
     end
 
     it "should print the kml_representation" do
-      expect(line.kml_representation).to
-        eql("<LineString>\n<coordinates>0,0 1,1 2,2 3,3 4,4 5,5 6,6</coordinates>\n</LineString>\n")
+      expect(line.kml_representation).
+        to eql("<LineString>\n<coordinates>0,0 1,1 2,2 3,3 4,4 5,5 6,6</coordinates>\n</LineString>\n")
     end
 
     it "should print the kml_poslist without reverse or z" do

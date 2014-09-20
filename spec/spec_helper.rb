@@ -53,7 +53,7 @@ module GeorubyMatchers
     end
 
     def failure_message;          "expected #{@expect} but received #{@actual.inspect}";    end
-    def negative_failure_message; "expected something else then '#{@expect}' but got '#{@actual}'";    end
+    def failure_message_when_negated; "expected something else then '#{@expect}' but got '#{@actual}'";    end
   end
 
   def be_a_point(*args)
