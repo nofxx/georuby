@@ -11,28 +11,28 @@ describe GeoRuby::SimpleFeatures::EWKBParser do
     @hex_ewkb_parser.parse("01010000207B000000CDCCCCCCCCCC28406666666666A64640")
     point = @factory.geometry
     expect(point).to be_instance_of GeoRuby::SimpleFeatures::Point
-    expect(point).to eq(GeoRuby::SimpleFeatures::Point.from_x_y(12.4,45.3,123))
+    expect(point).to eq(GeoRuby::SimpleFeatures::Point.from_x_y(12.4, 45.3, 123))
   end
 
   it "test_point2d_BigEndian" do
     @hex_ewkb_parser.parse("00000000014013A035BD512EC7404A3060C38F3669")
     point = @factory.geometry
     expect(point).to be_instance_of GeoRuby::SimpleFeatures::Point
-    expect(point).to eq(GeoRuby::SimpleFeatures::Point.from_x_y(4.906455,52.377953))
+    expect(point).to eq(GeoRuby::SimpleFeatures::Point.from_x_y(4.906455, 52.377953))
   end
 
   it "test_point3dz" do
     @hex_ewkb_parser.parse("01010000A07B000000CDCCCCCCCCCC28406666666666A646400000000000000CC0")
     point = @factory.geometry
     expect(point).to be_instance_of GeoRuby::SimpleFeatures::Point
-    expect(point).to eq(GeoRuby::SimpleFeatures::Point.from_x_y_z(12.4,45.3,-3.5,123))
+    expect(point).to eq(GeoRuby::SimpleFeatures::Point.from_x_y_z(12.4, 45.3, -3.5, 123))
   end
 
   it "test_point4d" do
     @hex_ewkb_parser.parse("01010000E07B000000CDCCCCCCCCCC28406666666666A646400000000000000CC00000000000002E40")
     point = @factory.geometry
     expect(point).to be_instance_of GeoRuby::SimpleFeatures::Point
-    expect(point).to eq(GeoRuby::SimpleFeatures::Point.from_x_y_z_m(12.4,45.3,-3.5,15,123))
+    expect(point).to eq(GeoRuby::SimpleFeatures::Point.from_x_y_z_m(12.4, 45.3, -3.5, 15, 123))
   end
 
   it "test_line_string" do

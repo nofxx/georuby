@@ -332,6 +332,11 @@ module GeoRuby
         [r, t]
       end
 
+      # Outputs the point in json format
+      def as_json(options = {})
+        {:type => 'Point', :coordinates => self.to_coordinates }
+      end
+
       # Invert signal of all coordinates
       def -@
         set_x_y_z(-@x, -@y, -@z)
@@ -354,10 +359,6 @@ module GeoRuby
       # Simple helper for 3D maps
       def to_xyz
         [x, y, z]
-      end
-
-      def as_json(options = {})
-        {:type => 'Point', :coordinates => self.to_coordinates }
       end
 
       # Creates a point from an array of coordinates
@@ -434,6 +435,9 @@ module GeoRuby
         alias :from_lon_lat_z_m :from_x_y_z_m
         alias :from_rad_tet     :from_r_t
       end
-    end
-  end
-end
+
+    end #Point
+
+  end #SimpleFeatures
+
+end #GeoRuby

@@ -199,7 +199,7 @@ module GeoRuby
       end
 
       def to_coordinates
-        points.map{|p| p.to_coordinates }
+        points.map { |p| p.to_coordinates }
       end
 
       def as_json(options = {})
@@ -219,6 +219,9 @@ module GeoRuby
         line_string.concat( points.map {|p| Point.from_coordinates(p,srid,with_z,with_m) } )
         line_string
       end
-    end
-  end
-end
+
+    end #LineString
+
+  end #SimpleFeatures
+
+end #GeoRuby

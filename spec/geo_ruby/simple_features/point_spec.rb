@@ -415,6 +415,14 @@ describe GeoRuby::SimpleFeatures::Point do
       expect(point.as_polar.size).to eq(2) #.length.should eql(2)
     end
 
+    it "should print out nicely as json/geojson" do
+      expect(GeoRuby::SimpleFeatures::Point.from_x_y(-47.11, 20.2).as_json).to eql({:type=>"Point", :coordinates=>[-47.11, 20.2]})
+    end
+
+    it "should print out nicely to json/geojson" do
+      expect(GeoRuby::SimpleFeatures::Point.from_x_y(-47.11, 20.2).to_json).to eql("{\"type\":\"Point\",\"coordinates\":[-47.11,20.2]}")
+    end
+
   end
 
 end

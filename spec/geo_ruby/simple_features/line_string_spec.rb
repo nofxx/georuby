@@ -6,8 +6,8 @@ module LineSpecHelper
     Array.new(num) { |i| mock_point(i,i) }
   end
 
-  def mock_point(x=1,y=2)
-    double(GeoRuby::SimpleFeatures::Point, :x => x, :y => y, :text_representation => "#{x} #{y}")
+  def mock_point(x=1, y=2)
+    double(GeoRuby::SimpleFeatures::Point, :x => x, :y => y, :text_representation => "#{x} #{y}", :to_coordinates => [x, y])
   end
 end
 
@@ -199,6 +199,15 @@ describe GeoRuby::SimpleFeatures::LineString do
     it "should print the kml_poslist reverse" do
       expect(line.kml_poslist({:reverse => true})).to eql("6,6 5,5 4,4 3,3 2,2 1,1 0,0")
     end
+
+    it "should print out nicely as json/geojson" do
+      expect(line.as_json).to eql({:type=>"LineString", :coordinates=>[[0, 0], [1, 1], [2, 2], [3, 3], [4, 4], [5, 5], [6, 6]]})
+    end
+
+    it "should print out nicely to json/geojson" do
+      expect(line.to_json).to eql("{\"type\":\"LineString\",\"coordinates\":[[0,0],[1,1],[2,2],[3,3],[4,4],[5,5],[6,6]]}")
+    end
+
   end
 
   describe "> Distances..." do

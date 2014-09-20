@@ -160,7 +160,11 @@ module GeoRuby#:nodoc:
       def to_json(options = {})
         as_json(options).to_json(options)
       end
-      alias :as_geojson :to_json
+
+      def as_json(options = {})
+        # Implemented by each class
+      end
+      alias :as_geojson :as_json
 
       # Creates a geometry based on a EWKB string. The actual class returned depends of the content of the string passed as argument. Since WKB strings are a subset of EWKB, they are also valid.
       def self.from_ewkb(ewkb)
