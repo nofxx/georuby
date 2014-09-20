@@ -132,7 +132,7 @@ GeoRuby does not allow the modification of the schema (it will probably be done 
 
 Here is an example of how to create a new Shapefile with 2 fields :
 
-      shpfile = ShpFile.create('hello.shp',ShpType::POINT,[DBF::Field.new("Hoyoyo","C",10),Dbf::Field.new("Boyoul","N",10,0)])
+      shpfile = ShpFile.create('hello.shp',ShpType::POINT,[DBF::Field.new("Hoyoyo","C",10), DBF::Field.new("Boyoul","N",10,0)])
 
 The file is then open for reading and writing.
 
