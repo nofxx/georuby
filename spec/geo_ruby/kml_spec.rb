@@ -20,59 +20,59 @@ describe GeoRuby::KmlParser do
   it "should parse a GeoRuby::SimpleFeatures::Point correctly" do
     @kml_parser.parse(POINT)
     g = @factory.geometry
-    g.should_not eql(nil)
-    g.should be_an_instance_of(GeoRuby::SimpleFeatures::Point)
-    g.as_kml.gsub(/\n/,'').should eql(POINT) 
+    expect(g).not_to eql(nil)
+    expect(g).to be_an_instance_of(GeoRuby::SimpleFeatures::Point)
+    expect(g.as_kml.gsub(/\n/,'')).to eql(POINT) 
   end
   
   it "should parse a GeoRuby::SimpleFeatures::LineString correctly" do
     @kml_parser.parse(LINESTRING)
     g = @factory.geometry
-    g.should_not eql(nil)
-    g.should be_an_instance_of(GeoRuby::SimpleFeatures::LineString)
-    g.as_kml.gsub(/\n/,'').should eql(LINESTRING)
+    expect(g).not_to eql(nil)
+    expect(g).to be_an_instance_of(GeoRuby::SimpleFeatures::LineString)
+    expect(g.as_kml.gsub(/\n/,'')).to eql(LINESTRING)
 
     @kml_parser.parse(LINEARRING)
     g = @factory.geometry
-    g.should_not eql(nil)
-    g.should be_an_instance_of(GeoRuby::SimpleFeatures::LinearRing)
-    g.as_kml.gsub(/\n/,'').should eql(LINEARRING)
+    expect(g).not_to eql(nil)
+    expect(g).to be_an_instance_of(GeoRuby::SimpleFeatures::LinearRing)
+    expect(g.as_kml.gsub(/\n/,'')).to eql(LINEARRING)
   end
   
   it "should parse a GeoRuby::SimpleFeatures::Polygon correctly" do
     @kml_parser.parse(POLYGON)
     g = @factory.geometry
-    g.should_not eql(nil)
-    g.should be_an_instance_of(GeoRuby::SimpleFeatures::Polygon)
-    g.as_kml.gsub(/\n/,'').should eql(POLYGON)
+    expect(g).not_to eql(nil)
+    expect(g).to be_an_instance_of(GeoRuby::SimpleFeatures::Polygon)
+    expect(g.as_kml.gsub(/\n/,'')).to eql(POLYGON)
 
     @kml_parser.parse(COMPLEX_POLYGON)
     g = @factory.geometry
-    g.should_not eql(nil)
-    g.should be_an_instance_of(GeoRuby::SimpleFeatures::Polygon)
-    g.as_kml.gsub(/\n/,'').should eql(COMPLEX_POLYGON)
+    expect(g).not_to eql(nil)
+    expect(g).to be_an_instance_of(GeoRuby::SimpleFeatures::Polygon)
+    expect(g.as_kml.gsub(/\n/,'')).to eql(COMPLEX_POLYGON)
   end
   
   it "should parse a MultiGeometry correctly" do
     @kml_parser.parse(MULTIGEOMETRY)
     g = @factory.geometry
-    g.should_not eql(nil)
-    g.geometries.length.should eql(2)
-    g.should be_an_instance_of(GeoRuby::SimpleFeatures::GeometryCollection)
-    g.as_kml.gsub(/\n/,'').should eql(MULTIGEOMETRY)
+    expect(g).not_to eql(nil)
+    expect(g.geometries.length).to eql(2)
+    expect(g).to be_an_instance_of(GeoRuby::SimpleFeatures::GeometryCollection)
+    expect(g.as_kml.gsub(/\n/,'')).to eql(MULTIGEOMETRY)
   end
   
   it "should parse 3D geometries correctly" do
     # not testing generation because GeoRuby kml generation logic currently requires additional
     # XML nodes to actually output 3D coordinate information.  I might modify that behavior
     g = @kml_parser.parse(POINT3D)
-    g.should_not eql(nil)
-    g.with_z.should eql(true)
+    expect(g).not_to eql(nil)
+    expect(g.with_z).to eql(true)
     # g.as_kml(:altitude_mode => "clampToGround").gsub(/\n/,'').should eql(POINT3D)
 
     g = @kml_parser.parse(LINESTRING3D)
-    g.should_not eql(nil)
-    g.with_z.should eql(true)
+    expect(g).not_to eql(nil)
+    expect(g.with_z).to eql(true)
     # g.as_kml(:altitude_mode => "clampToGround").gsub(/\n/,'').should eql(LINESTRING3D)
   end
 
@@ -80,9 +80,9 @@ describe GeoRuby::KmlParser do
     [LINESTRING, LINEARRING, POLYGON, COMPLEX_POLYGON, MULTIGEOMETRY, LINESTRING3D].each do |kml|
       @kml_parser.parse(kml)
       g = @factory.geometry
-      lambda {
+      expect {
         g.bounding_box
-      }.should_not raise_error
+      }.not_to raise_error
     end
   end
 
@@ -90,9 +90,9 @@ describe GeoRuby::KmlParser do
     [LINESTRING, LINEARRING, POLYGON, COMPLEX_POLYGON, MULTIGEOMETRY, LINESTRING3D].each do |kml|
       @kml_parser.parse(kml)
       g = @factory.geometry
-      lambda {
+      expect {
         g.envelope.center
-      }.should_not raise_error
+      }.not_to raise_error
     end
   end
 end

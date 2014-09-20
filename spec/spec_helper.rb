@@ -43,13 +43,13 @@ module GeorubyMatchers
         [:x, :y, :z, :m].each_with_index do |c, i|
           next unless val = @expect[i]
           if val.kind_of? Numeric
-            actual.send(c).should be_within(0.1).of(val)
+            expect(actual.send(c)).to be_within(0.1).of(val)
           else
-            actual.send(c).should eql(val)
+            expect(actual.send(c)).to eql(val)
           end
         end
       end
-      actual.should be_instance_of(GeoRuby::SimpleFeatures::Point)
+      expect(actual).to be_instance_of(GeoRuby::SimpleFeatures::Point)
     end
 
     def failure_message;          "expected #{@expect} but received #{@actual.inspect}";    end

@@ -8,31 +8,31 @@ describe GeoRuby::Shp4r do
     end
 
     it "should parse ok" do
-      @shpfile.record_count.should eql(2)
-      @shpfile.should have(1).fields
-      @shpfile.shp_type.should eql(GeoRuby::Shp4r::ShpType::POINT)
+      expect(@shpfile.record_count).to eql(2)
+      expect(@shpfile.fields.size).to eq(1)
+      expect(@shpfile.shp_type).to eql(GeoRuby::Shp4r::ShpType::POINT)
     end
 
     it "should parse fields" do
       field = @shpfile.fields.first
-      field.name.should eql("Hoyoyo")
-      field.type.should eql("N")
+      expect(field.name).to eql("Hoyoyo")
+      expect(field.type).to eql("N")
     end
 
     it "should parse record 1" do
       rec = @shpfile[0]
-      rec.geometry.should be_kind_of GeoRuby::SimpleFeatures::Point
-      rec.geometry.x.should be_within(0.00001).of(-90.08375)
-      rec.geometry.y.should be_within(0.00001).of(34.39996)
-      rec.data["Hoyoyo"].should eql(6)
+      expect(rec.geometry).to be_kind_of GeoRuby::SimpleFeatures::Point
+      expect(rec.geometry.x).to be_within(0.00001).of(-90.08375)
+      expect(rec.geometry.y).to be_within(0.00001).of(34.39996)
+      expect(rec.data["Hoyoyo"]).to eql(6)
     end
 
     it "should parse record 2" do
       rec = @shpfile[1]
-      rec.geometry.should be_kind_of GeoRuby::SimpleFeatures::Point
-      rec.geometry.x.should be_within(0.00001).of(-87.82580)
-      rec.geometry.y.should be_within(0.00001).of(33.36416)
-      rec.data["Hoyoyo"].should eql(9)
+      expect(rec.geometry).to be_kind_of GeoRuby::SimpleFeatures::Point
+      expect(rec.geometry.x).to be_within(0.00001).of(-87.82580)
+      expect(rec.geometry.y).to be_within(0.00001).of(33.36416)
+      expect(rec.data["Hoyoyo"]).to eql(9)
     end
 
   end
@@ -43,25 +43,25 @@ describe GeoRuby::Shp4r do
     end
 
     it "should parse ok" do
-      @shpfile.record_count.should eql(1)
-      @shpfile.should have(1).fields
-      @shpfile.shp_type.should eql(GeoRuby::Shp4r::ShpType::POLYLINE)
+      expect(@shpfile.record_count).to eql(1)
+      expect(@shpfile.fields.size).to eq(1)
+      expect(@shpfile.shp_type).to eql(GeoRuby::Shp4r::ShpType::POLYLINE)
     end
 
     it "should parse fields" do
       field = @shpfile.fields.first
-      field.name.should eql("Chipoto")
+      expect(field.name).to eql("Chipoto")
       # GeoRuby::Shp4r::Dbf now uses the decimal to choose between int and float
       # So here is N instead of F
-      field.type.should eql("N")
+      expect(field.type).to eql("N")
     end
 
     it "should parse record 1" do
       rec = @shpfile[0]
-      rec.geometry.should be_kind_of GeoRuby::SimpleFeatures::MultiLineString
-      rec.geometry.length.should eql(1)
-      rec.geometry[0].length.should eql(6)
-      rec.data["Chipoto"].should eql(5.678)
+      expect(rec.geometry).to be_kind_of GeoRuby::SimpleFeatures::MultiLineString
+      expect(rec.geometry.length).to eql(1)
+      expect(rec.geometry[0].length).to eql(6)
+      expect(rec.data["Chipoto"]).to eql(5.678)
     end
 
   end
@@ -72,24 +72,24 @@ describe GeoRuby::Shp4r do
     end
 
     it "should parse ok" do
-      @shpfile.record_count.should eql(1)
-      @shpfile.should have(1).fields
-      @shpfile.shp_type.should eql(GeoRuby::Shp4r::ShpType::POLYGON)
+      expect(@shpfile.record_count).to eql(1)
+      expect(@shpfile.fields.size).to eq(1)
+      expect(@shpfile.shp_type).to eql(GeoRuby::Shp4r::ShpType::POLYGON)
     end
 
     it "should parse fields" do
       field = @shpfile.fields.first
-      field.name.should eql("Hello")
-      field.type.should eql("C")
+      expect(field.name).to eql("Hello")
+      expect(field.type).to eql("C")
     end
 
     it "should parse record 1" do
       rec = @shpfile[0]
-      rec.geometry.should be_kind_of GeoRuby::SimpleFeatures::MultiPolygon
-      rec.geometry.length.should eql(1)
-      rec.geometry[0].length.should eql(1)
-      rec.geometry[0][0].length.should eql(7)
-      rec.data["Hello"].should eql("Bouyoul!")
+      expect(rec.geometry).to be_kind_of GeoRuby::SimpleFeatures::MultiPolygon
+      expect(rec.geometry.length).to eql(1)
+      expect(rec.geometry[0].length).to eql(1)
+      expect(rec.geometry[0][0].length).to eql(7)
+      expect(rec.data["Hello"]).to eql("Bouyoul!")
     end
   end
 
@@ -112,13 +112,13 @@ describe GeoRuby::Shp4r do
       shpfile = GeoRuby::Shp4r::ShpFile.open(File.dirname(__FILE__) + '/../../data/point2.shp')
 
       shpfile.transaction do |tr|
-        tr.should be_instance_of GeoRuby::Shp4r::ShpTransaction
+        expect(tr).to be_instance_of GeoRuby::Shp4r::ShpTransaction
         tr.add(GeoRuby::Shp4r::ShpRecord.new(GeoRuby::SimpleFeatures::Point.from_x_y(123.4,123.4),'Hoyoyo' => 5))
         tr.add(GeoRuby::Shp4r::ShpRecord.new(GeoRuby::SimpleFeatures::Point.from_x_y(-16.67,16.41),'Hoyoyo' => -7))
         tr.delete(1)
       end
 
-      shpfile.record_count.should eql(3)
+      expect(shpfile.record_count).to eql(3)
 
       shpfile.close
       rm_all_shp(File.dirname(__FILE__) + '/../../data/point2')
@@ -131,13 +131,13 @@ describe GeoRuby::Shp4r do
       shpfile = GeoRuby::Shp4r::ShpFile.open(File.dirname(__FILE__) + '/../../data/polyline2.shp')
 
       shpfile.transaction do |tr|
-        tr.should be_instance_of GeoRuby::Shp4r::ShpTransaction
+        expect(tr).to be_instance_of GeoRuby::Shp4r::ShpTransaction
         tr.add(GeoRuby::Shp4r::ShpRecord.new(GeoRuby::SimpleFeatures::LineString.from_coordinates([[123.4,123.4],[45.6,12.3]]),'Chipoto' => 5.6778))
         tr.add(GeoRuby::Shp4r::ShpRecord.new(GeoRuby::SimpleFeatures::LineString.from_coordinates([[23.4,13.4],[45.6,12.3],[12,-67]]),'Chipoto' => -7.1))
         tr.delete(0)
       end
 
-      shpfile.record_count.should eql(2)
+      expect(shpfile.record_count).to eql(2)
       shpfile.close
       rm_all_shp(File.dirname(__FILE__) + '/../../data/polyline2')
     end
@@ -148,12 +148,12 @@ describe GeoRuby::Shp4r do
       shpfile = GeoRuby::Shp4r::ShpFile.open(File.dirname(__FILE__) + '/../../data/polygon2.shp')
 
       shpfile.transaction do |tr|
-        tr.should be_instance_of GeoRuby::Shp4r::ShpTransaction
+        expect(tr).to be_instance_of GeoRuby::Shp4r::ShpTransaction
         tr.delete(0)
         tr.add(GeoRuby::Shp4r::ShpRecord.new(GeoRuby::SimpleFeatures::Polygon.from_coordinates([[[0,0],[40,0],[40,40],[0,40],[0,0]],[[10,10],[10,20],[20,20],[10,10]]]),'Hello' => "oook"))
       end
 
-      shpfile.record_count.should eql(1)
+      expect(shpfile.record_count).to eql(1)
 
       shpfile.close
       rm_all_shp(File.dirname(__FILE__) + '/../../data/polygon2')
@@ -165,11 +165,11 @@ describe GeoRuby::Shp4r do
       shpfile = GeoRuby::Shp4r::ShpFile.open(File.dirname(__FILE__) + '/../../data/multipoint2.shp')
 
       shpfile.transaction do |tr|
-        tr.should be_instance_of GeoRuby::Shp4r::ShpTransaction
+        expect(tr).to be_instance_of GeoRuby::Shp4r::ShpTransaction
         tr.add(GeoRuby::Shp4r::ShpRecord.new(GeoRuby::SimpleFeatures::MultiPoint.from_coordinates([[45.6,-45.1],[12.4,98.2],[51.2,-0.12],[156.12345,56.109]]),'Hello' => 5,"Hoyoyo" => "AEZAE"))
       end
 
-      shpfile.record_count.should eql(2)
+      expect(shpfile.record_count).to eql(2)
 
       shpfile.close
       rm_all_shp(File.dirname(__FILE__) + '/../../data/multipoint2')
@@ -182,11 +182,11 @@ describe GeoRuby::Shp4r do
       shpfile = GeoRuby::Shp4r::ShpFile.open(File.dirname(__FILE__) + '/../../data/polygon4.shp')
 
       shpfile.transaction do |tr|
-        tr.should be_instance_of GeoRuby::Shp4r::ShpTransaction
+        expect(tr).to be_instance_of GeoRuby::Shp4r::ShpTransaction
         tr.add(GeoRuby::Shp4r::ShpRecord.new(GeoRuby::SimpleFeatures::MultiPolygon.from_polygons([GeoRuby::SimpleFeatures::Polygon.from_coordinates([[[0,0],[40,0],[40,40],[0,40],[0,0]],[[10,10],[10,20],[20,20],[10,10]]])]),'Hello' => "oook"))
       end
 
-      shpfile.record_count.should eql(2)
+      expect(shpfile.record_count).to eql(2)
 
       shpfile.close
 
@@ -200,11 +200,11 @@ describe GeoRuby::Shp4r do
       shpfile = GeoRuby::Shp4r::ShpFile.open(File.dirname(__FILE__) + '/../../data/polygon5.shp')
 
       shpfile.transaction do |tr|
-        tr.should be_instance_of GeoRuby::Shp4r::ShpTransaction
+        expect(tr).to be_instance_of GeoRuby::Shp4r::ShpTransaction
         tr.add(GeoRuby::Shp4r::ShpRecord.new(GeoRuby::SimpleFeatures::MultiPolygon.from_polygons([GeoRuby::SimpleFeatures::Polygon.from_coordinates([[[0,0],[40,0],[40,40],[0,40],[0,0]],[[10,10],[10,20],[20,20],[10,10]]])]),'Hello' => "oook"))
         tr.rollback
       end
-      shpfile.record_count.should eql(1)
+      expect(shpfile.record_count).to eql(1)
 
       shpfile.close
 
@@ -217,7 +217,7 @@ describe GeoRuby::Shp4r do
       shpfile.transaction do |tr|
         tr.add(GeoRuby::Shp4r::ShpRecord.new(GeoRuby::SimpleFeatures::Point.from_x_y(123,123.4),'Hoyoyo' => "HJHJJ"))
       end
-      shpfile.record_count.should eql(1)
+      expect(shpfile.record_count).to eql(1)
       shpfile.close
       rm_all_shp(File.dirname(__FILE__) + '/../../data/point3')
     end
@@ -227,7 +227,7 @@ describe GeoRuby::Shp4r do
       shpfile.transaction do |tr|
         tr.add(GeoRuby::Shp4r::ShpRecord.new(GeoRuby::SimpleFeatures::MultiPoint.from_coordinates([[123,123.4],[345,12.2]]),'Hoyoyo' => "HJHJJ","Hello" => 5))
       end
-      shpfile.record_count.should eql(1)
+      expect(shpfile.record_count).to eql(1)
       shpfile.close
       rm_all_shp(File.dirname(__FILE__) + '/../../data/multipoint3')
     end

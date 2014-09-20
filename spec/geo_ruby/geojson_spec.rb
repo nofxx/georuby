@@ -12,17 +12,17 @@ describe GeoRuby::GeojsonParser do
   it "should create a specified GeoRuby::SimpleFeatures::Point" do
     point_json = %{ { "type": "Point", "coordinates": [100.0, 0.0] } }
     point = GeoRuby::SimpleFeatures::Geometry.from_geojson(point_json)
-    point.class.should eql(GeoRuby::SimpleFeatures::Point)
+    expect(point.class).to eql(GeoRuby::SimpleFeatures::Point)
     point_hash = JSON.parse(point_json)
-    point.to_coordinates.should eql(point_hash['coordinates'])
+    expect(point.to_coordinates).to eql(point_hash['coordinates'])
   end
 
   it "should create a specified GeoRuby::SimpleFeatures::LineString" do
     ls_json = %{ { "type": "LineString", "coordinates": [ [100.0, 0.0], [101.0, 1.0] ]} }
     line_string = GeoRuby::SimpleFeatures::Geometry.from_geojson(ls_json)
-    line_string.class.should eql(GeoRuby::SimpleFeatures::LineString)
+    expect(line_string.class).to eql(GeoRuby::SimpleFeatures::LineString)
     ls_hash = JSON.parse(ls_json)
-    line_string.to_coordinates.should eql(ls_hash['coordinates'])
+    expect(line_string.to_coordinates).to eql(ls_hash['coordinates'])
   end
 
   it "should create a specified GeoRuby::SimpleFeatures::Polygon" do
@@ -35,10 +35,10 @@ describe GeoRuby::GeojsonParser do
       }
     EOJ
     polygon = GeoRuby::SimpleFeatures::Geometry.from_geojson(poly_json)
-    polygon.class.should eql(GeoRuby::SimpleFeatures::Polygon)
-    polygon.rings.size.should eql(2)
+    expect(polygon.class).to eql(GeoRuby::SimpleFeatures::Polygon)
+    expect(polygon.rings.size).to eql(2)
     poly_hash = JSON.parse(poly_json)
-    polygon.to_coordinates.should eql(poly_hash['coordinates'])
+    expect(polygon.to_coordinates).to eql(poly_hash['coordinates'])
   end
 
   it "should create a specified GeoRuby::SimpleFeatures::MultiPoint" do
@@ -48,9 +48,9 @@ describe GeoRuby::GeojsonParser do
         }
     EOJ
     multi_point = GeoRuby::SimpleFeatures::Geometry.from_geojson(mp_json)
-    multi_point.class.should eql(GeoRuby::SimpleFeatures::MultiPoint)
+    expect(multi_point.class).to eql(GeoRuby::SimpleFeatures::MultiPoint)
     mp_hash = JSON.parse(mp_json)
-    multi_point.to_coordinates.should eql(mp_hash['coordinates'])
+    expect(multi_point.to_coordinates).to eql(mp_hash['coordinates'])
   end
 
   it "should create a specified GeoRuby::SimpleFeatures::MultiLineString" do
@@ -63,9 +63,9 @@ describe GeoRuby::GeojsonParser do
       }
     EOJ
     multi_ls = GeoRuby::SimpleFeatures::Geometry.from_geojson(mls_json)
-    multi_ls.class.should eql(GeoRuby::SimpleFeatures::MultiLineString)
+    expect(multi_ls.class).to eql(GeoRuby::SimpleFeatures::MultiLineString)
     mls_hash = JSON.parse(mls_json)
-    multi_ls.to_coordinates.should eql(mls_hash['coordinates'])
+    expect(multi_ls.to_coordinates).to eql(mls_hash['coordinates'])
   end
 
   it "should create a specifiead GeoRuby::SimpleFeatures::MultiPolygon" do
@@ -79,9 +79,9 @@ describe GeoRuby::GeojsonParser do
         }
     EOJ
     mpoly = GeoRuby::SimpleFeatures::Geometry.from_geojson(mpoly_json)
-    mpoly.class.should eql(GeoRuby::SimpleFeatures::MultiPolygon)
+    expect(mpoly.class).to eql(GeoRuby::SimpleFeatures::MultiPolygon)
     mpoly_hash = JSON.parse(mpoly_json)
-    mpoly.to_coordinates.should eql(mpoly_hash['coordinates'])
+    expect(mpoly.to_coordinates).to eql(mpoly_hash['coordinates'])
   end
 
   it "should create a specified GeoRuby::SimpleFeatures::GeometryCollection" do
@@ -98,12 +98,12 @@ describe GeoRuby::GeojsonParser do
       }
     EOJ
     gcol = GeoRuby::SimpleFeatures::Geometry.from_geojson(gcol_json)
-    gcol.class.should eql(GeoRuby::SimpleFeatures::GeometryCollection)
+    expect(gcol.class).to eql(GeoRuby::SimpleFeatures::GeometryCollection)
     gcol_hash = JSON.parse(gcol_json)
     gcol.geometries.each_with_index do |g,i|
       gh = gcol_hash['geometries'][i]
-      g.class.should eql(GeoRuby::SimpleFeatures.const_get(gh['type']))
-      g.to_coordinates.should eql(gh['coordinates'])
+      expect(g.class).to eql(GeoRuby::SimpleFeatures.const_get(gh['type']))
+      expect(g.to_coordinates).to eql(gh['coordinates'])
     end
   end
 
@@ -121,25 +121,25 @@ describe GeoRuby::GeojsonParser do
       }
     EOJ
     f = GeoRuby::SimpleFeatures::Geometry.from_geojson(feature_json)
-    f.class.should eql(GeoRuby::GeojsonFeature)
+    expect(f.class).to eql(GeoRuby::GeojsonFeature)
     feature_hash = JSON.parse(feature_json)
-    f.id.should eql(feature_hash['id'])
-    f.properties.should eql(feature_hash['properties'])
-    f.geometry.class.should eql(GeoRuby::SimpleFeatures.const_get(feature_hash['geometry']['type']))
-    f.geometry.to_coordinates.should eql(feature_hash['geometry']['coordinates'])
+    expect(f.id).to eql(feature_hash['id'])
+    expect(f.properties).to eql(feature_hash['properties'])
+    expect(f.geometry.class).to eql(GeoRuby::SimpleFeatures.const_get(feature_hash['geometry']['type']))
+    expect(f.geometry.to_coordinates).to eql(feature_hash['geometry']['coordinates'])
   end
 
   it "should create a specified FeatureCollection" do
     fcol_json = File.read(DATA_DIR + 'feature_collection.json')
     fcol = GeoRuby::SimpleFeatures::Geometry.from_geojson(fcol_json)
-    fcol.class.should eql(GeoRuby::GeojsonFeatureCollection)
+    expect(fcol.class).to eql(GeoRuby::GeojsonFeatureCollection)
     fcol_hash = JSON.parse(fcol_json)
     fcol.features.each_with_index do |f,i|
       fgh = fcol_hash['features'][i]['geometry']
       fg = f.geometry
-      f.properties.should eql(fcol_hash['features'][i]['properties'])
-      fg.class.should eql(GeoRuby::SimpleFeatures.const_get(fgh['type']))
-      fg.to_coordinates.should eql(fgh['coordinates'])
+      expect(f.properties).to eql(fcol_hash['features'][i]['properties'])
+      expect(fg.class).to eql(GeoRuby::SimpleFeatures.const_get(fgh['type']))
+      expect(fg.to_coordinates).to eql(fgh['coordinates'])
     end
   end
 
