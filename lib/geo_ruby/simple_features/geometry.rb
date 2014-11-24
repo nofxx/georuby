@@ -58,8 +58,8 @@ module GeoRuby #:nodoc:
         ewkb = 1.chr # little_endian by default
 
         type = binary_geometry_type
-        type = type | Z_MASK if @with_z && allow_z
-        type = type | M_MASK if @with_m && allow_m
+        type |= Z_MASK if @with_z && allow_z
+        type |= M_MASK if @with_m && allow_m
 
         if allow_srid
           type = type | SRID_MASK

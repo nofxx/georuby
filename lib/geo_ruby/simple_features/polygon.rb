@@ -3,7 +3,8 @@ require 'geo_ruby/simple_features/geometry'
 module GeoRuby
   module SimpleFeatures
     # Represents a polygon as an array of linear rings (see LinearRing).
-    # No check is performed regarding the validity of the geometries forming the polygon.
+    # No check is performed regarding the validity of the geometries
+    # forming the polygon.
     class Polygon < Geometry
       # the list of rings forming the polygon
       attr_reader :rings
@@ -66,7 +67,8 @@ module GeoRuby
         end
       end
 
-      # binary representation of a polygon, without the headers neccessary for a valid WKB string
+      # Binary representation of a polygon.
+      # Without the headers neccessary for a valid WKB string
       def binary_representation(allow_z = true, allow_m = true)
         rep = [length].pack('V')
         each { |linear_ring| rep << linear_ring.binary_representation(allow_z, allow_m) }
@@ -80,7 +82,9 @@ module GeoRuby
 
       # Text representation of a polygon
       def text_representation(allow_z = true, allow_m = true)
-        @rings.collect { |line_string| '(' + line_string.text_representation(allow_z, allow_m) + ')' }.join(',')
+        @rings.map do |line_string|
+          '(' + line_string.text_representation(allow_z, allow_m) + ')'
+        end.join(',')
       end
 
       # WKT geometry type
@@ -148,17 +152,18 @@ module GeoRuby
         polygon
       end
 
-      # creates a new polygon. Accepts a sequence of points as argument : ((x,y)....(x,y)),((x,y).....(x,y))
-      def self.from_coordinates(point_sequences, srid = DEFAULT_SRID, with_z = false, with_m = false)
-        polygon = new(srid, with_z, with_m)
-        polygon.concat(point_sequences.map { |points| LinearRing.from_coordinates(points, srid, with_z, with_m) })
+      # creates a new polygon. Accepts a sequence of points as argument:
+      #  ((x,y)....(x,y)),((x,y).....(x,y))
+      def self.from_coordinates(point_sequences, srid = DEFAULT_SRID, z = false, m = false)
+        polygon = new(srid, z, m)
+        polygon.concat(point_sequences.map { |points| LinearRing.from_coordinates(points, srid, z, m) })
         polygon
       end
 
       # creates a new polygon from a list of Points (pt1....ptn),(pti....ptj)
-      def self.from_points(point_sequences, srid = DEFAULT_SRID, with_z = false, with_m = false)
-        polygon = new(srid, with_z, with_m)
-        polygon.concat(point_sequences.map { |points| LinearRing.from_points(points, srid, with_z, with_m) })
+      def self.from_points(point_sequences, srid = DEFAULT_SRID, z = false, m = false)
+        polygon = new(srid, z, m)
+        polygon.concat(point_sequences.map { |points| LinearRing.from_points(points, srid, z, m) })
         polygon
       end
     end

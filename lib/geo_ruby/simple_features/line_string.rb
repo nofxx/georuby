@@ -18,25 +18,24 @@ module GeoRuby
       end
 
       # tests if the line string is closed
-      def is_closed
+      def closed?
         # a bit naive...
         @points.first == @points.last
       end
-      alias_method :closed?, :is_closed
 
       def clockwise?
         tuples = @points.zip(
           @points[1..-1] + [@points[0]],
           @points[2..-1] + [@points[0], @points[1]])
         tuples.map! { |a, b, c| b.x * (c.y - a.y)  }
-        sum = tuples.inject(0.0) { |sum, elem| sum + elem }
-
+        sum = tuples.reduce(0.0) { |a, e| a + e }
         sum < 0.0
       end
 
       # Bounding box in 2D/3D. Returns an array of 2 points
       def bounding_box
-        max_x, min_x, max_y, min_y = -Float::MAX, Float::MAX, -Float::MAX, Float::MAX
+        max_x = max_y = -Float::MAX
+        min_x = min_y = Float::MAX
         if with_z
           max_z, min_z = -Float::MAX, Float::MAX
           each do |point|
@@ -137,7 +136,8 @@ module GeoRuby
       # georss w3c representation : outputs the first point of the line
       def georss_w3cgeo_representation(options) #:nodoc:
         w3cgeo_ns = options[:w3cgeo_ns] || 'geo'
-        "<#{w3cgeo_ns}:lat>#{self[0].y}</#{w3cgeo_ns}:lat>\n<#{w3cgeo_ns}:long>#{self[0].x}</#{w3cgeo_ns}:long>\n"
+        "<#{w3cgeo_ns}:lat>#{self[0].y}</#{w3cgeo_ns}:lat>\n"\
+        "<#{w3cgeo_ns}:long>#{self[0].x}</#{w3cgeo_ns}:long>\n"
       end
       # georss gml representation
       def georss_gml_representation(options) #:nodoc:
@@ -146,7 +146,7 @@ module GeoRuby
 
         result = "<#{georss_ns}:where>\n<#{gml_ns}:LineString>\n<#{gml_ns}:posList>\n"
         result += georss_poslist
-        result += "\n</#{gml_ns}:posList>\n</#{gml_ns}:LineString>\n</#{georss_ns}:where>\n"
+        result + "\n</#{gml_ns}:posList>\n</#{gml_ns}:LineString>\n</#{georss_ns}:where>\n"
       end
 
       def georss_poslist #:nodoc:
@@ -163,7 +163,7 @@ module GeoRuby
         result += '<coordinates>'
         result += kml_poslist(options)
         result += "</coordinates>\n"
-        result += "</LineString>\n"
+        result + "</LineString>\n"
       end
 
       def kml_poslist(options) #:nodoc:

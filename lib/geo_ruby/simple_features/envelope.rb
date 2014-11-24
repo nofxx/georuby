@@ -56,14 +56,14 @@ module GeoRuby
       def zoom
         distance = lower_corner.spherical_distance(upper_corner) / 10_000
         @zoom = case distance
-        when 150..9000  then 5
-        when 80..149    then 6
-        when 50..79     then 7
-        when 20..49     then 8
-        when 10..19     then 9
-        when 5..9       then 10
-        else 13
-        end
+                when 150..9000  then 5
+                when 80..149    then 6
+                when 50..79     then 7
+                when 20..49     then 8
+                when 10..19     then 9
+                when 5..9       then 10
+                else 13
+                end
       end
 
       # Tests the equality of line strings
