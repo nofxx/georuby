@@ -49,7 +49,7 @@ module GeoRuby #:nodoc:
       # Outputs the geometry as an EWKB string.
       #
       # The +allow_srid+, +allow_z+ and +allow_m+ arguments allow the output
-      # to include srid, z and m respectively if they are present in the geometry.
+      # to include srid, z and m respectively if they are present.
       # If these arguments are set to false, srid, z and m are not included,
       # even if they are present in the geometry.
       # By default, the output string contains all the information in the object.
@@ -81,7 +81,7 @@ module GeoRuby #:nodoc:
       #
       # Outputs the geometry as a HexEWKB string.
       # It is almost the same as a WKB string, except that each byte of a WKB
-      # string is replaced by its hexadecimal 2-character representation in a HexEWKB string.
+      # string is replaced by its hex 2-char representation in a HexEWKB string.
       #
       def as_hex_ewkb(allow_srid = true, allow_z = true, allow_m = true)
         as_ewkb(allow_srid, allow_z, allow_m).unpack('H*').join('').upcase
@@ -104,7 +104,8 @@ module GeoRuby #:nodoc:
           ewkt = ''
         end
         ewkt << text_geometry_type
-        ewkt << 'M' if @with_m && allow_m && (!@with_z || !allow_z) # to distinguish the M from the Z when there is actually no Z...
+        # to distinguish the M from the Z when there is actually no Z...
+        ewkt << 'M' if @with_m && allow_m && (!@with_z || !allow_z)
         ewkt << '(' << text_representation(allow_z, allow_m) << ')'
       end
 
@@ -117,14 +118,19 @@ module GeoRuby #:nodoc:
 
       # Outputs the geometry in georss format.
       # Assumes the geometries are in latlon format, with x as lon and y as lat.
-      # Pass the <tt>:dialect</tt> option to swhit format. Possible values are: <tt>:simple</tt> (default), <tt>:w3cgeo</tt> and <tt>:gml</tt>.
+      # Pass the <tt>:dialect</tt> option to swhit format. Possible values are:
+      # <tt>:simple</tt> (default), <tt>:w3cgeo</tt> and <tt>:gml</tt>.
       def as_georss(options = {})
         dialect = options[:dialect] || :simple
         case (dialect)
         when :simple
           geom_attr = ''
-          geom_attr += " featuretypetag=\"#{options[:featuretypetag]}\"" if options[:featuretypetag]
-          geom_attr += " relationshiptag=\"#{options[:relationshiptag]}\"" if options[:relationshiptag]
+          if options[:featuretypetag]
+            geom_attr += " featuretypetag=\"#{options[:featuretypetag]}\""
+          end
+          if options[:relationshiptag]
+            geom_attr += " relationshiptag=\"#{options[:relationshiptag]}\""
+          end
           geom_attr += " floor=\"#{options[:floor]}\"" if options[:floor]
           geom_attr += " radius=\"#{options[:radius]}\"" if options[:radius]
           geom_attr += " elev=\"#{options[:elev]}\"" if options[:elev]
@@ -136,22 +142,32 @@ module GeoRuby #:nodoc:
         end
       end
 
-      # Iutputs the geometry in kml format : options are <tt>:id</tt>, <tt>:tesselate</tt>, <tt>:extrude</tt>,
-      # <tt>:altitude_mode</tt>. If the altitude_mode option is not present, the Z (if present) will not be output (since
-      # it won't be used by GE anyway: clampToGround is the default)
+      # Iutputs the geometry in kml format : options are <tt>:id</tt>,
+      # <tt>:tesselate</tt>, <tt>:extrude</tt>, <tt>:altitude_mode</tt>.
+      # If the altitude_mode option is not present, the Z (if present) will not
+      # be output (since it won't be used by GE: clampToGround is the default)
       def as_kml(options = {})
         id_attr = ''
         id_attr = " id=\"#{options[:id]}\"" if options[:id]
 
         geom_data = ''
-        geom_data += "<extrude>#{options[:extrude]}</extrude>\n" if options[:extrude]
-        geom_data += "<tesselate>#{options[:tesselate]}</tesselate>\n" if options[:tesselate]
-        geom_data += "<altitudeMode>#{options[:altitude_mode]}</altitudeMode>\n" if options[:altitude_mode]
+        if options[:extrude]
+          geom_data += "<extrude>#{options[:extrude]}</extrude>\n"
+        end
+        if options[:tesselate]
+          geom_data += "<tesselate>#{options[:tesselate]}</tesselate>\n"
+        end
+        if options[:altitude_mode]
+          geom_data += "<altitudeMode>#{options[:altitude_mode]}</altitudeMode>\n"
+        end
 
-        allow_z = (with_z || !options[:altitude].nil?) && (!options[:altitude_mode].nil?) && options[:atitude_mode] != 'clampToGround'
+        allow_z = (with_z || !options[:altitude].nil?) &&
+          (!options[:altitude_mode].nil?) &&
+          options[:atitude_mode] != 'clampToGround'
         fixed_z = options[:altitude]
 
-        kml_representation(options.merge(id_attr: id_attr, geom_data: geom_data, allow_z: allow_z, fixed_z: fixed_z))
+        kml_representation(options.merge(id_attr: id_attr, geom_data: geom_data,
+                                         allow_z: allow_z, fixed_z: fixed_z))
       end
 
       # simple geojson representation
@@ -165,7 +181,9 @@ module GeoRuby #:nodoc:
       end
       alias_method :as_geojson, :as_json
 
-      # Creates a geometry based on a EWKB string. The actual class returned depends of the content of the string passed as argument. Since WKB strings are a subset of EWKB, they are also valid.
+      # Creates a geometry based on a EWKB string. The actual class returned
+      # depends of the content of the string passed as argument.
+      # Since WKB strings are a subset of EWKB, they are also valid.
       def self.from_ewkb(ewkb)
         factory = GeometryFactory.new
         ewkb_parser = EWKBParser.new(factory)
@@ -181,7 +199,8 @@ module GeoRuby #:nodoc:
         factory.geometry
       end
 
-      # Creates a geometry based on a EWKT string. Since WKT strings are a subset of EWKT, they are also valid.
+      # Creates a geometry based on a EWKT string. Since WKT strings are a
+      # subset of EWKT, they are also valid.
       def self.from_ewkt(ewkt)
         factory = GeometryFactory.new
         ewkt_parser = EWKTParser.new(factory)
@@ -196,7 +215,9 @@ module GeoRuby #:nodoc:
         georss_parser.geometry
       end
 
-      # sends back an array: The first element is the goemetry based on the GeoRSS string passed as argument. The second one is the GeoRSSTags (found only with the Simple format)
+      # sends back an array: The first element is the goemetry based on the
+      # GeoRSS string passed as argument. The second one is the GeoRSSTags
+      # (found only with the Simple format)
       def self.from_georss_with_tags(georss)
         georss_parser = GeorssParser.new
         georss_parser.parse(georss, true)
@@ -213,7 +234,7 @@ module GeoRuby #:nodoc:
       # Some GeoJSON files do not include srid info, so
       # we provide an optional parameter
       def self.from_geojson(geojson, srid = DEFAULT_SRID)
-        geojson_parser = GeojsonParser.new
+        geojson_parser = GeoJSONParser.new
         geojson_parser.parse(geojson, srid)
         geojson_parser.geometry
       end

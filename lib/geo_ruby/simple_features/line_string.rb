@@ -153,9 +153,10 @@ module GeoRuby
         map { |point| "#{point.y} #{point.x}" }.join(' ')
       end
 
-      # outputs the geometry in kml format : options are <tt>:id</tt>, <tt>:tesselate</tt>, <tt>:extrude</tt>,
-      # <tt>:altitude_mode</tt>. If the altitude_mode option is not present, the Z (if present) will not be output (since
-      # it won't be used by GE anyway: clampToGround is the default)
+      # outputs the geometry in kml format : options are <tt>:id</tt>,
+      # <tt>:tesselate</tt>, <tt>:extrude</tt>, <tt>:altitude_mode</tt>.
+      # If the altitude_mode option is not present, the Z (if present) will not
+      # be output (since it won't be used by GE: clampToGround is the default)
       def kml_representation(options = {}) #:nodoc:
         result = "<LineString#{options[:id_attr]}>\n"
         result += options[:geom_data] if options[:geom_data]
@@ -166,10 +167,11 @@ module GeoRuby
       end
 
       def kml_poslist(options) #:nodoc:
-        pos_list = if options[:allow_z]
-                     map { |point| "#{point.x},#{point.y},#{options[:fixed_z] || point.z || 0}" }
-                   else
-                     map { |point| "#{point.x},#{point.y}" }
+        pos_list = \
+        if options[:allow_z]
+          map { |point| "#{point.x},#{point.y},#{options[:fixed_z] || point.z || 0}" }
+        else
+          map { |point| "#{point.x},#{point.y}" }
         end
         pos_list.reverse! if options[:reverse]
         pos_list.join(' ')
@@ -206,16 +208,17 @@ module GeoRuby
       end
 
       # Creates a new line string. Accept an array of points as argument
-      def self.from_points(points, srid = DEFAULT_SRID, with_z = false, with_m = false)
-        line_string = new(srid, with_z, with_m)
+      def self.from_points(points, srid = DEFAULT_SRID, z = false, m = false)
+        line_string = new(srid, z, m)
         line_string.concat(points)
         line_string
       end
 
-      # Creates a new line string. Accept a sequence of points as argument : ((x,y)...(x,y))
-      def self.from_coordinates(points, srid = DEFAULT_SRID, with_z = false, with_m = false)
-        line_string = new(srid, with_z, with_m)
-        line_string.concat(points.map { |p| Point.from_coordinates(p, srid, with_z, with_m) })
+      # Creates a new line string. Accept a sequence of points as argument:
+      #  ((x,y)...(x,y))
+      def self.from_coordinates(points, srid = DEFAULT_SRID, z = false, m = false)
+        line_string = new(srid, z, m)
+        line_string.concat(points.map { |p| Point.from_coordinates(p, srid, z, m) })
         line_string
       end
     end # LineString

@@ -413,7 +413,8 @@ module GeoRuby
       # Creates a point using coordinates like 22`34 23.45N
       def self.from_latlong(lat, lon, srid = DEFAULT_SRID)
         p = [lat, lon].map do |l|
-          sig, deg, min, sec, cen = l.scan(/(-)?(\d{1,2})\D*(\d{2})\D*(\d{2})(\D*(\d{1,3}))?/).flatten
+          sig, deg, min, sec, cen = \
+          l.scan(/(-)?(\d{1,2})\D*(\d{2})\D*(\d{2})(\D*(\d{1,3}))?/).flatten
           sig = true if l =~ /W|S/
           dec = deg.to_i + (min.to_i * 60 + "#{sec}#{cen}".to_f) / 3600
           sig ? dec * -1 : dec
@@ -422,7 +423,7 @@ module GeoRuby
         point.set_x_y(p[0], p[1])
       end
 
-      # Aliasing the constructors in case you like lat/lon instead of y/x
+      # Aliasing the constructors in case you like lat/lon over y/x
       class << self
         alias_method :xy,               :from_x_y
         alias_method :from_xy,          :from_x_y
