@@ -2,119 +2,118 @@ require File.expand_path(File.dirname(__FILE__) + '/../../spec_helper')
 
 describe GeoRuby::SimpleFeatures::Polygon do
 
-  describe "Instance Methods" do
+  describe 'Instance Methods' do
 
-    let(:poly) { GeoRuby::SimpleFeatures::Polygon.from_coordinates([[[0,0],[4,0],[4,4],[0,4],[0,0]],[[1,1],[3,1],[3,3],[1,3],[1,1]]],256) }
+    let(:poly) { GeoRuby::SimpleFeatures::Polygon.from_coordinates([[[0, 0], [4, 0], [4, 4], [0, 4], [0, 0]], [[1, 1], [3, 1], [3, 3], [1, 3], [1, 1]]], 256) }
 
-    it "should check if contains point" do
+    it 'should check if contains point' do
       expect(poly.contains_point?(GeoRuby::SimpleFeatures::Point.from_x_y(3, 3))).to be_truthy
     end
 
-    it "should check if not contains point" do
+    it 'should check if not contains point' do
       expect(poly.contains_point?(GeoRuby::SimpleFeatures::Point.from_x_y(5, 5))).to be_falsey
     end
 
   end
 
-  describe "tu converted" do
-    #no test of the binary representation for linear_rings : always with polygons and like line_string
-    it "should test_polygon_creation" do
-      linear_ring1 = GeoRuby::SimpleFeatures::LinearRing.from_coordinates([[12.4,-45.3],[45.4,41.6],[4.456,1.0698],[12.4,-45.3]],256)
-      linear_ring2 = GeoRuby::SimpleFeatures::LinearRing.from_coordinates([[2.4,5.3],[5.4,1.4263],[14.46,1.06],[2.4,5.3]],256)
-      point1 = GeoRuby::SimpleFeatures::Point.from_x_y(12.4,-45.3,256)
-      point2 = GeoRuby::SimpleFeatures::Point.from_x_y(45.4,41.6,256)
-      point3 = GeoRuby::SimpleFeatures::Point.from_x_y(4.456,1.0698,256)
-      point4 = GeoRuby::SimpleFeatures::Point.from_x_y(12.4,-45.3,256)
-      point5 = GeoRuby::SimpleFeatures::Point.from_x_y(2.4,5.3,256)
-      point6 = GeoRuby::SimpleFeatures::Point.from_x_y(5.4,1.4263,256)
-      point7 = GeoRuby::SimpleFeatures::Point.from_x_y(14.46,1.06,256)
-      point8 = GeoRuby::SimpleFeatures::Point.from_x_y(2.4,5.3,256)
+  describe 'tu converted' do
+    # no test of the binary representation for linear_rings : always with polygons and like line_string
+    it 'should test_polygon_creation' do
+      linear_ring1 = GeoRuby::SimpleFeatures::LinearRing.from_coordinates([[12.4, -45.3], [45.4, 41.6], [4.456, 1.0698], [12.4, -45.3]], 256)
+      linear_ring2 = GeoRuby::SimpleFeatures::LinearRing.from_coordinates([[2.4, 5.3], [5.4, 1.4263], [14.46, 1.06], [2.4, 5.3]], 256)
+      point1 = GeoRuby::SimpleFeatures::Point.from_x_y(12.4, -45.3, 256)
+      point2 = GeoRuby::SimpleFeatures::Point.from_x_y(45.4, 41.6, 256)
+      point3 = GeoRuby::SimpleFeatures::Point.from_x_y(4.456, 1.0698, 256)
+      point4 = GeoRuby::SimpleFeatures::Point.from_x_y(12.4, -45.3, 256)
+      point5 = GeoRuby::SimpleFeatures::Point.from_x_y(2.4, 5.3, 256)
+      point6 = GeoRuby::SimpleFeatures::Point.from_x_y(5.4, 1.4263, 256)
+      point7 = GeoRuby::SimpleFeatures::Point.from_x_y(14.46, 1.06, 256)
+      point8 = GeoRuby::SimpleFeatures::Point.from_x_y(2.4, 5.3, 256)
 
-      polygon = GeoRuby::SimpleFeatures::Polygon::new(256)
+      polygon = GeoRuby::SimpleFeatures::Polygon.new(256)
       expect(polygon.length).to be_zero
 
       polygon << linear_ring1
       expect(polygon.length).to eql(1)
       expect(polygon[0]).to eq(linear_ring1)
 
-      #the validity of the hole is not checked : just for the sake of example
+      # the validity of the hole is not checked : just for the sake of example
       polygon << linear_ring2
       expect(polygon.length).to eql(2)
       expect(polygon[1]).to eq(linear_ring2)
 
-      polygon = GeoRuby::SimpleFeatures::Polygon.from_linear_rings([linear_ring1,linear_ring2],256)
+      polygon = GeoRuby::SimpleFeatures::Polygon.from_linear_rings([linear_ring1, linear_ring2], 256)
       expect(polygon.class).to eql(GeoRuby::SimpleFeatures::Polygon)
       expect(polygon.length).to eql(2)
       expect(polygon[0]).to eq(linear_ring1)
       expect(polygon[1]).to eq(linear_ring2)
 
-      polygon = GeoRuby::SimpleFeatures::Polygon.from_coordinates([[[12.4,-45.3],[45.4,41.6],[4.456,1.0698],[12.4,-45.3]],[[2.4,5.3],[5.4,1.4263],[14.46,1.06],[2.4,5.3]]],256)
+      polygon = GeoRuby::SimpleFeatures::Polygon.from_coordinates([[[12.4, -45.3], [45.4, 41.6], [4.456, 1.0698], [12.4, -45.3]], [[2.4, 5.3], [5.4, 1.4263], [14.46, 1.06], [2.4, 5.3]]], 256)
       expect(polygon.class).to eql(GeoRuby::SimpleFeatures::Polygon)
       expect(polygon.length).to eql(2)
       expect(polygon[0]).to eq(linear_ring1)
       expect(polygon[1]).to eq(linear_ring2)
 
-      polygon = GeoRuby::SimpleFeatures::Polygon.from_points([[point1,point2,point3,point4],[point5,point6,point7,point8]],256)
+      polygon = GeoRuby::SimpleFeatures::Polygon.from_points([[point1, point2, point3, point4], [point5, point6, point7, point8]], 256)
       expect(polygon.length).to eql(2)
       expect(polygon[0]).to eq(linear_ring1)
       expect(polygon[1]).to eq(linear_ring2)
 
-      polygon = GeoRuby::SimpleFeatures::Polygon.from_coordinates([[[12.4,-45.3,15.2],[45.4,41.6,2.4],[4.456,1.0698,5.6],[12.4,-45.3,6.1]],[[2.4,5.3,4.5],[5.4,1.4263,4.2],[14.46,1.06,123.1],[2.4,5.3,4.4]]],256,true)
+      polygon = GeoRuby::SimpleFeatures::Polygon.from_coordinates([[[12.4, -45.3, 15.2], [45.4, 41.6, 2.4], [4.456, 1.0698, 5.6], [12.4, -45.3, 6.1]], [[2.4, 5.3, 4.5], [5.4, 1.4263, 4.2], [14.46, 1.06, 123.1], [2.4, 5.3, 4.4]]], 256, true)
       expect(polygon.class).to eql(GeoRuby::SimpleFeatures::Polygon)
       expect(polygon.length).to eql(2)
 
-      linear_ring1 = GeoRuby::SimpleFeatures::LinearRing.from_coordinates([[12.4,-45.3,15.2],[45.4,41.6,2.4],[4.456,1.0698,5.6],[12.4,-45.3,6.1]],256,true)
-      linear_ring2 = GeoRuby::SimpleFeatures::LinearRing.from_coordinates([[2.4,5.3,4.5],[5.4,1.4263,4.2],[14.46,1.06,123.1],[2.4,5.3,4.4]],256,true)
+      linear_ring1 = GeoRuby::SimpleFeatures::LinearRing.from_coordinates([[12.4, -45.3, 15.2], [45.4, 41.6, 2.4], [4.456, 1.0698, 5.6], [12.4, -45.3, 6.1]], 256, true)
+      linear_ring2 = GeoRuby::SimpleFeatures::LinearRing.from_coordinates([[2.4, 5.3, 4.5], [5.4, 1.4263, 4.2], [14.46, 1.06, 123.1], [2.4, 5.3, 4.4]], 256, true)
       expect(polygon[0]).to eq(linear_ring1)
       expect(polygon[1]).to eq(linear_ring2)
     end
 
-    it "bbox" do
-      bbox = GeoRuby::SimpleFeatures::Polygon.from_coordinates([[[12.4,-45.3,15.2],[45.4,41.6,2.4],[4.456,1.0698,5.6],[12.4,-45.3,6.1]],[[2.4,5.3,4.5],[5.4,1.4263,4.2],[14.46,1.06,123.1],[2.4,5.3,4.4]]],256,true).bounding_box
+    it 'bbox' do
+      bbox = GeoRuby::SimpleFeatures::Polygon.from_coordinates([[[12.4, -45.3, 15.2], [45.4, 41.6, 2.4], [4.456, 1.0698, 5.6], [12.4, -45.3, 6.1]], [[2.4, 5.3, 4.5], [5.4, 1.4263, 4.2], [14.46, 1.06, 123.1], [2.4, 5.3, 4.4]]], 256, true).bounding_box
       expect(bbox.length).to eql(2)
-      expect(bbox[0]).to eq(GeoRuby::SimpleFeatures::Point.from_x_y_z(4.456,-45.3,2.4))
-      expect(bbox[1]).to eq(GeoRuby::SimpleFeatures::Point.from_x_y_z(45.4,41.6,123.1))
+      expect(bbox[0]).to eq(GeoRuby::SimpleFeatures::Point.from_x_y_z(4.456, -45.3, 2.4))
+      expect(bbox[1]).to eq(GeoRuby::SimpleFeatures::Point.from_x_y_z(45.4, 41.6, 123.1))
     end
 
+    it 'test_polygon_equal' do
+      polygon1 = GeoRuby::SimpleFeatures::Polygon.from_coordinates([[[12.4, -45.3], [45.4, 41.6], [4.456, 1.0698], [12.4, -45.3]], [[2.4, 5.3], [5.4, 1.4263], [14.46, 1.06], [2.4, 5.3]]], 256)
+      polygon2 = GeoRuby::SimpleFeatures::Polygon.from_coordinates([[[12.4, -45.3], [45.4, 41.6], [4.456, 1.0698], [12.4, -45.3]], [[2.4, 5.3], [5.4, 1.4263], [14.46, 1.06]]])
+      point = GeoRuby::SimpleFeatures::Point.from_x_y(12.4, -45.3, 123)
 
-    it "test_polygon_equal" do
-      polygon1 = GeoRuby::SimpleFeatures::Polygon.from_coordinates([[[12.4,-45.3],[45.4,41.6],[4.456,1.0698],[12.4,-45.3]],[[2.4,5.3],[5.4,1.4263],[14.46,1.06],[2.4,5.3]]],256)
-      polygon2 = GeoRuby::SimpleFeatures::Polygon.from_coordinates([[[12.4,-45.3],[45.4,41.6],[4.456,1.0698],[12.4,-45.3]],[[2.4,5.3],[5.4,1.4263],[14.46,1.06]]])
-      point = GeoRuby::SimpleFeatures::Point.from_x_y(12.4,-45.3,123)
-
-      expect(polygon1).to  eq(GeoRuby::SimpleFeatures::Polygon.from_coordinates([[[12.4,-45.3],[45.4,41.6],[4.456,1.0698],[12.4,-45.3]],[[2.4,5.3],[5.4,1.4263],[14.46,1.06],[2.4,5.3]]],256))
+      expect(polygon1).to eq(GeoRuby::SimpleFeatures::Polygon.from_coordinates([[[12.4, -45.3], [45.4, 41.6], [4.456, 1.0698], [12.4, -45.3]], [[2.4, 5.3], [5.4, 1.4263], [14.46, 1.06], [2.4, 5.3]]], 256))
       expect(polygon1).not_to eq(polygon2)
       expect(polygon1).not_to eq(point)
     end
 
-    it "test_polygon_binary" do
-      polygon = GeoRuby::SimpleFeatures::Polygon.from_coordinates([[[0,0],[4,0],[4,4],[0,4],[0,0]],[[1,1],[3,1],[3,3],[1,3],[1,1]]],256)
-      #taken from PostGIS answer
-      expect(polygon.as_hex_ewkb).to eql("0103000020000100000200000005000000000000000000000000000000000000000000000000001040000000000000000000000000000010400000000000001040000000000000000000000000000010400000000000000000000000000000000005000000000000000000F03F000000000000F03F0000000000000840000000000000F03F00000000000008400000000000000840000000000000F03F0000000000000840000000000000F03F000000000000F03F")
+    it 'test_polygon_binary' do
+      polygon = GeoRuby::SimpleFeatures::Polygon.from_coordinates([[[0, 0], [4, 0], [4, 4], [0, 4], [0, 0]], [[1, 1], [3, 1], [3, 3], [1, 3], [1, 1]]], 256)
+      # taken from PostGIS answer
+      expect(polygon.as_hex_ewkb).to eql('0103000020000100000200000005000000000000000000000000000000000000000000000000001040000000000000000000000000000010400000000000001040000000000000000000000000000010400000000000000000000000000000000005000000000000000000F03F000000000000F03F0000000000000840000000000000F03F00000000000008400000000000000840000000000000F03F0000000000000840000000000000F03F000000000000F03F')
 
-      polygon = GeoRuby::SimpleFeatures::Polygon.from_coordinates([[[0,0,2],[4,0,2],[4,4,2],[0,4,2],[0,0,2]],[[1,1,2],[3,1,2],[3,3,2],[1,3,2],[1,1,2]]],256,true)
-      #taken from PostGIS answer
-      expect(polygon.as_hex_ewkb).to eql("01030000A000010000020000000500000000000000000000000000000000000000000000000000004000000000000010400000000000000000000000000000004000000000000010400000000000001040000000000000004000000000000000000000000000001040000000000000004000000000000000000000000000000000000000000000004005000000000000000000F03F000000000000F03F00000000000000400000000000000840000000000000F03F0000000000000040000000000000084000000000000008400000000000000040000000000000F03F00000000000008400000000000000040000000000000F03F000000000000F03F0000000000000040")
+      polygon = GeoRuby::SimpleFeatures::Polygon.from_coordinates([[[0, 0, 2], [4, 0, 2], [4, 4, 2], [0, 4, 2], [0, 0, 2]], [[1, 1, 2], [3, 1, 2], [3, 3, 2], [1, 3, 2], [1, 1, 2]]], 256, true)
+      # taken from PostGIS answer
+      expect(polygon.as_hex_ewkb).to eql('01030000A000010000020000000500000000000000000000000000000000000000000000000000004000000000000010400000000000000000000000000000004000000000000010400000000000001040000000000000004000000000000000000000000000001040000000000000004000000000000000000000000000000000000000000000004005000000000000000000F03F000000000000F03F00000000000000400000000000000840000000000000F03F0000000000000040000000000000084000000000000008400000000000000040000000000000F03F00000000000008400000000000000040000000000000F03F000000000000F03F0000000000000040')
 
-      polygon = GeoRuby::SimpleFeatures::Polygon.from_coordinates([[[0,0,2],[4,0,2],[4,4,2],[0,4,2],[0,0,2]],[[1,1,2],[3,1,2],[3,3,2],[1,3,2],[1,1,2]]],256,false,true)
-      expect(polygon.as_hex_ewkb).to eql("010300006000010000020000000500000000000000000000000000000000000000000000000000004000000000000010400000000000000000000000000000004000000000000010400000000000001040000000000000004000000000000000000000000000001040000000000000004000000000000000000000000000000000000000000000004005000000000000000000F03F000000000000F03F00000000000000400000000000000840000000000000F03F0000000000000040000000000000084000000000000008400000000000000040000000000000F03F00000000000008400000000000000040000000000000F03F000000000000F03F0000000000000040")
+      polygon = GeoRuby::SimpleFeatures::Polygon.from_coordinates([[[0, 0, 2], [4, 0, 2], [4, 4, 2], [0, 4, 2], [0, 0, 2]], [[1, 1, 2], [3, 1, 2], [3, 3, 2], [1, 3, 2], [1, 1, 2]]], 256, false, true)
+      expect(polygon.as_hex_ewkb).to eql('010300006000010000020000000500000000000000000000000000000000000000000000000000004000000000000010400000000000000000000000000000004000000000000010400000000000001040000000000000004000000000000000000000000000001040000000000000004000000000000000000000000000000000000000000000004005000000000000000000F03F000000000000F03F00000000000000400000000000000840000000000000F03F0000000000000040000000000000084000000000000008400000000000000040000000000000F03F00000000000008400000000000000040000000000000F03F000000000000F03F0000000000000040')
 
-      polygon = GeoRuby::SimpleFeatures::Polygon.from_coordinates([[[0,0,2,-45.1],[4,0,2,5],[4,4,2,4.67],[0,4,2,1.34],[0,0,2,-45.1]],[[1,1,2,12.3],[3,1,2,123],[3,3,2,12.2],[1,3,2,12],[1,1,2,12.3]]],256,true,true)
-      expect(polygon.as_hex_ewkb).to eql("01030000E0000100000200000005000000000000000000000000000000000000000000000000000040CDCCCCCCCC8C46C00000000000001040000000000000000000000000000000400000000000001440000000000000104000000000000010400000000000000040AE47E17A14AE1240000000000000000000000000000010400000000000000040713D0AD7A370F53F000000000000000000000000000000000000000000000040CDCCCCCCCC8C46C005000000000000000000F03F000000000000F03F00000000000000409A999999999928400000000000000840000000000000F03F00000000000000400000000000C05E400000000000000840000000000000084000000000000000406666666666662840000000000000F03F000000000000084000000000000000400000000000002840000000000000F03F000000000000F03F00000000000000409A99999999992840")
+      polygon = GeoRuby::SimpleFeatures::Polygon.from_coordinates([[[0, 0, 2, -45.1], [4, 0, 2, 5], [4, 4, 2, 4.67], [0, 4, 2, 1.34], [0, 0, 2, -45.1]], [[1, 1, 2, 12.3], [3, 1, 2, 123], [3, 3, 2, 12.2], [1, 3, 2, 12], [1, 1, 2, 12.3]]], 256, true, true)
+      expect(polygon.as_hex_ewkb).to eql('01030000E0000100000200000005000000000000000000000000000000000000000000000000000040CDCCCCCCCC8C46C00000000000001040000000000000000000000000000000400000000000001440000000000000104000000000000010400000000000000040AE47E17A14AE1240000000000000000000000000000010400000000000000040713D0AD7A370F53F000000000000000000000000000000000000000000000040CDCCCCCCCC8C46C005000000000000000000F03F000000000000F03F00000000000000409A999999999928400000000000000840000000000000F03F00000000000000400000000000C05E400000000000000840000000000000084000000000000000406666666666662840000000000000F03F000000000000084000000000000000400000000000002840000000000000F03F000000000000F03F00000000000000409A99999999992840')
     end
 
-    it "should test_polygon_text" do
-      polygon = GeoRuby::SimpleFeatures::Polygon.from_coordinates([[[0,0],[4,0],[4,4],[0,4],[0,0]],[[1,1],[3,1],[3,3],[1,3],[1,1]]],256)
-      expect(polygon.as_ewkt).to eql("SRID=256;POLYGON((0 0,4 0,4 4,0 4,0 0),(1 1,3 1,3 3,1 3,1 1))")
+    it 'should test_polygon_text' do
+      polygon = GeoRuby::SimpleFeatures::Polygon.from_coordinates([[[0, 0], [4, 0], [4, 4], [0, 4], [0, 0]], [[1, 1], [3, 1], [3, 3], [1, 3], [1, 1]]], 256)
+      expect(polygon.as_ewkt).to eql('SRID=256;POLYGON((0 0,4 0,4 4,0 4,0 0),(1 1,3 1,3 3,1 3,1 1))')
 
-      polygon = GeoRuby::SimpleFeatures::Polygon.from_coordinates([[[0,0,2],[4,0,2],[4,4,2],[0,4,2],[0,0,2]],[[1,1,2],[3,1,2],[3,3,2],[1,3,2],[1,1,2]]],256,true)
-      expect(polygon.as_ewkt).to eql("SRID=256;POLYGON((0 0 2,4 0 2,4 4 2,0 4 2,0 0 2),(1 1 2,3 1 2,3 3 2,1 3 2,1 1 2))")
+      polygon = GeoRuby::SimpleFeatures::Polygon.from_coordinates([[[0, 0, 2], [4, 0, 2], [4, 4, 2], [0, 4, 2], [0, 0, 2]], [[1, 1, 2], [3, 1, 2], [3, 3, 2], [1, 3, 2], [1, 1, 2]]], 256, true)
+      expect(polygon.as_ewkt).to eql('SRID=256;POLYGON((0 0 2,4 0 2,4 4 2,0 4 2,0 0 2),(1 1 2,3 1 2,3 3 2,1 3 2,1 1 2))')
 
-      polygon = GeoRuby::SimpleFeatures::Polygon.from_coordinates([[[0,0,2],[4,0,2],[4,4,2],[0,4,2],[0,0,2]],[[1,1,2],[3,1,2],[3,3,2],[1,3,2],[1,1,2]]],256,false,true)
-      expect(polygon.as_ewkt).to eql("SRID=256;POLYGONM((0 0 2,4 0 2,4 4 2,0 4 2,0 0 2),(1 1 2,3 1 2,3 3 2,1 3 2,1 1 2))")
+      polygon = GeoRuby::SimpleFeatures::Polygon.from_coordinates([[[0, 0, 2], [4, 0, 2], [4, 4, 2], [0, 4, 2], [0, 0, 2]], [[1, 1, 2], [3, 1, 2], [3, 3, 2], [1, 3, 2], [1, 1, 2]]], 256, false, true)
+      expect(polygon.as_ewkt).to eql('SRID=256;POLYGONM((0 0 2,4 0 2,4 4 2,0 4 2,0 0 2),(1 1 2,3 1 2,3 3 2,1 3 2,1 1 2))')
 
-      polygon = GeoRuby::SimpleFeatures::Polygon.from_coordinates([[[0,0,2,-45.1],[4,0,2,5],[4,4,2,4.67],[0,4,2,1.34],[0,0,2,-45.1]],[[1,1,2,12.3],[3,1,2,123],[3,3,2,12.2],[1,3,2,12],[1,1,2,12.3]]],256,true,true)
-      expect(polygon.as_ewkt).to eql("SRID=256;POLYGON((0 0 2 -45.1,4 0 2 5,4 4 2 4.67,0 4 2 1.34,0 0 2 -45.1),(1 1 2 12.3,3 1 2 123,3 3 2 12.2,1 3 2 12,1 1 2 12.3))")
+      polygon = GeoRuby::SimpleFeatures::Polygon.from_coordinates([[[0, 0, 2, -45.1], [4, 0, 2, 5], [4, 4, 2, 4.67], [0, 4, 2, 1.34], [0, 0, 2, -45.1]], [[1, 1, 2, 12.3], [3, 1, 2, 123], [3, 3, 2, 12.2], [1, 3, 2, 12], [1, 1, 2, 12.3]]], 256, true, true)
+      expect(polygon.as_ewkt).to eql('SRID=256;POLYGON((0 0 2 -45.1,4 0 2 5,4 4 2 4.67,0 4 2 1.34,0 0 2 -45.1),(1 1 2 12.3,3 1 2 123,3 3 2 12.2,1 3 2 12,1 1 2 12.3))')
     end
 
   end

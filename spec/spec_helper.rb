@@ -3,8 +3,8 @@ require 'rubygems'
 # Must require active_spport/core_ext/object and then json/pure
 # or the json module gets clobbered and geojson output
 # becomes invalid... ie. it never calls class specific to_json
-#require 'active_support/core_ext/object'
-#require 'json/pure'
+# require 'active_support/core_ext/object'
+# require 'json/pure'
 
 require 'rspec'
 
@@ -15,26 +15,26 @@ require 'geo_ruby/geojson'
 require 'geo_ruby/georss'
 require 'geo_ruby/kml'
 
-if ENV["CI"]
+if ENV['CI']
   require 'coveralls'
   Coveralls.wear!
 end
 
 module GeorubyMatchers
-
   class BeGeometric
-
     def matches?(actual)
-      actual.ancestors.include?(actual) || actual.kind_of?("Geometry")
+      actual.ancestors.include?(actual) || actual.is_a?('Geometry')
     end
 
-    def failure_message;          "expected #{@actual.inspect} to be some geom";    end
+    def failure_message
+      "expected #{@actual.inspect} to be some geom"
+    end
   end
 
   class BeAPoint
     include RSpec::Matchers
 
-    def initialize(expect=nil)
+    def initialize(expect = nil)
       @expect = expect
     end
 
@@ -42,7 +42,7 @@ module GeorubyMatchers
       if @expect
         [:x, :y, :z, :m].each_with_index do |c, i|
           next unless val = @expect[i]
-          if val.kind_of? Numeric
+          if val.is_a? Numeric
             expect(actual.send(c)).to be_within(0.1).of(val)
           else
             expect(actual.send(c)).to eql(val)
@@ -52,8 +52,13 @@ module GeorubyMatchers
       expect(actual).to be_instance_of(GeoRuby::SimpleFeatures::Point)
     end
 
-    def failure_message;          "expected #{@expect} but received #{@actual.inspect}";    end
-    def failure_message_when_negated; "expected something else then '#{@expect}' but got '#{@actual}'";    end
+    def failure_message
+      "expected #{@expect} but received #{@actual.inspect}"
+    end
+
+    def failure_message_when_negated
+      "expected something else then '#{@expect}' but got '#{@actual}'"
+    end
   end
 
   def be_a_point(*args)

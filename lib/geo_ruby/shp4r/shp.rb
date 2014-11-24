@@ -1,12 +1,10 @@
 require 'date'
-require 'fileutils' if !defined?(FileUtils)
+require 'fileutils' unless defined?(FileUtils)
 require  File.dirname(__FILE__) + '/dbf'
-
 
 module GeoRuby
   module Shp4r
-
-    #Enumerates all the types of SHP geometries. The MULTIPATCH one is the only one not currently supported by Geo_ruby.
+    # Enumerates all the types of SHP geometries. The MULTIPATCH one is the only one not currently supported by Geo_ruby.
     module ShpType
       NULL_SHAPE = 0
       POINT = 1
@@ -23,18 +21,18 @@ module GeoRuby
       MULTIPOINTM = 28
     end
 
-    #An interface to an ESRI shapefile (actually 3 files : shp, shx and dbf). Currently supports only the reading of geometries.
+    # An interface to an ESRI shapefile (actually 3 files : shp, shx and dbf). Currently supports only the reading of geometries.
     class ShpFile
       attr_reader :shp_type, :record_count, :xmin, :ymin, :xmax, :ymax, :zmin, :zmax, :mmin, :mmax, :file_root, :file_length
 
       include Enumerable
 
-      #Opens a SHP file. Both "abc.shp" and "abc" are accepted. The files "abc.shp", "abc.shx" and "abc.dbf" must be present
+      # Opens a SHP file. Both "abc.shp" and "abc" are accepted. The files "abc.shp", "abc.shx" and "abc.dbf" must be present
       def initialize(file)
-        #strip the shp out of the file if present
+        # strip the shp out of the file if present
         @file_root = file.gsub(/.shp$/i,"")
-        #check existence of shp, dbf and shx files
-        unless File.exists?(@file_root + ".shp") and File.exists?(@file_root + ".dbf") and File.exists?(@file_root + ".shx")
+        # check existence of shp, dbf and shx files
+        unless File.exist?(@file_root + ".shp") && File.exist?(@file_root + ".dbf") && File.exist?(@file_root + ".shx")
           raise MalformedShpException.new("Missing one of shp, dbf or shx for: #{@file}")
         end
 
@@ -44,12 +42,12 @@ module GeoRuby
         read_index
       end
 
-      #force the reopening of the files compsing the shp. Close before calling this.
+      # force the reopening of the files compsing the shp. Close before calling this.
       def reload!
         initialize(@file_root)
       end
 
-      #opens a SHP "file". If a block is given, the ShpFile object is yielded to it and is closed upon return. Else a call to <tt>open</tt> is equivalent to <tt>ShpFile.new(...)</tt>.
+      # opens a SHP "file". If a block is given, the ShpFile object is yielded to it and is closed upon return. Else a call to <tt>open</tt> is equivalent to <tt>ShpFile.new(...)</tt>.
       def self.open(file)
         shpfile = ShpFile.new(file)
         if block_given?
@@ -60,7 +58,7 @@ module GeoRuby
         end
       end
 
-      #create a new Shapefile of the specified shp type (see ShpType) and with the attribute specified in the +fields+ array (see Dbf::Field). If a block is given, the ShpFile object newly created is passed to it.
+      # create a new Shapefile of the specified shp type (see ShpType) and with the attribute specified in the +fields+ array (see Dbf::Field). If a block is given, the ShpFile object newly created is passed to it.
       def self.create(file,shp_type,fields,&proc)
         file_root = file.gsub(/.shp$/i,"")
         shx_io = File.open(file_root + ".shx","wb")
@@ -70,7 +68,7 @@ module GeoRuby
         shp_io << str
         shx_io << str
         rec_length = 1 + fields.inject(0) {|s,f| s + f.length} #+1 for the prefixed space (active record marker)
-        dbf_io << [3,107,7,7,0,33 + 32 * fields.length,rec_length ].pack("c4Vv2x20") #32 bytes for first part of header
+        dbf_io << [3,107,7,7,0,33 + 32 * fields.length,rec_length ].pack("c4Vv2x20") # 32 bytes for first part of header
         fields.each do |field|
           dbf_io << [field.name,field.type,field.length,field.decimal].pack("a10xax4CCx14")
         end
@@ -81,17 +79,16 @@ module GeoRuby
         dbf_io.close
 
         open(file,&proc)
-
       end
 
-      #Closes a shapefile
+      # Closes a shapefile
       def close
         @dbf.close
         @shx.close
         @shp.close
       end
 
-      #starts a transaction, to buffer physical file operations on the shapefile components.
+      # starts a transaction, to buffer physical file operations on the shapefile components.
       def transaction
         trs = ShpTransaction.new(self,@dbf)
         if block_given?
@@ -106,30 +103,30 @@ module GeoRuby
         end
       end
 
-      #return the description of data fields
+      # return the description of data fields
       def fields
         @dbf.fields
       end
 
-      #Tests if the file has no record
+      # Tests if the file has no record
       def empty?
         record_count == 0
       end
 
-      #Goes through each record
+      # Goes through each record
       def each
         (0...record_count).each do |i|
           yield get_record(i)
         end
       end
-      alias :each_record :each
+      alias_method :each_record, :each
 
-      #Returns record +i+
+      # Returns record +i+
       def [](i)
         get_record(i)
       end
 
-      #Returns all the records
+      # Returns all the records
       def records
         Array.new(record_count) do |i|
           get_record(i)
@@ -137,11 +134,12 @@ module GeoRuby
       end
 
       private
+
       def read_index
         @file_length, @shp_type, @xmin, @ymin, @xmax, @ymax, @zmin, @zmax, @mmin,@mmax = @shx.read(100).unpack("x24Nx4VE8")
         @record_count = (@file_length - 50) / 4
         if @record_count == 0
-          #initialize the bboxes to default values so if data added, they will be replaced
+          # initialize the bboxes to default values so if data added, they will be replaced
           @xmin, @ymin, @xmax, @ymax, @zmin, @zmax, @mmin,@mmax =  Float::MAX, Float::MAX, -Float::MAX, -Float::MAX, Float::MAX, -Float::MAX, Float::MAX, -Float::MAX
         end
         unless @record_count == @dbf.record_count
@@ -149,11 +147,11 @@ module GeoRuby
         end
       end
 
-      #TODO : refactor to minimize redundant code
+      # TODO : refactor to minimize redundant code
       def get_record(i)
-        return nil if record_count <= i or i < 0
+        return nil if record_count <= i || i < 0
         dbf_record = @dbf.record(i)
-        @shx.seek(100 + 8 * i) #100 is the header length
+        @shx.seek(100 + 8 * i) # 100 is the header length
         offset,length = @shx.read(8).unpack("N2")
         @shp.seek(offset * 2 + 8)
         rec_shp_type = @shp.read(4).unpack("V")[0]
@@ -162,11 +160,11 @@ module GeoRuby
         when ShpType::POINT
           x, y = @shp.read(16).unpack("E2")
           geometry = GeoRuby::SimpleFeatures::Point.from_x_y(x,y)
-        when ShpType::POLYLINE #actually creates a multi_polyline
-          @shp.seek(32,IO::SEEK_CUR) #extent
+        when ShpType::POLYLINE # actually creates a multi_polyline
+          @shp.seek(32,IO::SEEK_CUR) # extent
           num_parts, num_points = @shp.read(8).unpack("V2")
           parts =  @shp.read(num_parts * 4).unpack("V" + num_parts.to_s)
-          parts << num_points #indexes for LS of idx i go to parts of idx i to idx i +1
+          parts << num_points # indexes for LS of idx i go to parts of idx i to idx i +1
           points = Array.new(num_points) do
             x, y = @shp.read(16).unpack("E2")
             GeoRuby::SimpleFeatures::Point.from_x_y(x,y)
@@ -176,13 +174,13 @@ module GeoRuby
           end
           geometry = GeoRuby::SimpleFeatures::MultiLineString.from_line_strings(line_strings)
         when ShpType::POLYGON
-          #TODO : TO CORRECT
-          #does not take into account the possibility that the outer loop could be after the inner loops in the SHP + more than one outer loop
-          #Still sends back a multi polygon (so the correction above won't change what gets sent back)
+          # TODO : TO CORRECT
+          # does not take into account the possibility that the outer loop could be after the inner loops in the SHP + more than one outer loop
+          # Still sends back a multi polygon (so the correction above won't change what gets sent back)
           @shp.seek(32,IO::SEEK_CUR)
           num_parts, num_points = @shp.read(8).unpack("V2")
           parts =  @shp.read(num_parts * 4).unpack("V" + num_parts.to_s)
-          parts << num_points #indexes for LS of idx i go to parts of idx i to idx i +1
+          parts << num_points # indexes for LS of idx i go to parts of idx i to idx i +1
           points = Array.new(num_points) do
             x, y = @shp.read(16).unpack("E2")
             GeoRuby::SimpleFeatures::Point.from_x_y(x,y)
@@ -221,17 +219,15 @@ module GeoRuby
           end
           geometry = GeoRuby::SimpleFeatures::MultiPoint.from_points(points)
 
-
         when ShpType::POINTZ
           x, y, z, m = @shp.read(24).unpack("E4")
           geometry = GeoRuby::SimpleFeatures::Point.from_x_y_z_m(x,y,z,m)
-
 
         when ShpType::POLYLINEZ
           @shp.seek(32,IO::SEEK_CUR)
           num_parts, num_points = @shp.read(8).unpack("V2")
           parts =  @shp.read(num_parts * 4).unpack("V" + num_parts.to_s)
-          parts << num_points #indexes for LS of idx i go to parts of idx i to idx i +1
+          parts << num_points # indexes for LS of idx i go to parts of idx i to idx i +1
           xys = Array.new(num_points) { @shp.read(16).unpack("E2") }
           @shp.seek(16,IO::SEEK_CUR)
           zs = Array.new(num_points) {@shp.read(8).unpack("E")[0]}
@@ -245,18 +241,17 @@ module GeoRuby
           end
           geometry = GeoRuby::SimpleFeatures::MultiLineString.from_line_strings(line_strings,GeoRuby::SimpleFeatures::DEFAULT_SRID,true,true)
 
-
         when ShpType::POLYGONZ
-          #TODO : CORRECT
+          # TODO : CORRECT
 
-          @shp.seek(32,IO::SEEK_CUR)#extent
+          @shp.seek(32,IO::SEEK_CUR)# extent
           num_parts, num_points = @shp.read(8).unpack("V2")
           parts =  @shp.read(num_parts * 4).unpack("V" + num_parts.to_s)
-          parts << num_points #indexes for LS of idx i go to parts of idx i to idx i +1
+          parts << num_points # indexes for LS of idx i go to parts of idx i to idx i +1
           xys = Array.new(num_points) { @shp.read(16).unpack("E2") }
-          @shp.seek(16,IO::SEEK_CUR)#extent
+          @shp.seek(16,IO::SEEK_CUR)# extent
           zs = Array.new(num_points) {@shp.read(8).unpack("E")[0]}
-          @shp.seek(16,IO::SEEK_CUR)#extent
+          @shp.seek(16,IO::SEEK_CUR)# extent
           ms = Array.new(num_points) {@shp.read(8).unpack("E")[0]}
           points = Array.new(num_points) do |i|
             GeoRuby::SimpleFeatures::Point.from_x_y_z_m(xys[i][0],xys[i][1],zs[i],ms[i])
@@ -265,7 +260,6 @@ module GeoRuby
             GeoRuby::SimpleFeatures::LinearRing.from_points(points[(parts[i])...(parts[i+1])],GeoRuby::SimpleFeatures::DEFAULT_SRID,true,true)
           end
           geometry = GeoRuby::SimpleFeatures::MultiPolygon.from_polygons([GeoRuby::SimpleFeatures::Polygon.from_linear_rings(linear_rings)],GeoRuby::SimpleFeatures::DEFAULT_SRID,true,true)
-
 
         when ShpType::MULTIPOINTZ
           @shp.seek(32,IO::SEEK_CUR)
@@ -290,7 +284,7 @@ module GeoRuby
           @shp.seek(32,IO::SEEK_CUR)
           num_parts, num_points = @shp.read(8).unpack("V2")
           parts =  @shp.read(num_parts * 4).unpack("V" + num_parts.to_s)
-          parts << num_points #indexes for LS of idx i go to parts of idx i to idx i +1
+          parts << num_points # indexes for LS of idx i go to parts of idx i to idx i +1
           xys = Array.new(num_points) { @shp.read(16).unpack("E2") }
           @shp.seek(16,IO::SEEK_CUR)
           ms = Array.new(num_points) {@shp.read(8).unpack("E")[0]}
@@ -302,14 +296,13 @@ module GeoRuby
           end
           geometry = GeoRuby::SimpleFeatures::MultiLineString.from_line_strings(line_strings,GeoRuby::SimpleFeatures::DEFAULT_SRID,false,true)
 
-
         when ShpType::POLYGONM
-          #TODO : CORRECT
+          # TODO : CORRECT
 
           @shp.seek(32,IO::SEEK_CUR)
           num_parts, num_points = @shp.read(8).unpack("V2")
           parts =  @shp.read(num_parts * 4).unpack("V" + num_parts.to_s)
-          parts << num_points #indexes for LS of idx i go to parts of idx i to idx i +1
+          parts << num_points # indexes for LS of idx i go to parts of idx i to idx i +1
           xys = Array.new(num_points) { @shp.read(16).unpack("E2") }
           @shp.seek(16,IO::SEEK_CUR)
           ms = Array.new(num_points) {@shp.read(8).unpack("E")[0]}
@@ -320,7 +313,6 @@ module GeoRuby
             GeoRuby::SimpleFeatures::LinearRing.from_points(points[(parts[i])...(parts[i+1])],GeoRuby::SimpleFeatures::DEFAULT_SRID,false,true)
           end
           geometry = GeoRuby::SimpleFeatures::MultiPolygon.from_polygons([GeoRuby::SimpleFeatures::Polygon.from_linear_rings(linear_rings)],GeoRuby::SimpleFeatures::DEFAULT_SRID,false,true)
-
 
         when ShpType::MULTIPOINTM
           @shp.seek(32,IO::SEEK_CUR)
@@ -342,7 +334,7 @@ module GeoRuby
       end
     end
 
-    #A SHP record : contains both the geometry and the data fields (from the DBF)
+    # A SHP record : contains both the geometry and the data fields (from the DBF)
     class ShpRecord
       attr_reader :geometry , :data
 
@@ -351,43 +343,43 @@ module GeoRuby
         @data = data
       end
 
-      #Tests if the geometry is a NULL SHAPE
+      # Tests if the geometry is a NULL SHAPE
       def has_null_shape?
         @geometry.nil?
       end
     end
 
-    #An object returned from ShpFile#transaction. Buffers updates to a Shapefile
+    # An object returned from ShpFile#transaction. Buffers updates to a Shapefile
     class ShpTransaction
       attr_reader :rollbacked
 
       def initialize(shp, dbf)
-        @deleted = Hash.new
-        @added = Array.new
+        @deleted = {}
+        @added = []
         @shp = shp
         @dbf = dbf
       end
 
-      #delete a record. Does not take into account the records added in the current transaction
+      # delete a record. Does not take into account the records added in the current transaction
       def delete(i)
         raise UnexistantRecordException.new("Invalid index : #{i}") if @shp.record_count <= i
         @deleted[i] = true
       end
 
-      #Update a record. In effect just a delete followed by an add.
+      # Update a record. In effect just a delete followed by an add.
       def update(i, record)
         delete(i)
         add(record)
       end
 
-      #add a ShpRecord at the end
+      # add a ShpRecord at the end
       def add(record)
         record_type = to_shp_type(record.geometry)
         raise IncompatibleGeometryException.new("Incompatible type") unless record_type==@shp.shp_type
         @added << record
       end
 
-      #updates the physical files
+      # updates the physical files
       def commit
         @shp.close
         @shp_r = open(@shp.file_root + ".shp", "rb")
@@ -407,16 +399,16 @@ module GeoRuby
         FileUtils.move(@shp.file_root + ".shx.tmp.shx", @shp.file_root + ".shx")
         FileUtils.move(@shp.file_root + ".dbf.tmp.dbf", @shp.file_root + ".dbf")
 
-        @deleted = Hash.new
-        @added = Array.new
+        @deleted = {}
+        @added = []
 
         @shp.reload!
        end
 
-      #prevents the udpate from taking place
+      # prevents the udpate from taking place
       def rollback
-        @deleted = Hash.new
-        @added = Array.new
+        @deleted = {}
+        @added = []
         @rollbacked = true
       end
 
@@ -438,7 +430,7 @@ module GeoRuby
                else
                  false
                end
-        return false if !root
+        return false unless root
 
         if geom.with_z
           root = root + "Z"
@@ -473,7 +465,7 @@ module GeoRuby
           min_z = min_zp if min_zp < min_z
           max_m = max_mp if max_mp > max_m
           min_m = min_mp if min_mp < min_m
-          length = (shp_str.length/2 + 2).to_i #num of 16-bit words; geom type is included (+2)
+          length = (shp_str.length/2 + 2).to_i # num of 16-bit words; geom type is included (+2)
           @shx_io << [(@shp_io.pos/2).to_i,length].pack("N2")
           @shp_io << [index,length,@shp.shp_type].pack("N2V")
           @shp_io << shp_str
@@ -491,7 +483,7 @@ module GeoRuby
         @shp_io << header
         @shx_io << header
         index = 1
-        while(!@shp_r.eof?)
+        until @shp_r.eof?
           icur,length = @shp_r.read(8).unpack("N2")
           unless(@deleted[icur-1])
             @shx_io << [(@shp_io.pos/2).to_i,length].pack("N2")
@@ -508,7 +500,7 @@ module GeoRuby
         @dbf_r.rewind
         @dbf_io << @dbf_r.read(@dbf.header_length)
         icur = 0
-        while(!@dbf_r.eof?)
+        until @dbf_r.eof?
           unless(@deleted[icur])
             @dbf_io << @dbf_r.read(@dbf.record_length)
           else
@@ -521,7 +513,7 @@ module GeoRuby
       end
 
       def commit_finalize(min_x,max_x,min_y,max_y,min_z,max_z,min_m,max_m)
-        #update size in shp and dbf + extent and num records in dbf
+        # update size in shp and dbf + extent and num records in dbf
         @shp_io.seek(0,IO::SEEK_END)
         shp_size = @shp_io.pos / 2
         @shx_io.seek(0,IO::SEEK_END)
@@ -609,12 +601,12 @@ module GeoRuby
         if geometry.is_a? GeoRuby::SimpleFeatures::LineString
           str << [1,geometry.length,0].pack("V3")
           geometry.each do |point|
-              str << [point.x,point.y].pack("E2")
+            str << [point.x,point.y].pack("E2")
           end
         else
-          #multilinestring
+          # multilinestring
           str << [geometry.length,geometry.inject(0) {|l, ls| l + ls.length}].pack("V2")
-          str << geometry.inject([0]) {|a,ls| a << (a.last + ls.length)}.pack("V#{geometry.length}") #last element of the previous array is dropped
+          str << geometry.inject([0]) {|a,ls| a << (a.last + ls.length)}.pack("V#{geometry.length}") # last element of the previous array is dropped
           geometry.each do |ls|
             ls.each do |point|
               str << [point.x,point.y].pack("E2")
@@ -631,7 +623,7 @@ module GeoRuby
             str << [point.instance_variable_get(zm)].pack("E")
           end
         else
-          #multilinestring
+          # multilinestring
           geometry.each do |ls|
             ls.each do |point|
               str << [point.instance_variable_get(zm)].pack("E")
@@ -644,17 +636,17 @@ module GeoRuby
       def build_polygon(geometry,str)
         if geometry.is_a? GeoRuby::SimpleFeatures::Polygon
           str << [geometry.length,geometry.inject(0) {|l, lr| l + lr.length}].pack("V2")
-          str << geometry.inject([0]) {|a,lr| a << (a.last + lr.length)}.pack("V#{geometry.length}") #last element of the previous array is dropped
+          str << geometry.inject([0]) {|a,lr| a << (a.last + lr.length)}.pack("V#{geometry.length}") # last element of the previous array is dropped
           geometry.each do |lr|
             lr.each do |point|
               str << [point.x,point.y].pack("E2")
             end
           end
         else
-          #multipolygon
+          # multipolygon
           num_rings = geometry.inject(0) {|l, poly| l + poly.length}
           str << [num_rings, geometry.inject(0) {|l, poly| l + poly.inject(0) {|l2,lr| l2 + lr.length} }].pack("V2")
-          str << geometry.inject([0]) {|a,poly| poly.inject(a) {|a2, lr| a2 << (a2.last + lr.length)}}.pack("V#{num_rings}") #last element of the previous array is dropped
+          str << geometry.inject([0]) {|a,poly| poly.inject(a) {|a2, lr| a2 << (a2.last + lr.length)}}.pack("V#{num_rings}") # last element of the previous array is dropped
           geometry.each do |poly|
             poly.each do |lr|
               lr.each do |point|

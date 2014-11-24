@@ -1,9 +1,9 @@
 module GeoRuby
   module SimpleFeatures
-    #Represents a point. It is in 3D if the Z coordinate is not +nil+.
+    # Represents a point. It is in 3D if the Z coordinate is not +nil+.
     class Circle < Geometry
       attr_accessor :radius, :center
-      alias :r :radius
+      alias_method :r, :radius
 
       def initialize(srid = DEFAULT_SRID, with_z = false, with_m = false)
         super(srid, with_z, with_m)
@@ -15,24 +15,24 @@ module GeoRuby
       end
 
       def m_range
-        raise NotImplementedError
+        fail NotImplementedError
       end
 
       def ==(other)
         return false unless other.is_a?(Circle)
-        @center == other.center and @radius == other.radius
+        @center == other.center && @radius == other.radius
       end
 
       def to_json(options = {})
-        {:type => 'Circle',
-         :coordinates => @center.to_coordinates,
-         :radius => @radius}.to_json(options)
+        { type: 'Circle',
+          coordinates: @center.to_coordinates,
+          radius: @radius }.to_json(options)
       end
-      alias :as_geojson :to_json
+      alias_method :as_geojson, :to_json
 
       def contains_point?(point)
         dist = Mongoid::Spacial.distance(@center.to_coordinates,
-                  point.to_coordinates, :spherical => true, :unit => :m)
+                                         point.to_coordinates, spherical: true, unit: :m)
         dist <= @radius
       end
 
@@ -51,7 +51,6 @@ module GeoRuby
           circle
         end
       end
-
     end
   end
 end

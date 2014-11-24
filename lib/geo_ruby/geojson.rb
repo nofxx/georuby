@@ -8,8 +8,7 @@ rescue LoadError
 end
 
 module GeoRuby
-
-  #Raised when an error in the GeoJSON string is detected
+  # Raised when an error in the GeoJSON string is detected
   class GeojsonFormatError < StandardError
   end
 
@@ -27,11 +26,11 @@ module GeoRuby
       if (self.class != other.class)
         false
       else
-        (self.id == other.id) && (self.geometry == other.geometry) && (self.properties == other.properties)
+        (id == other.id) && (geometry == other.geometry) && (properties == other.properties)
       end
     end
 
-    def as_json(options={})
+    def as_json(options = {})
       output = {}
       output[:type] = 'Feature'
       output[:geometry] = geometry
@@ -43,7 +42,7 @@ module GeoRuby
     def to_json(options = {})
       as_json(options).to_json
     end
-    alias :as_geojson :to_json
+    alias_method :as_geojson, :to_json
   end
 
   # Class added to support geojson 'Feature Collection' objects
@@ -59,28 +58,27 @@ module GeoRuby
         return false
       else
         features.each_index do |index|
-          return false if self.features[index] != other.features[index]
+          return false if features[index] != other.features[index]
         end
       end
       true
     end
 
-    def as_json(options = {})
-      {:type => 'FeatureCollection', :features => features}
+    def as_json(_options = {})
+      { type: 'FeatureCollection', features: features }
     end
 
     def to_json(options = {})
       as_json(options).to_json
     end
-    alias :as_geojson :to_json
+    alias_method :as_geojson, :to_json
   end
-
 
   class GeojsonParser
     include GeoRuby::SimpleFeatures
     attr_reader :geometry
 
-    def parse(geojson, srid=DEFAULT_SRID)
+    def parse(geojson, srid = DEFAULT_SRID)
       @geometry = nil
       geohash = JSON.parse(geojson)
       parse_geohash(geohash, srid)
@@ -114,13 +112,13 @@ module GeoRuby
 
     def parse_geometry_collection(geohash, srid)
       srid = srid_from_crs(geohash['crs']) || srid
-      geometries = geohash['geometries'].map{|g| parse_geometry(g,srid)}
-      GeometryCollection.from_geometries(geometries,srid)
+      geometries = geohash['geometries'].map { |g| parse_geometry(g, srid) }
+      GeometryCollection.from_geometries(geometries, srid)
     end
 
     def parse_geojson_feature(geohash, srid)
       srid = srid_from_crs(geohash['crs']) || srid
-      geometry = parse_geometry(geohash['geometry'],srid)
+      geometry = parse_geometry(geohash['geometry'], srid)
       GeojsonFeature.new(geometry, geohash['properties'], geohash['id'])
     end
 
@@ -139,9 +137,7 @@ module GeoRuby
         urn = crs['properties']['urn'].split(':')
         return urn.last if urn[4] == 'EPSG'
       end
-      return nil
+      nil
     end
-
-  end #GeojsonParser
-
-end #GeoRuby
+  end # GeojsonParser
+end # GeoRuby
