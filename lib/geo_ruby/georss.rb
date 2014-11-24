@@ -1,14 +1,5 @@
-# require 'geo_ruby/simple_features/point'
-# require 'geo_ruby/simple_features/line_string'
-# require 'geo_ruby/simple_features/linear_ring'
-# require 'geo_ruby/simple_features/polygon'
-# require 'geo_ruby/simple_features/multi_point'
-# require 'geo_ruby/simple_features/multi_line_string'
-# require 'geo_ruby/simple_features/multi_polygon'
-# require 'geo_ruby/simple_features/geometry_collection'
-# require 'geo_ruby/simple_features/envelope'
-
 module GeoRuby
+
   # Raised when an error in the GeoRSS string is detected
   class GeorssFormatError < StandardError
   end
@@ -44,7 +35,7 @@ module GeoRuby
           lon = Regexp.last_match[1].to_f
           @geometry = Point.from_x_y(lon, lat)
         else
-          fail GeorssFormatError.new('Bad W3CGeo GeoRSS format')
+          fail GeorssFormatError, 'Bad W3CGeo GeoRSS format'
         end
       elsif georss =~ /^<\s*[^:>]*:where\s*>/
         # GML format found
@@ -56,17 +47,18 @@ module GeoRuby
             # lat comes first
             @geometry = Point.from_x_y(point[1].to_f, point[0].to_f)
           else
-            fail GeorssFormatError.new('Bad GML GeoRSS: Malformed Point')
+            fail GeorssFormatError, 'Bad GML GeoRSS: Malformed Point'
           end
         elsif gml =~ /^<\s*[^:>]*:LineString\s*>/
           if gml =~ /<\s*[^:>]*:posList\s*>([^<]*)/
             xy = Regexp.last_match[1].split(' ')
             @geometry = LineString.new
             0.upto(xy.size / 2 - 1) do |index|
-              @geometry << Point.from_x_y(xy[index * 2 + 1].to_f, xy[index * 2].to_f)
+              @geometry << Point.from_x_y(xy[index * 2 + 1].to_f,
+                                          xy[index * 2].to_f)
             end
           else
-            fail GeorssFormatError.new('Bad GML GeoRSS: Malformed LineString')
+            fail GeorssFormatError, 'Bad GML GeoRSS: Malformed LineString'
           end
         elsif gml =~ /^<\s*[^:>]*:Polygon\s*>/
           if gml =~ /<\s*[^:>]*:posList\s*>([^<]*)/
@@ -75,9 +67,12 @@ module GeoRuby
             linear_ring = LinearRing.new
             @geometry << linear_ring
             xy = Regexp.last_match[1].split(' ')
-            0.upto(xy.size / 2 - 1) { |index| linear_ring << Point.from_x_y(xy[index * 2 + 1].to_f, xy[index * 2].to_f) }
+            0.upto(xy.size / 2 - 1) do |index|
+              linear_ring << Point.from_x_y(xy[index * 2 + 1].to_f,
+                                            xy[index * 2].to_f)
+            end
           else
-            fail GeorssFormatError.new('Bad GML GeoRSS: Malformed Polygon')
+            fail GeorssFormatError, 'Bad GML GeoRSS: Malformed Polygon'
           end
         elsif gml =~ /^<\s*[^:>]*:Envelope\s*>/
           if gml =~ /<\s*[^:>]*:lowerCorner\s*>([^<]*)</
@@ -86,13 +81,13 @@ module GeoRuby
               uc = Regexp.last_match[1].split(' ').collect(&:to_f).reverse
               @geometry = Envelope.from_coordinates([lc, uc])
             else
-              fail GeorssFormatError.new('Bad GML GeoRSS: Malformed Envelope')
+              fail GeorssFormatError, 'Bad GML GeoRSS: Malformed Envelope'
             end
           else
-            fail GeorssFormatError.new('Bad GML GeoRSS: Malformed Envelope')
+            fail GeorssFormatError, 'Bad GML GeoRSS: Malformed Envelope'
           end
         else
-          fail GeorssFormatError.new('Bad GML GeoRSS: Unknown geometry type')
+          fail GeorssFormatError, 'Bad GML GeoRSS: Unknown geometry type'
         end
       else
         # must be simple format
@@ -105,7 +100,8 @@ module GeoRuby
           @geometry = LineString.new
           xy = Regexp.last_match[2].gsub(',', ' ').split(' ')
           0.upto(xy.size / 2 - 1) do |index|
-            @geometry << Point.from_x_y(xy[index * 2 + 1].to_f, xy[index * 2].to_f)
+            @geometry << Point.from_x_y(xy[index * 2 + 1].to_f,
+                                        xy[index * 2].to_f)
           end
         elsif georss =~ /^<\s*[^>:]*:polygon([^>]*)>(.*)</m
           tags = Regexp.last_match[1]
@@ -114,39 +110,38 @@ module GeoRuby
           @geometry << linear_ring
           xy = Regexp.last_match[2].gsub(',', ' ').split(' ')
           0.upto(xy.size / 2 - 1) do |index|
-            linear_ring << Point.from_x_y(xy[index * 2 + 1].to_f, xy[index * 2].to_f)
+            linear_ring << Point.from_x_y(xy[index * 2 + 1].to_f,
+                                          xy[index * 2].to_f)
           end
         elsif georss =~ /^<\s*[^>:]*:box([^>]*)>(.*)</m
           tags = Regexp.last_match[1]
           corners = []
           xy = Regexp.last_match[2].gsub(',', ' ').split(' ')
           0.upto(xy.size / 2 - 1) do |index|
-            corners << Point.from_x_y(xy[index * 2 + 1].to_f, xy[index * 2].to_f)
+            corners << Point.from_x_y(xy[index * 2 + 1].to_f,
+                                      xy[index * 2].to_f)
           end
           @geometry = Envelope.from_points(corners)
         else
-          fail GeorssFormatError.new('Bad Simple GeoRSS format: ' +
-                                     'Unknown geometry type')
+          fail GeorssFormatError, 'Bad Simple GeoRSS format: ' \
+                                  'Unknown geometry type'
         end
 
         # geometry found: parse tags
         return unless with_tags
 
-        @georss_tags.featuretypetag = \
-        Regexp.last_match[1] if tags =~ /featuretypetag=['"]([^"']*)['"]/
-
-        @georss_tags.relationshiptag = \
-        Regexp.last_match[1] if tags =~ /relationshiptag=['"]([^'"]*)['"]/
-
-        @georss_tags.elev = \
-        Regexp.last_match[1].to_f if tags =~ /elev=['"]([^'"]*)['"]/
-
-        @georss_tags.floor = \
-        Regexp.last_match[1].to_i if tags =~ /floor=['"]([^'"]*)['"]/
-
-        @georss_tags.radius = \
-        Regexp.last_match[1].to_f if tags =~ /radius=['"]([^'"]*)['"]/
-
+        case tags
+        when /featuretypetag=['"]([^"']*)['"]/
+          @georss_tags.featuretypetag = Regexp.last_match[1]
+        when /relationshiptag=['"]([^'"]*)['"]/
+          @georss_tags.relationshiptag = Regexp.last_match[1]
+        when /elev=['"]([^'"]*)['"]/
+          @georss_tags.elev = Regexp.last_match[1].to_f
+        when /floor=['"]([^'"]*)['"]/
+          @georss_tags.floor = Regexp.last_match[1].to_i
+        when /radius=['"]([^'"]*)['"]/
+          @georss_tags.radius = Regexp.last_match[1].to_f
+        end
       end
     end
   end

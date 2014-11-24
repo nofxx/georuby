@@ -43,7 +43,6 @@ To install the latest version, just type:
 
     gem install georuby
 
-
 Or include on your projects`s Gemfile:
 
     gem 'georuby'
@@ -52,11 +51,13 @@ Or include on your projects`s Gemfile:
 Optional, require if you need the functionality:
 
 
-    require 'geo_ruby/shp4r/shp'    # Shapefile
-    require 'geo_ruby/gpx4r/gpx'    # GPX data
-    require 'geo_ruby/geojson'      # GeoJSON
-    require 'geo_ruby/georss'       # GeoRSS
-    require 'geo_ruby/kml'          # KML data
+    require 'georuby'
+    require 'geo_ruby/ewk'        # EWKT/EWKB
+    require 'geo_ruby/shp'        # Shapefile
+    require 'geo_ruby/gpx'        # GPX data
+    require 'geo_ruby/kml'        # KML data
+    require 'geo_ruby/georss'     # GeoRSS
+    require 'geo_ruby/geojson'    # GeoJSON
 
 
 Use

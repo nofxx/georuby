@@ -9,11 +9,12 @@ require 'rubygems'
 require 'rspec'
 
 require 'geo_ruby'
+require 'geo_ruby/ewk'
 require 'geo_ruby/shp'
 require 'geo_ruby/gpx'
-require 'geo_ruby/geojson'
-require 'geo_ruby/georss'
 require 'geo_ruby/kml'
+require 'geo_ruby/georss'
+require 'geo_ruby/geojson'
 
 if ENV['CI']
   require 'coveralls'

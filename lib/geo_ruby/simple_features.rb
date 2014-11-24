@@ -4,8 +4,6 @@ module GeoRuby
       geometry
       circle
       envelope
-      ewkb_parser
-      ewkt_parser
       geometry_collection
       geometry_factory
       helper

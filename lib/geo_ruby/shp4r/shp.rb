@@ -1,6 +1,5 @@
 require 'date'
 require 'fileutils' unless defined?(FileUtils)
-require File.dirname(__FILE__) + '/dbf'
 
 module GeoRuby
   module Shp4r

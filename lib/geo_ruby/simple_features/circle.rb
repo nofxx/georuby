@@ -30,10 +30,8 @@ module GeoRuby
       end
       alias_method :as_geojson, :to_json
 
-      def contains_point?(point)
-        dist = Mongoid::Spacial.distance(@center.to_coordinates,
-                                         point.to_coordinates, spherical: true, unit: :m)
-        dist <= @radius
+      def contains_point?(_point)
+        fail NotImplementedError
       end
 
       class << self
