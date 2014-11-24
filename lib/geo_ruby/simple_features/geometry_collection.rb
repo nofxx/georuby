@@ -64,15 +64,15 @@ module GeoRuby
       end
 
       # tests the equality of geometry collections
-      def ==(other_collection)
-        if (other_collection.class != self.class)
+      def ==(other)
+        if (other.class != self.class)
           false
-        elsif length != other_collection.length
+        elsif length != other.length
           false
         else
           index = 0
           while index < length
-            return false if self[index] != other_collection[index]
+            return false if self[index] != other[index]
             index += 1
           end
           true
@@ -82,7 +82,8 @@ module GeoRuby
       # Binary representation of the collection
       def binary_representation(allow_z = true, allow_m = true) #:nodoc:
         rep = [length].pack('V')
-        # output the list of geometries without outputting the SRID first and with the same setting regarding Z and M
+        # output the list of geometries without outputting the SRID first
+        # and with the same setting regarding Z and M
         each { |geometry| rep << geometry.as_ewkb(false, allow_z, allow_m) }
         rep
       end
@@ -94,7 +95,9 @@ module GeoRuby
 
       # Text representation of a geometry collection
       def text_representation(allow_z = true, allow_m = true) #:nodoc:
-        @geometries.collect { |geometry| geometry.as_ewkt(false, allow_z, allow_m) }.join(',')
+        @geometries.collect do |geometry|
+          geometry.as_ewkt(false, allow_z, allow_m)
+        end.join(',')
       end
 
       # WKT geometry type
@@ -130,8 +133,8 @@ module GeoRuby
       end
 
       # creates a new GeometryCollection from an array of geometries
-      def self.from_geometries(geometries, srid = DEFAULT_SRID, with_z = false, with_m = false)
-        geometry_collection = new(srid, with_z, with_m)
+      def self.from_geometries(geometries, srid = DEFAULT_SRID, z = false, m = false)
+        geometry_collection = new(srid, z, m)
         geometry_collection.concat(geometries)
         geometry_collection
       end

@@ -5,7 +5,8 @@ module GeoRuby
       attr_accessor :lower_corner, :upper_corner
       attr_accessor :srid, :with_z, :zoom
 
-      # Creates a enw Envelope with +lower_corner+ as the first element of the corners array and +upper_corner+ as the second element
+      # Creates a enw Envelope with +lower_corner+ as the first element
+      # of the corners array and +upper_corner+ as the second element
       def initialize(srid = DEFAULT_SRID, with_z = false)
         @srid = srid
         @with_z = with_z
@@ -28,6 +29,7 @@ module GeoRuby
         e.extend!(envelope)
         e
       end
+
       #  def bounding_box(markers)
       #    max_lat, max_lon, min_lat, min_lon = -Float::MAX, -Float::MAX, Float::MAX, Float::MAX
       #    markers.each do |marker|
@@ -75,15 +77,20 @@ module GeoRuby
         end
       end
 
-      # georss serialization: Dialect can be passed as option <tt>:dialect</tt> and set to <tt>:simple</tt> (default)
-      # <tt>:w3cgeo</tt> or <tt>:gml</tt>. Options <tt>:featuretypetag
+      # georss serialization: Dialect can be passed as option <tt>:dialect</tt>
+      # and set to <tt>:simple</tt> (default) <tt>:w3cgeo</tt> or <tt>:gml</tt>.
+      # Options <tt>:featuretypetag
       def as_georss(options = {})
         dialect = options[:dialect] || :simple
         case (dialect)
         when :simple
           geom_attr = ''
-          geom_attr += " featuretypetag=\"#{options[:featuretypetag]}\"" if options[:featuretypetag]
-          geom_attr += " relationshiptag=\"#{options[:relationshiptag]}\"" if options[:relationshiptag]
+          if options[:featuretypetag]
+            geom_attr += " featuretypetag=\"#{options[:featuretypetag]}\""
+          end
+          if options[:relationshiptag]
+            geom_attr += " relationshiptag=\"#{options[:relationshiptag]}\""
+          end
           geom_attr += " floor=\"#{options[:floor]}\"" if options[:floor]
           geom_attr += " radius=\"#{options[:radius]}\"" if options[:radius]
           geom_attr += " elev=\"#{options[:elev]}\"" if options[:elev]
@@ -115,9 +122,11 @@ module GeoRuby
         georss_ns = options[:georss_ns] || 'georss'
         gml_ns = options[:gml_ns] || 'gml'
         result = "<#{georss_ns}:where>\n<#{gml_ns}:Envelope>\n"
-        result += "<#{gml_ns}:LowerCorner>" + "#{lower_corner.y} #{lower_corner.x}" + "</#{gml_ns}:LowerCorner>"
-        result += "<#{gml_ns}:UpperCorner>" + "#{upper_corner.y} #{upper_corner.x}" + "</#{gml_ns}:UpperCorner>"
-        result += "</#{gml_ns}:Envelope>\n</#{georss_ns}:where>\n"
+        result += "<#{gml_ns}:LowerCorner>#{lower_corner.y} #{lower_corner.x}"\
+                  "</#{gml_ns}:LowerCorner>"
+        result += "<#{gml_ns}:UpperCorner>#{upper_corner.y} #{upper_corner.x}"\
+                  "</#{gml_ns}:UpperCorner>"
+        result + "</#{gml_ns}:Envelope>\n</#{georss_ns}:where>\n"
       end
 
       # Sends back a latlonaltbox
@@ -143,7 +152,7 @@ module GeoRuby
           result += "<maxAltitude>#{upper_corner.z}</maxAltitude>"
         end
 
-        result += "</LatLonAltBox>\n"
+        result + "</LatLonAltBox>\n"
       end
 
       # Creates a new envelope. Accept an array of 2 points as argument

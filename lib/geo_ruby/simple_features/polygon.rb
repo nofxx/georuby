@@ -21,7 +21,7 @@ module GeoRuby
 
       # Bounding box in 2D/3D. Returns an array of 2 points
       def bounding_box
-        unless with_z
+        if !with_z
           @rings[0].bounding_box
         else
           result = @rings[0].bounding_box # valid for x and y
