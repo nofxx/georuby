@@ -22,7 +22,8 @@ describe GeoRuby::SimpleFeatures::Point do
   end
 
   it 'should have a very nice matcher' do
-    expect(GeoRuby::SimpleFeatures::Point.from_x_y_z_m(1, 2, 3.33, 't')).to be_a_point(1, 2, 3.33, 't')
+    expect(GeoRuby::SimpleFeatures::Point.from_x_y_z_m(1, 2, 3.33, 't'))
+      .to be_a_point(1, 2, 3.33, 't')
   end
 
   it 'should have a dumb matcher' do
@@ -127,7 +128,7 @@ describe GeoRuby::SimpleFeatures::Point do
     it 'should store correctly a 4d point' do
       point = GeoRuby::SimpleFeatures::Point.from_x_y_z_m(-10, -20, -30, 1)
       expect(point.m).to eql(1)
-      expect(point.to_coordinates).to eq([-10, -20, -30])
+      expect(point.to_coordinates).to eq([-10, -20, -30, 1])
     end
 
     it 'should instantiate a point from polar coordinates' do
@@ -266,6 +267,7 @@ describe GeoRuby::SimpleFeatures::Point do
     end
 
     describe 'Orthogonal Distance' do
+
       let(:line) { GeoRuby::SimpleFeatures::LineString.from_coordinates([[0, 0], [1, 3]], 4326) }
       let(:line2) { GeoRuby::SimpleFeatures::LineString.from_coordinates([[1, 1], [1, 2]], 4326) }
 
@@ -291,41 +293,45 @@ describe GeoRuby::SimpleFeatures::Point do
 
     end
 
-    it 'should calculate the bearing from apoint to another in degrees' do
-      expect(p1.bearing_to(p2)).to be_within(0.01).of(45.0)
-    end
+    describe "Bearing" do
 
-    it 'should calculate the bearing from apoint to another in degrees' do
-      p3 = GeoRuby::SimpleFeatures::Point.from_x_y(1, -1)
-      expect(p1.bearing_to(p3)).to be_within(0.01).of(180.0)
-    end
+      it 'should calculate the bearing from apoint to another in degrees' do
+        expect(p1.bearing_to(p2)).to be_within(0.01).of(45.0)
+      end
 
-    it 'should calculate the bearing from apoint to another in degrees' do
-      p3 = GeoRuby::SimpleFeatures::Point.from_x_y(-1, -1)
-      expect(p1.bearing_to(p3)).to be_within(0.01).of(225.0)
-    end
+      it 'should calculate the bearing from apoint to another in degrees' do
+        p3 = GeoRuby::SimpleFeatures::Point.from_x_y(1, -1)
+        expect(p1.bearing_to(p3)).to be_within(0.01).of(180.0)
+      end
 
-    it 'should calculate the bearing from apoint to another in degrees' do
-      p3 = GeoRuby::SimpleFeatures::Point.from_x_y(-1, 1)
-      expect(p1.bearing_to(p3)).to be_within(0.01).of(270.0)
-    end
+      it 'should calculate the bearing from apoint to another in degrees' do
+        p3 = GeoRuby::SimpleFeatures::Point.from_x_y(-1, -1)
+        expect(p1.bearing_to(p3)).to be_within(0.01).of(225.0)
+      end
 
-    it 'should calculate the bearing from apoint to another in degrees' do
-      p3 = GeoRuby::SimpleFeatures::Point.from_x_y(2, -1)
-      expect(p1.bearing_to(p3)).to be_within(0.0001).of(153.4349488)
-    end
+      it 'should calculate the bearing from apoint to another in degrees' do
+        p3 = GeoRuby::SimpleFeatures::Point.from_x_y(-1, 1)
+        expect(p1.bearing_to(p3)).to be_within(0.01).of(270.0)
+      end
 
-    it 'should calculate a clone point bearing to 0' do
-      expect(p1.bearing_to(p1)).to eql(0)
-    end
+      it 'should calculate the bearing from apoint to another in degrees' do
+        p3 = GeoRuby::SimpleFeatures::Point.from_x_y(2, -1)
+        expect(p1.bearing_to(p3)).to be_within(0.0001).of(153.4349488)
+      end
 
-    it 'should calculate the bearing from apoint to another in degrees' do
-      expect(p1.bearing_text(p2)).to eql(:ne)
-    end
+      it 'should calculate a clone point bearing to 0' do
+        expect(p1.bearing_to(p1)).to eql(0)
+      end
 
-    it 'should calculate the bearing from apoint to another in degrees' do
-      p3 = GeoRuby::SimpleFeatures::Point.from_x_y(-1, 1)
-      expect(p1.bearing_text(p3)).to eql(:w)
+      it 'should calculate the bearing from apoint to another in degrees' do
+        expect(p1.bearing_text(p2)).to eql(:ne)
+      end
+
+      it 'should calculate the bearing from apoint to another in degrees' do
+        p3 = GeoRuby::SimpleFeatures::Point.from_x_y(-1, 1)
+        expect(p1.bearing_text(p3)).to eql(:w)
+      end
+
     end
 
   end

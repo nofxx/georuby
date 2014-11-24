@@ -68,62 +68,69 @@ module GeoRuby
         r * c
       end
 
-      # Ellipsoidal distance in m using Vincenty's formula. Lifted entirely from Chris Veness's code at http://www.movable-type.co.uk/scripts/LatLongVincenty.html and adapted for Ruby. Assumes the x and y are the lon and lat in degrees.
+      #
+      # Ellipsoidal distance in m using Vincenty's formula.
+      # Lifted entirely from Chris Veness's code at
+      # http://www.movable-type.co.uk/scripts/LatLongVincenty.html
+      # and adapted for Ruby.
+      #
+      # Assumes the x and y are the lon and lat in degrees.
       # a is the semi-major axis (equatorial radius) of the ellipsoid
       # b is the semi-minor axis (polar radius) of the ellipsoid
-      # Their values by default are set to the ones of the WGS84 ellipsoid
+      # Their values by default are set to the WGS84 ellipsoid.
+      #
       def ellipsoidal_distance(point, a = 6_378_137.0, b = 6_356_752.3142)
         f = (a - b) / a
         l = (point.lon - lon) * DEG2RAD
 
         u1 = Math.atan((1 - f) * Math.tan(lat * DEG2RAD))
         u2 = Math.atan((1 - f) * Math.tan(point.lat * DEG2RAD))
-        sinU1 = Math.sin(u1)
-        cosU1 = Math.cos(u1)
-        sinU2 = Math.sin(u2)
-        cosU2 = Math.cos(u2)
+        sin_u1 = Math.sin(u1)
+        cos_u1 = Math.cos(u1)
+        sin_u2 = Math.sin(u2)
+        cos_u2 = Math.cos(u2)
 
         lambda = l
-        lambdaP = 2 * Math::PI
-        iterLimit = 20
+        lambda_p = 2 * Math::PI
+        iter_limit = 20
 
-        while (lambda - lambdaP).abs > 1e-12 && --iterLimit > 0
-          sinLambda = Math.sin(lambda)
-          cosLambda = Math.cos(lambda)
-          sinSigma = \
-          Math.sqrt((cosU2 * sinLambda) * (cosU2 * sinLambda) +
-                    (cosU1 * sinU2 - sinU1 * cosU2 * cosLambda) *
-                    (cosU1 * sinU2 - sinU1 * cosU2 * cosLambda))
+        while (lambda - lambda_p).abs > 1e-12 && --iter_limit > 0
+          sin_lambda = Math.sin(lambda)
+          cos_lambda = Math.cos(lambda)
+          sin_sigma = \
+          Math.sqrt((cos_u2 * sin_lambda) * (cos_u2 * sin_lambda) +
+                    (cos_u1 * sin_u2 - sin_u1 * cos_u2 * cos_lambda) *
+                    (cos_u1 * sin_u2 - sin_u1 * cos_u2 * cos_lambda))
 
-          return 0 if sinSigma == 0 # coincident points
+          return 0 if sin_sigma == 0 # coincident points
 
-          cosSigma   = sinU1 * sinU2 + cosU1 * cosU2 * cosLambda
-          sigma      = Math.atan2(sinSigma, cosSigma)
-          sinAlpha   = cosU1 * cosU2 * sinLambda / sinSigma
-          cosSqAlpha = 1 - sinAlpha * sinAlpha
-          cos2SigmaM = cosSigma - 2 * sinU1 * sinU2 / cosSqAlpha
+          cos_sigma   = sin_u1 * sin_u2 + cos_u1 * cos_u2 * cos_lambda
+          sigma      = Math.atan2(sin_sigma, cos_sigma)
+          sin_alpha   = cos_u1 * cos_u2 * sin_lambda / sin_sigma
+          cos_sq_alpha = 1 - sin_alpha * sin_alpha
+          cos2_sigma_m = cos_sigma - 2 * sin_u1 * sin_u2 / cos_sq_alpha
 
-          # equatorial line: cosSqAlpha=0
-          cos2SigmaM = 0 if cos2SigmaM.nan?
+          # equatorial line: cos_sq_alpha=0
+          cos2_sigma_m = 0 if cos2_sigma_m.nan?
 
-          c = f / 16 * cosSqAlpha * (4 + f * (4 - 3 * cosSqAlpha))
-          lambdaP = lambda
-          lambda = l + (1 - c) * f * sinAlpha * (sigma + c * sinSigma *
-            (cos2SigmaM + c * cosSigma * (-1 + 2 * cos2SigmaM *
-                cos2SigmaM)))
+          c = f / 16 * cos_sq_alpha * (4 + f * (4 - 3 * cos_sq_alpha))
+          lambda_p = lambda
+          lambda = l + (1 - c) * f * sin_alpha * (sigma + c * sin_sigma *
+            (cos2_sigma_m + c * cos_sigma * (-1 + 2 * cos2_sigma_m *
+                cos2_sigma_m)))
         end
 
-        return NaN if iterLimit == 0 # formula failed to converge
+        return NaN if iter_limit == 0 # formula failed to converge
 
-        uSq = cosSqAlpha * (a * a - b * b) / (b * b)
-        a_bis = 1 + uSq / 16_384 * (4096 + uSq * (-768 + uSq * (320 - 175 * uSq)))
-        b_bis = uSq / 1024 * (256 + uSq * (-128 + uSq * (74 - 47 * uSq)))
-        deltaSigma = b_bis * sinSigma * (cos2SigmaM + b_bis / 4 *
-          (cosSigma * (-1 + 2 * cos2SigmaM * cos2SigmaM) - b_bis / 6 *
-            cos2SigmaM * (-3 + 4 * sinSigma * sinSigma) * (-3 + 4 *
-              cos2SigmaM * cos2SigmaM)))
+        usq = cos_sq_alpha * (a * a - b * b) / (b * b)
+        a_bis = 1 + usq / 16_384 * (4096 + usq * (-768 + usq * (320 - 175 * usq)))
+        b_bis = usq / 1024 * (256 + usq * (-128 + usq * (74 - 47 * usq)))
+        delta_sigma = b_bis * sin_sigma * (cos2_sigma_m + b_bis / 4 *
+          (cos_sigma * (-1 + 2 * cos2_sigma_m * cos2_sigma_m) - b_bis / 6 *
+            cos2_sigma_m * (-3 + 4 * sin_sigma * sin_sigma) * (-3 + 4 *
+              cos2_sigma_m * cos2_sigma_m)))
 
-        b * a_bis * (sigma - deltaSigma)
+        b * a_bis * (sigma - delta_sigma)
       end
 
       # Orthogonal Distance
@@ -146,7 +153,7 @@ module GeoRuby
         else
           [head.x + res * c, head.y + res * d]
         end
-        # todo benchmark if worth creating an instance
+        # TODO: benchmark if worth creating an instance
         # euclidian_distance(Point.from_x_y(xx, yy))
         Math.sqrt((@x - xx)**2 + (@y - yy)**2)
       end
@@ -194,7 +201,8 @@ module GeoRuby
         @x == other.x && @y == other.y && @z == other.z && @m == other.m
       end
 
-      # Binary representation of a point. It lacks some headers to be a valid EWKB representation.
+      # Binary representation of a point.
+      # It lacks some headers to be a valid EWKB representation.
       def binary_representation(allow_z = true, allow_m = true) #:nodoc:
         bin_rep = [@x.to_f, @y.to_f].pack('EE')
         bin_rep += [@z.to_f].pack('E') if @with_z && allow_z # Default value so no crash
@@ -239,7 +247,7 @@ module GeoRuby
         gml_ns = options[:gml_ns] || 'gml'
         out = "<#{georss_ns}:where>\n<#{gml_ns}:Point>\n<#{gml_ns}:pos>"
         out += "#{y} #{x}"
-        out += "</#{gml_ns}:pos>\n</#{gml_ns}:Point>\n</#{georss_ns}:where>\n"
+        out + "</#{gml_ns}:pos>\n</#{gml_ns}:Point>\n</#{georss_ns}:where>\n"
       end
 
       # outputs the geometry in kml format : options are
@@ -254,7 +262,7 @@ module GeoRuby
         out += "<coordinates>#{x},#{y}"
         out += ",#{options[:fixed_z] || z || 0}" if options[:allow_z]
         out += "</coordinates>\n"
-        out += "</Point>\n"
+        out + "</Point>\n"
       end
 
       def html_representation(options = {})
@@ -262,7 +270,7 @@ module GeoRuby
         out =  '<span class=\'geo\'>'
         out += "<abbr class='latitude' title='#{x}'>#{as_lat(options)}</abbr>"
         out += "<abbr class='longitude' title='#{y}'>#{as_long(options)}</abbr>"
-        out += '</span>'
+        out + '</span>'
       end
 
       # Human representation of the geom, don't use directly, use:
@@ -272,7 +280,8 @@ module GeoRuby
           deg = v.to_i.abs
           min = (60 * (v.abs - deg)).to_i
           labs = (v * 1_000_000).abs / 1_000_000
-          sec = ((((labs - labs.to_i) * 60) - ((labs - labs.to_i) * 60).to_i) * 100_000) * 60 / 100_000
+          sec = ((((labs - labs.to_i) * 60) -
+              ((labs - labs.to_i) * 60).to_i) * 100_000) * 60 / 100_000
           str = options[:full] ? '%.i°%.2i′%05.2f″' :  '%.i°%.2i′%02.0f″'
           if options[:coord]
             out = str % [deg, min, sec]
@@ -286,13 +295,13 @@ module GeoRuby
       # Outputs the geometry coordinate in human format:
       # 47°52′48″N
       def as_lat(options = {})
-        human_representation(options,  x: x).join
+        human_representation(options, x: x).join
       end
 
       # Outputs the geometry coordinate in human format:
       # -20°06′00W″
       def as_long(options = {})
-        human_representation(options,  y: y).join
+        human_representation(options, y: y).join
       end
       alias_method :as_lng, :as_long
 
@@ -318,7 +327,7 @@ module GeoRuby
           @y < 0 ? 3 * HALFPI : HALFPI
         else
           th = Math.atan(@y / @x)
-          th += 2 * Math::PI if r > 0
+          r > 0 ? th + 2 * Math::PI : th
         end
       end
 
@@ -342,13 +351,12 @@ module GeoRuby
         set_x_y_z(-@x, -@y, -@z)
       end
 
-      # TODO Perhaps should support with_m analogous to from_coordinates?
+      # Helper to get all coordinates as array.
       def to_coordinates
-        if with_z
-          [x, y, z]
-        else
-          [x, y]
-        end
+        coord = [x, y]
+        coord << z if with_z
+        coord << m if with_m
+        coord
       end
 
       # Simple helper for 2D maps
