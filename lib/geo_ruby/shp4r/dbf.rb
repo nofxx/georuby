@@ -9,6 +9,8 @@ rescue LoadError
 end
 
 module GeoRuby
+
+  # Ruby .shp files
   module Shp4r
     Dbf = DBF
 
@@ -20,11 +22,12 @@ module GeoRuby
       end
 
       class Field < Column::Base
-        def initialize(name, type, length, decimal = 0, version = 1, encoding = nil)
-          super(name, type, length, decimal, version, encoding)
+        def initialize(name, type, length, decimal = 0, version = 1, enc = nil)
+          super(name, type, length, decimal, version, enc)
         end
       end
 
+      # Main DBF File Reader
       class Reader < Table
         alias_method :fields, :columns
         def header_length
