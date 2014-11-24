@@ -5,10 +5,12 @@ gem 'rake'
 group :test do
   gem 'dbf'
   gem 'json'
+  gem 'nokogiri'
+
   gem 'rspec'
   gem 'guard'
   gem 'guard-rspec'
-  gem 'nokogiri'
+  gem 'guard-rubocop'
 
   if ENV['CI']
     gem 'coveralls', require: false
