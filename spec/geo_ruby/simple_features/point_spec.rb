@@ -293,7 +293,7 @@ describe GeoRuby::SimpleFeatures::Point do
 
     end
 
-    describe "Bearing" do
+    describe 'Bearing' do
 
       it 'should calculate the bearing from apoint to another in degrees' do
         expect(p1.bearing_to(p2)).to be_within(0.01).of(45.0)

@@ -1,5 +1,4 @@
 module GeoRuby
-
   # Raised when an error in the GeoRSS string is detected
   class GeorssFormatError < StandardError
   end

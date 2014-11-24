@@ -162,8 +162,8 @@ module GeoRuby #:nodoc:
         end
 
         allow_z = (with_z || !options[:altitude].nil?) &&
-          (!options[:altitude_mode].nil?) &&
-          options[:atitude_mode] != 'clampToGround'
+                  (!options[:altitude_mode].nil?) &&
+                  options[:atitude_mode] != 'clampToGround'
         fixed_z = options[:altitude]
 
         kml_representation(options.merge(id_attr: id_attr, geom_data: geom_data,

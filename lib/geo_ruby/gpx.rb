@@ -111,5 +111,3 @@ module GeoRuby
     end
   end
 end
-
-require 'geo_ruby/gpx4r/gpx'

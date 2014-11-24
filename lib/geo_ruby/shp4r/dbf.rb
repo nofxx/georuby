@@ -9,7 +9,6 @@ rescue LoadError
 end
 
 module GeoRuby
-
   # Ruby .shp files
   module Shp4r
     Dbf = DBF
