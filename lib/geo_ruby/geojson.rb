@@ -9,11 +9,11 @@ end
 
 module GeoRuby
   # Raised when an error in the GeoJSON string is detected
-  class GeojsonFormatError < StandardError
+  class GeoJSONFormatError < StandardError
   end
 
   # Class added to support geojson 'Feature' objects
-  class GeojsonFeature
+  class GeoJSONFeature
     attr_accessor :geometry, :properties, :id
 
     def initialize(geometry, properties = {}, id = nil)
@@ -26,7 +26,9 @@ module GeoRuby
       if (self.class != other.class)
         false
       else
-        (id == other.id) && (geometry == other.geometry) && (properties == other.properties)
+        (id == other.id) &&
+          (geometry == other.geometry) &&
+          (properties == other.properties)
       end
     end
 
@@ -46,7 +48,7 @@ module GeoRuby
   end
 
   # Class added to support geojson 'Feature Collection' objects
-  class GeojsonFeatureCollection
+  class GeoJSONFeatureCollection
     attr_accessor :features
 
     def initialize(features)
@@ -74,7 +76,8 @@ module GeoRuby
     alias_method :as_geojson, :to_json
   end
 
-  class GeojsonParser
+  # GeoJSON main parser
+  class GeoJSONParser
     include GeoRuby::SimpleFeatures
     attr_reader :geometry
 
@@ -89,14 +92,15 @@ module GeoRuby
     def parse_geohash(geohash, srid)
       srid = srid_from_crs(geohash['crs']) || srid
       case geohash['type']
-      when 'Point', 'MultiPoint', 'LineString', 'MultiLineString', 'Polygon', 'MultiPolygon', 'GeometryCollection'
+      when 'Point', 'MultiPoint', 'LineString', 'MultiLineString', 'Polygon',
+           'MultiPolygon', 'GeometryCollection'
         @geometry = parse_geometry(geohash, srid)
       when 'Feature'
         @geometry = parse_geojson_feature(geohash, srid)
       when 'FeatureCollection'
         @geometry = parse_geojson_feature_collection(geohash, srid)
       else
-        GeojsonFormatError.new('Unknown GeoJSON type')
+        fail GeoJSONFormatError, 'Unknown GeoJSON type'
       end
     end
 
@@ -119,7 +123,7 @@ module GeoRuby
     def parse_geojson_feature(geohash, srid)
       srid = srid_from_crs(geohash['crs']) || srid
       geometry = parse_geometry(geohash['geometry'], srid)
-      GeojsonFeature.new(geometry, geohash['properties'], geohash['id'])
+      GeoJSONFeature.new(geometry, geohash['properties'], geohash['id'])
     end
 
     def parse_geojson_feature_collection(geohash, srid)
@@ -128,7 +132,7 @@ module GeoRuby
       geohash['features'].each do |feature|
         features << parse_geojson_feature(feature, srid)
       end
-      GeojsonFeatureCollection.new(features)
+      GeoJSONFeatureCollection.new(features)
     end
 
     def srid_from_crs(crs)
@@ -139,5 +143,5 @@ module GeoRuby
       end
       nil
     end
-  end # GeojsonParser
+  end # GeoJSONParser
 end # GeoRuby

@@ -96,7 +96,9 @@ describe GeoRuby::GeorssParser do
     expect(geom.lon).to eql(3.0)
 
     # simple with tags
-    str = "<georss:point featuretypetag=\"hoyoyo\"  elev=\"45.7\" \n floor=\"2\" relationshiptag=\"puyopuyo\" radius=\"42\" > 4 \n 3 \t</georss:point >"
+    str = "<georss:point featuretypetag=\"hoyoyo\"  elev=\"45.7\" \n" \
+          "floor=\"2\" relationshiptag=\"puyopuyo\" radius=\"42\" > 4" \
+          "\n 3 \t</georss:point >"
     geom, tags = GeoRuby::SimpleFeatures::Geometry.from_georss_with_tags(str)
     expect(geom.class).to eql(GeoRuby::SimpleFeatures::Point)
     expect(geom.lat).to eql(4.0)
@@ -214,12 +216,20 @@ describe GeoRuby::GeorssParser do
   end
 
   it 'does not raise type error if polygon geom data not provided' do
-    polygon =  GeoRuby::SimpleFeatures::Polygon.from_coordinates([[[12.4, -45.3], [45.4, 41.6], [4.456, 1.0698], [12.4, -45.3]], [[2.4, 5.3], [5.4, 1.4263], [14.46, 1.06], [2.4, 5.3]]], 256)
+    polygon = GeoRuby::SimpleFeatures::Polygon
+      .from_coordinates([[
+                            [12.4, -45.3],
+                            [45.4, 41.6],
+                            [4.456, 1.0698],
+                            [12.4, -45.3]],
+                          [[2.4, 5.3], [5.4, 1.4263], [14.46, 1.06], [2.4, 5.3]]
+                        ], 256)
     expect { polygon.kml_representation }.not_to raise_error
   end
 
   it 'does not raise type error if linestring geom data not provided' do
-    ls = GeoRuby::SimpleFeatures::LineString.from_coordinates([[5.7, 12.45], [67.55, 54]], 256)
+    ls = GeoRuby::SimpleFeatures::LineString
+         .from_coordinates([[5.7, 12.45], [67.55, 54]], 256)
     expect { ls.kml_representation }.not_to raise_error
   end
 

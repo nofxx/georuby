@@ -7,7 +7,7 @@ DATA_DIR = File.dirname(__FILE__) + '/../data/geojson/'
 #
 # TODO Refactor comon test approaches into methods
 # TODO Add use of contexts?
-describe GeoRuby::GeojsonParser do
+describe GeoRuby::GeoJSONParser do
 
   it 'should create a specified GeoRuby::SimpleFeatures::Point' do
     point_json = %( { "type": "Point", "coordinates": [100.0, 0.0] } )
@@ -121,7 +121,7 @@ describe GeoRuby::GeojsonParser do
       }
     EOJ
     f = GeoRuby::SimpleFeatures::Geometry.from_geojson(feature_json)
-    expect(f.class).to eql(GeoRuby::GeojsonFeature)
+    expect(f.class).to eql(GeoRuby::GeoJSONFeature)
     feature_hash = JSON.parse(feature_json)
     expect(f.id).to eql(feature_hash['id'])
     expect(f.properties).to eql(feature_hash['properties'])
@@ -132,7 +132,7 @@ describe GeoRuby::GeojsonParser do
   it 'should create a specified FeatureCollection' do
     fcol_json = File.read(DATA_DIR + 'feature_collection.json')
     fcol = GeoRuby::SimpleFeatures::Geometry.from_geojson(fcol_json)
-    expect(fcol.class).to eql(GeoRuby::GeojsonFeatureCollection)
+    expect(fcol.class).to eql(GeoRuby::GeoJSONFeatureCollection)
     fcol_hash = JSON.parse(fcol_json)
     fcol.features.each_with_index do |f, i|
       fgh = fcol_hash['features'][i]['geometry']
