@@ -73,7 +73,13 @@ Creating a 3D Point:
 
 Creating a LineString:
 
-     LineString.from_coordinates([[1,1],[2,2]],4326))
+    LineString.from_coordinates([[1,1],[2,2]],4326))
+
+
+Creating a Polygon:
+
+    Polygon.from_coordinates([[1,1],[2,2]],4326))
+    LineString.from_linear_rings(rings)
 
 
 Input and output
@@ -156,7 +162,7 @@ thoroughly so caveat emptor and backup before performing any destructive operati
 
 
 GPX Reading
----
+-----------
 
 You can read and convert GPX Files to LineString/Polygon:
 
@@ -166,7 +172,7 @@ You can read and convert GPX Files to LineString/Polygon:
 
 
 GeoJSON Support
--------
+---------------
 
 Basic GeoJSON support has been implemented per v1.0 of the {spec}[http://geojson.org/geojson-spec.html].
 
