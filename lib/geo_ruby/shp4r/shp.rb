@@ -147,10 +147,10 @@ module GeoRuby
       end
 
       # TODO : refactor to minimize redundant code
-      def get_record(i)
-        return nil if record_count <= i || i < 0
-        dbf_record = @dbf.record(i)
-        @shx.seek(100 + 8 * i) # 100 is the header length
+      def get_record(index)
+        return nil if record_count <= index || index < 0
+        dbf_record = @dbf.record(index)
+        @shx.seek(100 + 8 * index) # 100 is the header length
         offset, length = @shx.read(8).unpack('N2')
         @shp.seek(offset * 2 + 8)
         rec_shp_type = @shp.read(4).unpack('V')[0]
