@@ -604,8 +604,10 @@ module GeoRuby
           end
         else
           # multilinestring
-          str << [geometry.length, geometry.reduce(0) { |l, ls| l + ls.length }].pack('V2')
-          str << geometry.reduce([0]) { |a, ls| a << (a.last + ls.length) }.pack("V#{geometry.length}") # last element of the previous array is dropped
+          str << [geometry.length, geometry.reduce(0) { |a, e| a + e.length }].pack('V2')
+          str << geometry.reduce([0]) do |a, e|
+            a << (a.last + e.length) # last element of the previous array is dropped
+          end.pack("V#{geometry.length}")
           geometry.each do |ls|
             ls.each do |point|
               str << [point.x, point.y].pack('E2')
@@ -634,8 +636,13 @@ module GeoRuby
 
       def build_polygon(geometry, str)
         if geometry.is_a? GeoRuby::SimpleFeatures::Polygon
-          str << [geometry.length, geometry.reduce(0) { |l, lr| l + lr.length }].pack('V2')
-          str << geometry.reduce([0]) { |a, lr| a << (a.last + lr.length) }.pack("V#{geometry.length}") # last element of the previous array is dropped
+          str << [geometry.length,
+            geometry.reduce(0) { |a, e| a + e.length }
+          ].pack('V2')
+          # last element of the previous array is dropped
+          str << geometry.reduce([0]) do |a, e|
+            a << (a.last + e.length)
+          end.pack("V#{geometry.length}")
           geometry.each do |lr|
             lr.each do |point|
               str << [point.x, point.y].pack('E2')
@@ -643,9 +650,12 @@ module GeoRuby
           end
         else
           # multipolygon
-          num_rings = geometry.reduce(0) { |l, poly| l + poly.length }
+          num_rings = geometry.reduce(0) { |a, e| a + e.length }
           str << [num_rings, geometry.reduce(0) { |l, poly| l + poly.reduce(0) { |l2, lr| l2 + lr.length } }].pack('V2')
-          str << geometry.reduce([0]) { |a, poly| poly.reduce(a) { |a2, lr| a2 << (a2.last + lr.length) } }.pack("V#{num_rings}") # last element of the previous array is dropped
+          # last element of the previous array is dropped
+          str << geometry.reduce([0]) do |a, e|
+            e.reduce(a) { |a2, lr| a2 << (a2.last + lr.length) }
+          end.pack("V#{num_rings}")
           geometry.each do |poly|
             poly.each do |lr|
               lr.each do |point|
