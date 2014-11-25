@@ -66,7 +66,7 @@ module GeoRuby
         str = [9994, 0, 0, 0, 0, 0, 50, 1000, shp_type, 0, 0, 0, 0, 0, 0, 0, 0].pack('N7V2E8')
         shp_io << str
         shx_io << str
-        rec_length = 1 + fields.inject(0) { |s, f| s + f.length } #+1 for the prefixed space (active record marker)
+        rec_length = 1 + fields.reduce(0) { |s, f| s + f.length } #+1 for the prefixed space (active record marker)
         dbf_io << [3, 107, 7, 7, 0, 33 + 32 * fields.length, rec_length].pack('c4Vv2x20') # 32 bytes for first part of header
         fields.each do |field|
           dbf_io << [field.name, field.type, field.length, field.decimal].pack('a10xax4CCx14')
@@ -604,8 +604,8 @@ module GeoRuby
           end
         else
           # multilinestring
-          str << [geometry.length, geometry.inject(0) { |l, ls| l + ls.length }].pack('V2')
-          str << geometry.inject([0]) { |a, ls| a << (a.last + ls.length) }.pack("V#{geometry.length}") # last element of the previous array is dropped
+          str << [geometry.length, geometry.reduce(0) { |l, ls| l + ls.length }].pack('V2')
+          str << geometry.reduce([0]) { |a, ls| a << (a.last + ls.length) }.pack("V#{geometry.length}") # last element of the previous array is dropped
           geometry.each do |ls|
             ls.each do |point|
               str << [point.x, point.y].pack('E2')
@@ -634,8 +634,8 @@ module GeoRuby
 
       def build_polygon(geometry, str)
         if geometry.is_a? GeoRuby::SimpleFeatures::Polygon
-          str << [geometry.length, geometry.inject(0) { |l, lr| l + lr.length }].pack('V2')
-          str << geometry.inject([0]) { |a, lr| a << (a.last + lr.length) }.pack("V#{geometry.length}") # last element of the previous array is dropped
+          str << [geometry.length, geometry.reduce(0) { |l, lr| l + lr.length }].pack('V2')
+          str << geometry.reduce([0]) { |a, lr| a << (a.last + lr.length) }.pack("V#{geometry.length}") # last element of the previous array is dropped
           geometry.each do |lr|
             lr.each do |point|
               str << [point.x, point.y].pack('E2')
@@ -643,9 +643,9 @@ module GeoRuby
           end
         else
           # multipolygon
-          num_rings = geometry.inject(0) { |l, poly| l + poly.length }
-          str << [num_rings, geometry.inject(0) { |l, poly| l + poly.inject(0) { |l2, lr| l2 + lr.length } }].pack('V2')
-          str << geometry.inject([0]) { |a, poly| poly.inject(a) { |a2, lr| a2 << (a2.last + lr.length) } }.pack("V#{num_rings}") # last element of the previous array is dropped
+          num_rings = geometry.reduce(0) { |l, poly| l + poly.length }
+          str << [num_rings, geometry.reduce(0) { |l, poly| l + poly.reduce(0) { |l2, lr| l2 + lr.length } }].pack('V2')
+          str << geometry.reduce([0]) { |a, poly| poly.reduce(a) { |a2, lr| a2 << (a2.last + lr.length) } }.pack("V#{num_rings}") # last element of the previous array is dropped
           geometry.each do |poly|
             poly.each do |lr|
               lr.each do |point|

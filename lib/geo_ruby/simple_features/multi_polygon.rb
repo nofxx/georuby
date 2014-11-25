@@ -13,7 +13,7 @@ module GeoRuby
       end
 
       def points
-        @points ||= geometries.inject([]) do |arr, r|
+        @points ||= geometries.reduce([]) do |arr, r|
           arr.concat(r.rings.map(&:points).flatten)
         end
       end

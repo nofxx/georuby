@@ -14,6 +14,8 @@ module GeoRuby
     include GeoRuby::SimpleFeatures
     attr_reader :georss_tags, :geometry
 
+    GEORSS_REGEX = /=['"]([^"']*)['"]/
+
     # Parses the georss geometry  passed as argument and notifies
     # the factory of events the parser assumes
     def parse(georss, with_tags = false)
@@ -128,19 +130,26 @@ module GeoRuby
 
         # geometry found: parse tags
         return unless with_tags
-
-        case tags
-        when /featuretypetag=['"]([^"']*)['"]/
+        if tags =~ /featuretypetag#{GEORSS_REGEX}/
           @georss_tags.featuretypetag = Regexp.last_match[1]
-        when /relationshiptag=['"]([^'"]*)['"]/
+        end
+
+        if tags =~ /relationshiptag#{GEORSS_REGEX}/
           @georss_tags.relationshiptag = Regexp.last_match[1]
-        when /elev=['"]([^'"]*)['"]/
+        end
+
+        if tags =~ /elev#{GEORSS_REGEX}/
           @georss_tags.elev = Regexp.last_match[1].to_f
-        when /floor=['"]([^'"]*)['"]/
+        end
+
+        if tags =~ /floor#{GEORSS_REGEX}/
           @georss_tags.floor = Regexp.last_match[1].to_i
-        when /radius=['"]([^'"]*)['"]/
+        end
+
+        if tags =~ /radius#{GEORSS_REGEX}/
           @georss_tags.radius = Regexp.last_match[1].to_f
         end
+
       end
     end
   end

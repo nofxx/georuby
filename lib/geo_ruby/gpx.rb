@@ -15,7 +15,7 @@ module GeoRuby
           File.exist? @file_root + '.gpx'
         @points, @envelope = [], nil
         @gpx = File.open(@file_root + '.gpx', 'rb')
-        opt = opts.inject({}) { |o, h| h.merge(o) }
+        opt = opts.reduce({}) { |a, e| e.merge(a) }
         parse_file(opt[:with_z], opt[:with_m])
       end
 

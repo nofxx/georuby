@@ -218,11 +218,13 @@ describe GeoRuby::GeorssParser do
   it 'does not raise type error if polygon geom data not provided' do
     polygon = GeoRuby::SimpleFeatures::Polygon
       .from_coordinates([[
-                            [12.4, -45.3],
-                            [45.4, 41.6],
-                            [4.456, 1.0698],
-                            [12.4, -45.3]],
-                          [[2.4, 5.3], [5.4, 1.4263], [14.46, 1.06], [2.4, 5.3]]
+                            [12.4, -45.3], [45.4, 41.6],
+                            [4.456, 1.0698], [12.4, -45.3]
+                          ],
+                          [
+                            [2.4, 5.3], [5.4, 1.4263],
+                            [14.46, 1.06], [2.4, 5.3]
+                          ]
                         ], 256)
     expect { polygon.kml_representation }.not_to raise_error
   end
