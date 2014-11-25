@@ -92,14 +92,14 @@ module GeoRuby
       end
 
       # Tests the equality of line strings
-      def ==(other_line_string)
-        if other_line_string.class != self.class ||
-           other_line_string.length != length
+      def ==(other)
+        if other.class != self.class ||
+           other.length != length
           false
         else
           index = 0
           while index < length
-            return false if self[index] != other_line_string[index]
+            return false if self[index] != other[index]
             index += 1
           end
           true
@@ -131,22 +131,24 @@ module GeoRuby
       def georss_simple_representation(options) #:nodoc:
         georss_ns = options[:georss_ns] || 'georss'
         geom_attr = options[:geom_attr]
-        "<#{georss_ns}:line#{geom_attr}>" + georss_poslist + "</#{georss_ns}:line>\n"
+        "<#{georss_ns}:line#{geom_attr}>#{georss_poslist}</#{georss_ns}:line>\n"
       end
+
       # georss w3c representation : outputs the first point of the line
       def georss_w3cgeo_representation(options) #:nodoc:
         w3cgeo_ns = options[:w3cgeo_ns] || 'geo'
         "<#{w3cgeo_ns}:lat>#{self[0].y}</#{w3cgeo_ns}:lat>\n"\
         "<#{w3cgeo_ns}:long>#{self[0].x}</#{w3cgeo_ns}:long>\n"
       end
+
       # georss gml representation
       def georss_gml_representation(options) #:nodoc:
         georss_ns = options[:georss_ns] || 'georss'
         gml_ns = options[:gml_ns] || 'gml'
 
-        result = "<#{georss_ns}:where>\n<#{gml_ns}:LineString>\n<#{gml_ns}:posList>\n"
-        result += georss_poslist
-        result + "\n</#{gml_ns}:posList>\n</#{gml_ns}:LineString>\n</#{georss_ns}:where>\n"
+        "<#{georss_ns}:where>\n<#{gml_ns}:LineString>\n<#{gml_ns}:posList>\n" \
+        "#{georss_poslist}\n</#{gml_ns}:posList>\n</#{gml_ns}:LineString>\n" \
+        "</#{georss_ns}:where>\n"
       end
 
       def georss_poslist #:nodoc:
@@ -189,14 +191,10 @@ module GeoRuby
           d = list[i].orthogonal_distance(list[0], list[-1])
           index, dmax = i, d if d > dmax
         end
-
-        if dmax >= epsilon
-          res1 = do_simplify(list[0..index], epsilon)
-          res2 = do_simplify(list[index..-1], epsilon)
-          res1[0..-2] + res2[0..-1]
-        else
-          [list[0], list[-1]]
-        end
+        return [list[0], list[-1]] if dmax < epsilon
+        res1 = do_simplify(list[0..index], epsilon)
+        res2 = do_simplify(list[index..-1], epsilon)
+        res1[0..-2] + res2[0..-1]
       end
 
       def to_coordinates

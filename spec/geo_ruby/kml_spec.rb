@@ -63,21 +63,25 @@ describe GeoRuby::KmlParser do
   end
 
   it 'should parse 3D geometries correctly' do
-    # not testing generation because GeoRuby kml generation logic currently requires additional
-    # XML nodes to actually output 3D coordinate information.  I might modify that behavior
+    # not testing generation because GeoRuby kml generation logic currently
+    # requires additional XML nodes to actually output 3D coordinate
+    # information. I might modify that behavior.
     g = @kml_parser.parse(POINT3D)
     expect(g).not_to eql(nil)
     expect(g.with_z).to eql(true)
-    # g.as_kml(:altitude_mode => "clampToGround").gsub(/\n/,'').should eql(POINT3D)
+    # g.as_kml(:altitude_mode => "clampToGround").gsub(/\n/,'')
+    #  .should eql(POINT3D)
 
     g = @kml_parser.parse(LINESTRING3D)
     expect(g).not_to eql(nil)
     expect(g.with_z).to eql(true)
-    # g.as_kml(:altitude_mode => "clampToGround").gsub(/\n/,'').should eql(LINESTRING3D)
+    # g.as_kml(:altitude_mode => "clampToGround").gsub(/\n/,'')
+    #  .should eql(LINESTRING3D)
   end
 
   it 'should yield a geometries with functional bounding boxes' do
-    [LINESTRING, LINEARRING, POLYGON, COMPLEX_POLYGON, MULTIGEOMETRY, LINESTRING3D].each do |kml|
+    [LINESTRING, LINEARRING, POLYGON, COMPLEX_POLYGON,
+      MULTIGEOMETRY, LINESTRING3D].each do |kml|
       @kml_parser.parse(kml)
       g = @factory.geometry
       expect do

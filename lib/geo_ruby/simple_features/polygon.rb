@@ -110,6 +110,7 @@ module GeoRuby
 
         "<#{w3cgeo_ns}:lat>#{self[0][0].y}</#{w3cgeo_ns}:lat>\n<#{w3cgeo_ns}:long>#{self[0][0].x}</#{w3cgeo_ns}:long>\n"
       end
+
       # georss gml representation
       def georss_gml_representation(options)
         georss_ns = options[:georss_ns] || 'georss'

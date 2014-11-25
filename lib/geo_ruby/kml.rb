@@ -8,11 +8,13 @@ module GeoRuby
       'Polygon' => SimpleFeatures::Polygon,
       'MultiGeometry' => SimpleFeatures::GeometryCollection
     }
+
     def initialize(factory)
       @factory = factory
       @buffer = ''
       @with_z = false
     end
+
     # argument should be a valid kml geometry fragment ie. <Point> .... </Point>
     # returns the GeoRuby geometry object back
     def parse(kml)

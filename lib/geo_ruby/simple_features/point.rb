@@ -245,9 +245,8 @@ module GeoRuby
       def georss_gml_representation(options) #:nodoc:
         georss_ns = options[:georss_ns] || 'georss'
         gml_ns = options[:gml_ns] || 'gml'
-        out = "<#{georss_ns}:where>\n<#{gml_ns}:Point>\n<#{gml_ns}:pos>"
-        out += "#{y} #{x}"
-        out + "</#{gml_ns}:pos>\n</#{gml_ns}:Point>\n</#{georss_ns}:where>\n"
+        "<#{georss_ns}:where>\n<#{gml_ns}:Point>\n<#{gml_ns}:pos>#{y} #{x}" \
+        "</#{gml_ns}:pos>\n</#{gml_ns}:Point>\n</#{georss_ns}:where>\n"
       end
 
       # outputs the geometry in kml format : options are
@@ -284,10 +283,11 @@ module GeoRuby
               ((labs - labs.to_i) * 60).to_i) * 100_000) * 60 / 100_000
           str = options[:full] ? '%.i°%.2i′%05.2f″' :  '%.i°%.2i′%02.0f″'
           if options[:coord]
-            out = str % [deg, min, sec]
-            out += k == :x ? v > 0 ? 'N' : 'S' : v > 0 ? 'E' : 'W'
+            out = format(str, deg, min, sec)
+            # Add cardinal
+            out + (k == :x ? v > 0 ? 'N' : 'S' : v > 0 ? 'E' : 'W')
           else
-            str % [v.to_i, min, sec]
+            format(str, v.to_i, min, sec)
           end
         end
       end
@@ -370,12 +370,12 @@ module GeoRuby
       end
 
       # Creates a point from an array of coordinates
-      def self.from_coordinates(coords, srid = DEFAULT_SRID, with_z = false, with_m = false)
-        if ! (with_z || with_m)
+      def self.from_coordinates(coords, srid = DEFAULT_SRID, z = false, m = false)
+        if !(z || m)
           from_x_y(coords[0], coords[1], srid)
-        elsif with_z && with_m
+        elsif z && m
           from_x_y_z_m(coords[0], coords[1], coords[2], coords[3], srid)
-        elsif with_z
+        elsif z
           from_x_y_z(coords[0], coords[1], coords[2], srid)
         else
           from_x_y_m(coords[0], coords[1], coords[2], srid)
