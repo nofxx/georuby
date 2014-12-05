@@ -108,7 +108,7 @@ the altitude data will not be output even if present. Envelopes output a LatLonA
 For the output, the following geometric types are supported : Point, LineString, Polygon.
 
 
-SHP reading et writing
+SHP reading and writing
 ---
 
 Georuby has support for reading ESRI shapefiles (http://www.esri.com/library/whitepapers/pdfs/shapefile.pdf).
