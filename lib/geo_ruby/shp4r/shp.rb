@@ -3,7 +3,8 @@ require 'fileutils' unless defined?(FileUtils)
 
 module GeoRuby
   module Shp4r
-    # Enumerates all the types of SHP geometries. The MULTIPATCH one is the only one not currently supported by Geo_ruby.
+    # Enumerates all the types of SHP geometries.
+    # The MULTIPATCH one is the only one not currently supported by Geo_ruby.
     module ShpType
       NULL_SHAPE = 0
       POINT = 1
@@ -20,13 +21,16 @@ module GeoRuby
       MULTIPOINTM = 28
     end
 
-    # An interface to an ESRI shapefile (actually 3 files : shp, shx and dbf). Currently supports only the reading of geometries.
+    # An interface to an ESRI shapefile (actually 3 files : shp, shx and dbf).
+    # Currently supports only the reading of geometries.
     class ShpFile
-      attr_reader :shp_type, :record_count, :xmin, :ymin, :xmax, :ymax, :zmin, :zmax, :mmin, :mmax, :file_root, :file_length
+      attr_reader :shp_type, :record_count, :xmin, :ymin, :xmax, :ymax,
+                  :zmin, :zmax, :mmin, :mmax, :file_root, :file_length
 
       include Enumerable
 
-      # Opens a SHP file. Both "abc.shp" and "abc" are accepted. The files "abc.shp", "abc.shx" and "abc.dbf" must be present
+      # Opens a SHP file. Both "abc.shp" and "abc" are accepted.
+      # The files "abc.shp", "abc.shx" and "abc.dbf" must be present
       def initialize(file)
         # strip the shp out of the file if present
         @file_root = file.gsub(/.shp$/i, '')
@@ -41,12 +45,15 @@ module GeoRuby
         read_index
       end
 
-      # force the reopening of the files compsing the shp. Close before calling this.
+      # force the reopening of the files compsing the shp.
+      # Close before calling this.
       def reload!
         initialize(@file_root)
       end
 
-      # opens a SHP "file". If a block is given, the ShpFile object is yielded to it and is closed upon return. Else a call to <tt>open</tt> is equivalent to <tt>ShpFile.new(...)</tt>.
+      # opens a SHP "file". If a block is given, the ShpFile object
+      # is yielded to it and is closed upon return.
+      # Else a call to <tt>open</tt> is equivalent to <tt>ShpFile.new(...)</tt>.
       def self.open(file)
         shpfile = ShpFile.new(file)
         if block_given?
@@ -57,7 +64,9 @@ module GeoRuby
         end
       end
 
-      # create a new Shapefile of the specified shp type (see ShpType) and with the attribute specified in the +fields+ array (see Dbf::Field). If a block is given, the ShpFile object newly created is passed to it.
+      # create a new Shapefile of the specified shp type (see ShpType) and
+      # with the attribute specified in the +fields+ array (see Dbf::Field).
+      # If a block is given, the ShpFile object newly created is passed to it.
       def self.create(file, shp_type, fields, &proc)
         file_root = file.gsub(/.shp$/i, '')
         shx_io = File.open(file_root + '.shx', 'wb')
@@ -87,7 +96,8 @@ module GeoRuby
         @shp.close
       end
 
-      # starts a transaction, to buffer physical file operations on the shapefile components.
+      # starts a transaction, to buffer physical file operations
+      # on the shapefile components.
       def transaction
         trs = ShpTransaction.new(self, @dbf)
         if block_given?
@@ -174,8 +184,10 @@ module GeoRuby
           geometry = GeoRuby::SimpleFeatures::MultiLineString.from_line_strings(line_strings)
         when ShpType::POLYGON
           # TODO : TO CORRECT
-          # does not take into account the possibility that the outer loop could be after the inner loops in the SHP + more than one outer loop
-          # Still sends back a multi polygon (so the correction above won't change what gets sent back)
+          # does not take into account the possibility that the outer loop could
+          # be after the inner loops in the SHP + more than one outer loop
+          # Still sends back a multi polygon (so the correction above won't
+          # change what gets sent back)
           @shp.seek(32, IO::SEEK_CUR)
           num_parts, num_points = @shp.read(8).unpack('V2')
           parts =  @shp.read(num_parts * 4).unpack('V' + num_parts.to_s)

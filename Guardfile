@@ -5,7 +5,7 @@ ignore(/\/.#.+/)
 
 # notification :off
 
-guard :rubocop, all_on_start: false, keep_failed: false, notification: false, cli: ['--format', 'emacs'] do
+guard :rubocop, all_on_start: false, keep_failed: false, notification: false, cli: ['--format', 'emacs', '-D'] do
   watch(/^lib\/(.+)\.rb$/)
 end
 
