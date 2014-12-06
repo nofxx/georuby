@@ -1,0 +1,9 @@
+{
+  "type":"Feature",
+  "id":"Some.Nice.Id_777",
+  "properties":{"color": "red"},
+  "geometry":{
+    "type":"Point",
+    "coordinates":[97.03125, 39.7265625]
+  }
+}
