@@ -143,4 +143,22 @@ describe GeoRuby::GeoJSONParser do
     end
   end
 
+  it 'should export a feature as JSON' do
+    fcol_json = File.read(DATA_DIR + 'feature.json')
+    geojson = GeoRuby::SimpleFeatures::Geometry.from_geojson(fcol_json)
+    expect(geojson).to be_a(GeoRuby::GeoJSONFeature)
+
+    export = GeoRuby::SimpleFeatures::Geometry.from_geojson(geojson.to_json)
+    expect(geojson).to eq(export)
+  end
+
+  it 'should export a feature collection as JSON' do
+    fcol_json = File.read(DATA_DIR + 'feature_collection.json')
+    geojson = GeoRuby::SimpleFeatures::Geometry.from_geojson(fcol_json)
+    expect(geojson).to be_a(GeoRuby::GeoJSONFeatureCollection)
+
+    export = GeoRuby::SimpleFeatures::Geometry.from_geojson(geojson.to_json)
+    expect(geojson).to eq(export)
+  end
+
 end
