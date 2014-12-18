@@ -1,6 +1,8 @@
 GeoRuby
 =======
 
+[![Gitter](https://badges.gitter.im/Join%20Chat.svg)](https://gitter.im/nofxx/georuby?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge&utm_content=badge)
+
 This is intended as a holder for geometric data.
 The data model roughly follows the OGC "Simple Features for SQL" specification,
 so it should play nice with data returned from PostGIS or any Spatial Extensions (MongoDB, MySQL...).
