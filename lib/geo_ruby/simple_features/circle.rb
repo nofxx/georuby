@@ -4,6 +4,7 @@ module GeoRuby
     class Circle < Geometry
       attr_accessor :radius, :center
       alias_method :r, :radius
+      alias_method :c, :center
 
       def initialize(srid = DEFAULT_SRID, with_z = false, with_m = false)
         super(srid, with_z, with_m)
@@ -12,6 +13,10 @@ module GeoRuby
       def bounding_box
         [Point.from_x_y(@center.x - @r, @center.y - @r),
          Point.from_x_y(@center.x + @r, @center.y + @r)]
+      end
+
+      def diameter
+        radius * 2
       end
 
       def m_range
