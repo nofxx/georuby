@@ -35,7 +35,9 @@ module GeoRuby
         # strip the shp out of the file if present
         @file_root = file.gsub(/.shp$/i, '')
         # check existence of shp, dbf and shx files
-        unless File.exist?(@file_root + '.shp') && File.exist?(@file_root + '.dbf') && File.exist?(@file_root + '.shx')
+        unless File.exist?(@file_root + '.shp') &&
+               File.exist?(@file_root + '.dbf') &&
+               File.exist?(@file_root + '.shx')
           fail MalformedShpException.new("Missing one of shp, dbf or shx for: #{@file}")
         end
 
@@ -425,30 +427,23 @@ module GeoRuby
 
       private
 
-      def to_shp_type(geom)
-        root = if geom.is_a? GeoRuby::SimpleFeatures::Point
-                 'POINT'
-               elsif geom.is_a? GeoRuby::SimpleFeatures::LineString
-                 'POLYLINE'
-               elsif geom.is_a? GeoRuby::SimpleFeatures::Polygon
-                 'POLYGON'
-               elsif geom.is_a? GeoRuby::SimpleFeatures::MultiPoint
-                 'MULTIPOINT'
-               elsif geom.is_a? GeoRuby::SimpleFeatures::MultiLineString
-                 'POLYLINE'
-               elsif geom.is_a? GeoRuby::SimpleFeatures::MultiPolygon
-                 'POLYGON'
-               else
-                 false
-               end
-        return false unless root
-
-        if geom.with_z
-          root = root + 'Z'
-        elsif geom.with_m
-          root = root + 'M'
+      def geom_type(geom)
+        case geom
+        when GeoRuby::SimpleFeatures::Point then 'POINT'
+        when GeoRuby::SimpleFeatures::LineString then 'POLYLINE'
+        when GeoRuby::SimpleFeatures::Polygon then 'POLYGON'
+        when GeoRuby::SimpleFeatures::MultiPoint then 'MULTIPOINT'
+        when GeoRuby::SimpleFeatures::MultiLineString then 'POLYLINE'
+        when GeoRuby::SimpleFeatures::MultiPolygon then 'POLYGON'
+        else false
         end
-        eval 'ShpType::' + root
+      end
+
+      def to_shp_type(geom)
+        return false unless klass = geom_type(geom)
+        klass += 'Z' if geom.with_z
+        klass += 'M' if geom.with_m
+        GeoRuby::Shp4r.const_get('ShpType::' + klass)
       end
 
       def commit_add(index)
