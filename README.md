@@ -18,6 +18,7 @@ rgeo:"https://github.com/dazuma/rgeo"
 [![Code Climate](https://codeclimate.com/github/nofxx/georuby.png)](https://codeclimate.com/github/nofxx/georuby)
 [![Build Status](https://travis-ci.org/nofxx/georuby.png?branch=master)](https://travis-ci.org/nofxx/georuby)
 [![Coverage Status](https://coveralls.io/repos/nofxx/georuby/badge.png)](https://coveralls.io/r/nofxx/georuby)
+[![Dependency Status](https://gemnasium.com/nofxx/georuby.svg)](https://gemnasium.com/nofxx/georuby)
 
 
 Available data types
@@ -61,6 +62,7 @@ Optional, require if you need the functionality:
     require 'geo_ruby/georss'     # GeoRSS
     require 'geo_ruby/geojson'    # GeoJSON
 
+TODO: https://github.com/AnalyticalGraphicsInc/czml-writer
 
 Use
 ===
@@ -141,7 +143,7 @@ GeoRuby does not allow the modification of the schema (it will probably be done 
 
 Here is an example of how to create a new Shapefile with 2 fields :
 
-      shpfile = ShpFile.create('hello.shp',ShpType::POINT,[DBF::Field.new("Hoyoyo","C",10), DBF::Field.new("Boyoul","N",10,0)])
+      shpfile = ShpFile.create('hello.shp', ShpType::POINT, [DBF::Field.new("Hoyoyo", "C", 10), DBF::Field.new("Boyoul","N",10,0)])
 
 The file is then open for reading and writing.
 
@@ -149,8 +151,8 @@ Here is an example of how to write to a shapefile (created or not with GeoRuby) 
 
       shpfile = ShpFile.open('places.shp')
       shpfile.transaction do |tr|
-        tr.add(ShpRecord.new(Point.from_x_y(123.4,123.4),'Hoyoyo' => "AEZ",'Bouyoul' => 45))
-        tr.update(4,ShpRecord.new(Point.from_x_y(-16.67,16.41),'Hoyoyo' => "EatMe",'Bouyoul' => 42))
+        tr.add(ShpRecord.new(Point.from_x_y(123.4, 123.4), 'Hoyoyo' => "AEZ",'Bouyoul' => 45))
+        tr.update(4, ShpRecord.new(Point.from_x_y(-16.67, 16.41), 'Hoyoyo' => "EatMe",'Bouyoul' => 42))
         tr.delete(1)
       end
       shpfile.close
@@ -161,6 +163,8 @@ Calling <tt>tr.rollback</tt> at anytime during the execution will prevent the mo
 
 Also currently, error reporting is minimal and it has not been tested that
 thoroughly so caveat emptor and backup before performing any destructive operation.
+
+Shapefile names and extensions (dbf, shp, gpx) must be lowercased!
 
 
 GPX Reading
