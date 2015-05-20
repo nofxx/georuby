@@ -73,56 +73,56 @@ module GeoRuby
     include GeoRuby::SimpleFeatures
     attr_reader :geometry
 
-    def parse(geojson, srid = DEFAULT_SRID)
+    def parse(geojson, srid = DEFAULT_SRID, with_z = false, with_m = false)
       @geometry = nil
       geohash = JSON.parse(geojson)
-      parse_geohash(geohash, srid)
+      parse_geohash(geohash, srid, with_z, with_m)
     end
 
     private
 
-    def parse_geohash(geohash, srid)
+    def parse_geohash(geohash, srid, with_z, with_m)
       srid = srid_from_crs(geohash['crs']) || srid
       case geohash['type']
       when 'Point', 'MultiPoint', 'LineString', 'MultiLineString', 'Polygon',
            'MultiPolygon', 'GeometryCollection'
-        @geometry = parse_geometry(geohash, srid)
+        @geometry = parse_geometry(geohash, srid, with_z, with_m)
       when 'Feature'
-        @geometry = parse_geojson_feature(geohash, srid)
+        @geometry = parse_geojson_feature(geohash, srid, with_z, with_m)
       when 'FeatureCollection'
-        @geometry = parse_geojson_feature_collection(geohash, srid)
+        @geometry = parse_geojson_feature_collection(geohash, srid, with_z, with_m)
       else
         fail GeoJSONFormatError, 'Unknown GeoJSON type'
       end
     end
 
-    def parse_geometry(geohash, srid)
+    def parse_geometry(geohash, srid, with_z, with_m)
       srid = srid_from_crs(geohash['crs']) || srid
       if geohash['type'] == 'GeometryCollection'
-        parse_geometry_collection(geohash, srid)
+        parse_geometry_collection(geohash, srid, with_z, with_m)
       else
         klass = GeoRuby::SimpleFeatures.const_get(geohash['type'])
-        klass.from_coordinates(geohash['coordinates'], srid, false, false)
+        klass.from_coordinates(geohash['coordinates'], srid, with_z, with_m)
       end
     end
 
-    def parse_geometry_collection(geohash, srid)
+    def parse_geometry_collection(geohash, srid, with_z, with_m)
       srid = srid_from_crs(geohash['crs']) || srid
-      geometries = geohash['geometries'].map { |g| parse_geometry(g, srid) }
-      GeometryCollection.from_geometries(geometries, srid)
+      geometries = geohash['geometries'].map { |g| parse_geometry(g, srid, with_z, with_m) }
+      GeometryCollection.from_geometries(geometries, srid, with_z, with_m)
     end
 
-    def parse_geojson_feature(geohash, srid)
+    def parse_geojson_feature(geohash, srid, with_z, with_m)
       srid = srid_from_crs(geohash['crs']) || srid
-      geometry = parse_geometry(geohash['geometry'], srid)
+      geometry = parse_geometry(geohash['geometry'], srid, with_z, with_m)
       GeoJSONFeature.new(geometry, geohash['properties'], geohash['id'])
     end
 
-    def parse_geojson_feature_collection(geohash, srid)
+    def parse_geojson_feature_collection(geohash, srid, with_z, with_m)
       srid = srid_from_crs(geohash['crs']) || srid
       features = []
       geohash['features'].each do |feature|
-        features << parse_geojson_feature(feature, srid)
+        features << parse_geojson_feature(feature, srid, with_z, with_m)
       end
       GeoJSONFeatureCollection.new(features)
     end

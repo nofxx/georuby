@@ -233,9 +233,9 @@ module GeoRuby #:nodoc:
 
       # Some GeoJSON files do not include srid info, so
       # we provide an optional parameter
-      def self.from_geojson(geojson, srid = DEFAULT_SRID)
+      def self.from_geojson(geojson, srid = DEFAULT_SRID, with_z = false, with_m = false)
         geojson_parser = GeoJSONParser.new
-        geojson_parser.parse(geojson, srid)
+        geojson_parser.parse(geojson, srid, with_z, with_m)
         geojson_parser.geometry
       end
 
