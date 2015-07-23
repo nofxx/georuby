@@ -1,8 +1,6 @@
 GeoRuby
 =======
 
-[![Gitter](https://badges.gitter.im/Join%20Chat.svg)](https://gitter.im/nofxx/georuby?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge&utm_content=badge)
-
 This is intended as a holder for geometric data.
 The data model roughly follows the OGC "Simple Features for SQL" specification,
 so it should play nice with data returned from PostGIS or any Spatial Extensions (MongoDB, MySQL...).
@@ -14,12 +12,13 @@ OGC:"http://www.opengis.org/docs/99-049.pdf"
 If you are looking for Proj/Geos (geometric operators or reprojections) rubygem checkout: (C extension)
 rgeo:"https://github.com/dazuma/rgeo"
 
-[![Gem Version](https://badge.fury.io/rb/georuby.png)](http://badge.fury.io/rb/georuby)
-[![Code Climate](https://codeclimate.com/github/nofxx/georuby.png)](https://codeclimate.com/github/nofxx/georuby)
-[![Build Status](https://travis-ci.org/nofxx/georuby.png?branch=master)](https://travis-ci.org/nofxx/georuby)
-[![Coverage Status](https://coveralls.io/repos/nofxx/georuby/badge.png)](https://coveralls.io/r/nofxx/georuby)
+[![Gem Version](https://badge.fury.io/rb/georuby.svg)](http://badge.fury.io/rb/georuby)
 [![Dependency Status](https://gemnasium.com/nofxx/georuby.svg)](https://gemnasium.com/nofxx/georuby)
+[![Build Status](https://travis-ci.org/nofxx/georuby.svg?branch=master)](https://travis-ci.org/nofxx/georuby)
+[![Code Climate](https://codeclimate.com/github/nofxx/georuby.svg)](https://codeclimate.com/github/nofxx/georuby)
+[![Coverage Status](https://coveralls.io/repos/nofxx/georuby/badge.svg)](https://coveralls.io/r/nofxx/georuby)
 
+[![Gitter](https://badges.gitter.im/Join%20Chat.svg)](https://gitter.im/nofxx/georuby?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge&utm_content=badge)
 
 Available data types
 --------------------
