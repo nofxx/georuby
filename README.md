@@ -71,19 +71,27 @@ Simple Examples
 
 Creating a 3D Point:
 
+    include GeoRuby::SimpleFeatures
     Point.from_x_y_z(10.0, 20.0, 5.0)
 
 
 Creating a LineString:
 
-    LineString.from_coordinates([[1,1],[2,2]],4326))
+    LineString.from_coordinates([[1,1],[2,2]],4326)
 
 
 Creating a Polygon:
 
-    Polygon.from_coordinates([[1,1],[2,2]],4326))
-    LineString.from_linear_rings(rings)
+    coordinates = [[0,0],[0,1],[1,1],[1,0]]
+    outer_ring = LinearRing.from_coordinates(coordinates, 4326)
+    rings = [outer_ring]
+    Polygon.from_linear_rings(rings)
 
+Checking if a Point is inside a Polygon:
+
+    point   = Point.from_x_y(0.5, 0.5)
+    polygon = Polygon.from_coordinates([[[0,0],[0,1],[1,1],[1,0]]],4326)
+    polygon.contains_point?(point)
 
 Input and output
 ----------------
