@@ -131,7 +131,7 @@ in a file and disaply the values of the attributes :
 
       require 'geo_ruby/shp'
 
-      ShpFile.open(shpfile) do |shp|
+      GeoRuby::Shp4r::ShpFile.open(shpfile) do |shp|
         shp.each do |shape|
           geom = shape.geometry #a GeoRuby SimpleFeature
           att_data = shape.data #a Hash
@@ -150,13 +150,13 @@ GeoRuby does not allow the modification of the schema (it will probably be done 
 
 Here is an example of how to create a new Shapefile with 2 fields :
 
-      shpfile = ShpFile.create('hello.shp', ShpType::POINT, [DBF::Field.new("Hoyoyo", "C", 10), DBF::Field.new("Boyoul","N",10,0)])
+      shpfile = GeoRuby::Shp4r::ShpFile.create('hello.shp', ShpType::POINT, [DBF::Field.new("Hoyoyo", "C", 10), DBF::Field.new("Boyoul","N",10,0)])
 
 The file is then open for reading and writing.
 
 Here is an example of how to write to a shapefile (created or not with GeoRuby) :
 
-      shpfile = ShpFile.open('places.shp')
+      shpfile = GeoRuby::Shp4r::ShpFile.open('places.shp')
       shpfile.transaction do |tr|
         tr.add(ShpRecord.new(Point.from_x_y(123.4, 123.4), 'Hoyoyo' => "AEZ",'Bouyoul' => 45))
         tr.update(4, ShpRecord.new(Point.from_x_y(-16.67, 16.41), 'Hoyoyo' => "EatMe",'Bouyoul' => 42))
