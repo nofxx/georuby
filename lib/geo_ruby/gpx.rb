@@ -73,7 +73,7 @@ module GeoRuby
       # If the GPX isn't closed, a line from the first
       # to the last point will be created to close it.
       def as_polygon
-        GeoRuby::SimpleFeatures::Polygon.from_points([@points[0] == @points[-1] ?  @points : @points.push(@points[0].clone)])
+        GeoRuby::SimpleFeatures::Polygon.from_points([@points[0] == @points[-1] ?  @points : (@points + [@points[0].clone])])
       end
 
       # Return GPX Envelope
