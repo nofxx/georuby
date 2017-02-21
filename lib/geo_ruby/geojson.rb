@@ -63,7 +63,7 @@ module GeoRuby
     end
 
     def to_json(options = {})
-      ({ type: 'FeatureCollection', features: features }).to_json
+      ({ type: 'FeatureCollection', features: features }).to_json(options)
     end
     alias_method :as_geojson, :to_json
   end
