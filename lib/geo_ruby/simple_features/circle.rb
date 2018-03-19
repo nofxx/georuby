@@ -35,8 +35,8 @@ module GeoRuby
       end
       alias_method :as_geojson, :to_json
 
-      def contains_point?(_point)
-        fail NotImplementedError
+      def contains_point?(point)
+        @center.euclidian_distance(point) <= radius
       end
 
       class << self
