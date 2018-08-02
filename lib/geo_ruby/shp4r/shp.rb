@@ -204,25 +204,29 @@ module GeoRuby
           # geometry = GeoRuby::SimpleFeatures::MultiPolygon.from_polygons([GeoRuby::SimpleFeatures::Polygon.from_linear_rings(linear_rings)])
           outer, inner = linear_rings.partition(&:clockwise?)
 
-          # Make polygons from the outer rings so we can concatenate
-          # them with inner rings.
-          outer.map! { |ring| GeoRuby::SimpleFeatures::Polygon.from_linear_rings([ring]) }
+          # Return NullShape if polygon is degenerated (it only contains 3 points or less)
+          if outer.empty?
+            geometry = GeoRuby::SimpleFeatures::NullShape.new
+          else
+            # Make polygons from the outer rings so we can concatenate
+            # them with inner rings.
+            outer.map! {|ring| GeoRuby::SimpleFeatures::Polygon.from_linear_rings([ring])}
 
-          # We make the assumption that all vertices of holes are
-          # entirely contained.
-          inner.each do |inner_ring|
-            outer_poly = outer.find { |outer_poly| outer_poly[0].contains_point?(inner_ring[0]) }
-            if outer_poly
-              outer_poly << inner_ring
-            else
-              # TODO - what to do here?  technically the geometry is
-              # not well formed (or our above assumption does not
-              # hold).
-              $stderr.puts 'Failed to find polygon for inner ring!'
+            # We make the assumption that all vertices of holes are
+            # entirely contained.
+            inner.each do |inner_ring|
+              outer_poly = outer.find {|outer_poly| outer_poly[0].contains_point?(inner_ring[0])}
+              if outer_poly
+                outer_poly << inner_ring
+              else
+                # TODO - what to do here?  technically the geometry is
+                # not well formed (or our above assumption does not
+                # hold).
+                puts 'Failed to find polygon for inner ring!'
+              end
             end
+            geometry = GeoRuby::SimpleFeatures::MultiPolygon.from_polygons(outer)
           end
-
-          geometry = GeoRuby::SimpleFeatures::MultiPolygon.from_polygons(outer)
         when ShpType::MULTIPOINT
           @shp.seek(32, IO::SEEK_CUR)
           num_points = @shp.read(4).unpack('V')[0]
