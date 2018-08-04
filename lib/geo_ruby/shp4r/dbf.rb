@@ -20,7 +20,7 @@ module GeoRuby
         end
       end
 
-      class Field < Column::Base
+      class Field < ColumnType::Base
         def initialize(name, type, length, decimal = 0, version = 1, enc = nil)
           super(name, type, length, decimal, version, enc)
         end
