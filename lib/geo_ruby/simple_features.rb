@@ -13,6 +13,7 @@ module GeoRuby
       multi_point
       multi_polygon
       point
+      null_shape
       polygon
     ).each do |rel_file|
       require File.join(File.dirname(__FILE__), 'simple_features', rel_file)
