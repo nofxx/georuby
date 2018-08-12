@@ -33,8 +33,10 @@ module GeoRuby
           @columns_count
         end
 
-        def self.open(f)
-          new(f)
+		# Open DBF with specified encoding (it can also be nil and DBF reader
+		# will use what it finds in header).
+		def self.open(f, memo = nil, encoding)
+          new(f, memo, encoding)
         end
 
         def close
