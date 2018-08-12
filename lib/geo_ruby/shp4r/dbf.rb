@@ -20,7 +20,7 @@ module GeoRuby
         end
       end
 
-      class Field < Column::Base
+      class Field < ColumnType::Base
         def initialize(name, type, length, decimal = 0, version = 1, enc = nil)
           super(name, type, length, decimal, version, enc)
         end
@@ -33,8 +33,10 @@ module GeoRuby
           @columns_count
         end
 
-        def self.open(f)
-          new(f)
+		# Open DBF with specified encoding (it can also be nil and DBF reader
+		# will use what it finds in header).
+		def self.open(f, memo = nil, encoding)
+          new(f, memo, encoding)
         end
 
         def close

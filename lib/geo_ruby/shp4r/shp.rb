@@ -31,7 +31,7 @@ module GeoRuby
 
       # Opens a SHP file. Both "abc.shp" and "abc" are accepted.
       # The files "abc.shp", "abc.shx" and "abc.dbf" must be present
-      def initialize(file)
+      def initialize(file, dbf_encoding)
         # strip the shp out of the file if present
         @file_root = file.gsub(/.shp$/i, '')
         # check existence of shp, dbf and shx files
@@ -41,7 +41,7 @@ module GeoRuby
           fail MalformedShpException.new("Missing one of shp, dbf or shx for: #{@file}")
         end
 
-        @dbf = Dbf::Reader.open(@file_root + '.dbf')
+        @dbf = Dbf::Reader.open(@file_root + '.dbf', nil, dbf_encoding)
         @shx = File.open(@file_root + '.shx', 'rb')
         @shp = File.open(@file_root + '.shp', 'rb')
         read_index
@@ -56,8 +56,10 @@ module GeoRuby
       # opens a SHP "file". If a block is given, the ShpFile object
       # is yielded to it and is closed upon return.
       # Else a call to <tt>open</tt> is equivalent to <tt>ShpFile.new(...)</tt>.
-      def self.open(file)
-        shpfile = ShpFile.new(file)
+      # You can specify encoding of the table, by default it is not set, maybe
+      # it should be UTF-8?
+      def self.open(file, dbf_encoding = nil)
+        shpfile = ShpFile.new(file, dbf_encoding)
         if block_given?
           yield shpfile
           shpfile.close
