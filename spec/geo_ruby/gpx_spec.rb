@@ -34,6 +34,11 @@ describe GeoRuby::Gpx4r do
       expect(@gpxfile[0].y).to be_within(0.0001).of(48.731813)
     end
 
+    it 'should point last record to last waypoint' do
+      expect(@gpxfile[-1].x).to be_within(0.0001).of(9.09436)
+      expect(@gpxfile[-1].y).to be_within(0.0001).of(48.731805)
+    end
+
     it 'should read Z and M' do
       expect(@gpxfile[0].z).to eql(468.0)
       expect(@gpxfile[0].m).to eql('2008-09-07T17:36:57Z')
