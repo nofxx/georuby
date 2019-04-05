@@ -32,8 +32,8 @@ module GeoRuby
 
       private
 
-      def valid_point?(a, b)
-        a.x.present? && a.y.present? && b.x.present? && b.y.present?
+      def valid_point?(x_coodinate, y_coordinate)
+        x_coodinate.x.present? && x_coodinate.y.present? && y_coordinate.x.present? && y_coordinate.y.present?
       end
     end
   end
