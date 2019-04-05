@@ -25,7 +25,7 @@ module GeoRuby
         crossings =
           tuples.select do |a, b|
             valid_point?(a, b) &&
-            (b.y > y != a.y > y) && (x < (a.x - b.x) * (y - b.y) / (a.y - b.y) + b.x)
+              (b.y > y != a.y > y) && (x < (a.x - b.x) * (y - b.y) / (a.y - b.y) + b.x)
           end
 
         crossings.size % 2 == 1
@@ -35,7 +35,7 @@ module GeoRuby
 
       def valid_point?(x_coodinate, y_coordinate)
         x_coodinate.x.present? && x_coodinate.y.present? &&
-        y_coordinate.x.present? && y_coordinate.y.present?
+          y_coordinate.x.present? && y_coordinate.y.present?
       end
     end
   end
