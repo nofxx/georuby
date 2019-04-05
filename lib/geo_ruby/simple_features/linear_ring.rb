@@ -10,7 +10,7 @@ module GeoRuby
       end
 
       # fix kml export
-      alias_method :orig_kml_representation, :kml_representation
+      alias orig_kml_representation kml_representation
       def kml_representation(options = {})
         orig_kml_representation(options).gsub('LineString', 'LinearRing')
       end
@@ -20,16 +20,17 @@ module GeoRuby
       #
       # http://www.ecse.rpi.edu/Homepages/wrf/Research/Short_Notes/pnpoly.html
       def contains_point?(point)
-        x, y = point.x, point.y
+        x = point.x
+        y = point.y
         tuples = @points.zip(@points[1..-1] + [@points[0]])
         crossings =
           tuples.select do |a, b|
             valid_point?(a, b) &&
               (b.y > y != a.y > y) &&
-                (x < (a.x - b.x) * (y - b.y) / (a.y - b.y) + b.x)
+              (x < (a.x - b.x) * (y - b.y) / (a.y - b.y) + b.x)
           end
 
-        crossings.size % 2 == 1
+        crossings.size.odd?
       end
 
       private
