@@ -18,7 +18,7 @@ module GeoRuby
       # Does this linear string contain the given point?  We use the
       # algorithm described here:
       #
-      # http://www.ecse.rpi.edu/Homepages/wrf/Research/Short_Notes/pnpoly.html
+      # https://wrf.ecse.rpi.edu/Research/Short_Notes/pnpoly.html
       def contains_point?(point)
         x, y = point.x, point.y
         tuples = @points.zip(@points[1..-1] + [@points[0]])
